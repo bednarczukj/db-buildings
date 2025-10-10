@@ -1,94 +1,130 @@
-# 10x Astro Starter
+# Polish Buildings Database (BBP)
 
-A modern, opinionated starter template for building fast, accessible, and AI-friendly web applications.
+A web application for manual entry, browsing, and management of building data in Poland, including broadband provider information. Includes role-based access control, autocomplete search, and a public REST API.
+
+---
+
+## Table of Contents
+
+1. [Tech Stack](#tech-stack)  
+2. [Getting Started Locally](#getting-started-locally)  
+3. [Available Scripts](#available-scripts)  
+4. [Project Scope](#project-scope)  
+   - [In Scope (MVP)](#in-scope-mvp)  
+   - [Out of Scope (MVP)](#out-of-scope-mvp)  
+5. [Project Status](#project-status)  
+6. [License](#license)  
+
+---
 
 ## Tech Stack
 
-- [Astro](https://astro.build/) v5.5.5 - Modern web framework for building fast, content-focused websites
-- [React](https://react.dev/) v19.0.0 - UI library for building interactive components
-- [TypeScript](https://www.typescriptlang.org/) v5 - Type-safe JavaScript
-- [Tailwind CSS](https://tailwindcss.com/) v4.0.17 - Utility-first CSS framework
+- **Frontend**  
+  - Astro 5  
+  - React 19  
+  - TypeScript 5  
+  - Tailwind CSS 4  
+  - Shadcn/ui  
+- **Backend**  
+  - Supabase (PostgreSQL & Auth)  
+- **AI (internal)**  
+  - Openrouter.ai (model orchestration)  
+- **CI/CD & Hosting**  
+  - GitHub Actions  
+  - DigitalOcean (Docker)
 
-## Prerequisites
+---
 
-- Node.js v22.14.0 (as specified in `.nvmrc`)
-- npm (comes with Node.js)
+## Getting Started Locally
 
-## Getting Started
+### Prerequisites
 
-1. Clone the repository:
+- Node.js v22.14.0 (use [nvm](https://github.com/nvm-sh/nvm))
+- npm (bundled with Node.js)
 
-```bash
-git clone https://github.com/przeprogramowani/10x-astro-starter.git
-cd 10x-astro-starter
-```
+### Installation
 
-2. Install dependencies:
-
-```bash
+```sh
+git clone https://github.com/your-org/db-buildings.git
+cd db-buildings
+nvm use
 npm install
 ```
 
-3. Run the development server:
+### Running in Development
 
-```bash
+```sh
 npm run dev
 ```
 
-4. Build for production:
+Open your browser at `http://localhost:3000` (or the port shown in console).
 
-```bash
-npm run build
-```
+---
 
 ## Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint issues
+From the project root, you can run:
 
-## Project Structure
+- `npm run dev`  
+  Start the local development server.
 
-```md
-.
-├── src/
-│   ├── layouts/    # Astro layouts
-│   ├── pages/      # Astro pages
-│   │   └── api/    # API endpoints
-│   ├── components/ # UI components (Astro & React)
-│   └── assets/     # Static assets
-├── public/         # Public assets
-```
+- `npm run build`  
+  Build the app for production.
 
-## AI Development Support
+- `npm run preview`  
+  Serve the built app locally.
 
-This project is configured with AI development tools to enhance the development experience, providing guidelines for:
+- `npm run astro`  
+  Run the Astro CLI.
 
-- Project structure
-- Coding practices
-- Frontend development
-- Styling with Tailwind
-- Accessibility best practices
-- Astro and React guidelines
+- `npm run lint`  
+  Lint all `.ts`, `.tsx`, and `.astro` files.
 
-### Cursor IDE
+- `npm run lint:fix`  
+  Lint and automatically fix issues.
 
-The project includes AI rules in `.cursor/rules/` directory that help Cursor IDE understand the project structure and provide better code suggestions.
+- `npm run format`  
+  Format all `.json`, `.css`, and `.md` files with Prettier.
 
-### GitHub Copilot
+---
 
-AI instructions for GitHub Copilot are available in `.github/copilot-instructions.md`
+## Project Scope
 
-### Windsurf
+### In Scope (MVP)
 
-The `.windsurfrules` file contains AI configuration for Windsurf.
+- Manual entry and CRUD of building records with:
+  - Building number, type, TERYT hierarchy (voivodeship → county → commune → locality → district/part (optional) → street (optional))
+  - Coordinates (WGS84), broadband provider data (name, technology, throughput)
+- CRUD for TERYT dictionaries (voivodeships, counties, communes, localities, parts/districts, streets)
+- Role-based access:
+  - `ADMIN`: manage users and roles  
+  - `WRITE`: create, update, delete buildings and dictionaries  
+  - `READ`: view only  
+- Supabase Auth with HttpOnly secure cookies and session timeout
+- Autocomplete search (min. 2 chars, 300 ms debounce)
+- Public REST API v1:
+  - Read building parameters (coordinates, provider, technology, throughput)
+  - API keys with rotation, rate limit 10 req/hr, `Idempotency-Key`, HTTP 429/`Retry-After`
+  - Pagination (`page`, `pageSize`)
+- Audit logging (filters, pagination, retention 365 days)
+- Hard delete with confirmation modal
+- Optimistic locking and unique constraints
 
-## Contributing
+### Out of Scope (MVP)
 
-Please follow the AI guidelines and coding practices defined in the AI configuration files when contributing to this project.
+- Automatic data imports or external integrations
+- Bulk upload of building data
+- External provider dictionary (entered manually)
+- Backup UI and enforcement of HTTPS/CORS/SLA
+
+---
+
+## Project Status
+
+🔧 Currently in MVP development. Core features implemented; additional enhancements and documentation forthcoming.
+
+---
 
 ## License
 
-MIT
+This project is not yet licensed. Please add a `LICENSE` file to specify the terms under which the project may be used or contributed to.
