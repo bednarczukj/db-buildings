@@ -49,17 +49,18 @@
 - community_name VARCHAR(100) NOT NULL
 - city_code VARCHAR(7) NOT NULL REFERENCES cities(code) ON UPDATE CASCADE
 - city_name VARCHAR(100) NOT NULL
-- city_part_code VARCHAR(7) NOT NULL REFERENCES cities(code) ON UPDATE CASCADE
+- city_part_code VARCHAR(7) REFERENCES cities(code) ON UPDATE CASCADE
 - city_part_name VARCHAR(100)
 - city_district_code VARCHAR(7) NOT NULL REFERENCES city_districts(code) ON UPDATE CASCADE
 - city_district_name VARCHAR(100)
-- street_code VARCHAR(7) NOT NULL REFERENCES streets(code) ON UPDATE CASCADE ON DELETE RESTRICT
-- street_name VARCHAR(100) NOT NULL
+- street_code VARCHAR(7) REFERENCES streets(code) ON UPDATE CASCADE ON DELETE RESTRICT
+- street_name VARCHAR(100)
 - house_number VARCHAR(10) NOT NULL
+- post_code VARCHAR(6) NOT NULL
 - provider_id INTEGER NOT NULL REFERENCES providers(id) ON UPDATE CASCADE
 - latitude DOUBLE PRECISION NOT NULL
 - longitude DOUBLE PRECISION NOT NULL
-- location GEOGRAPHY(Point,4326) NOT NULL
+- location GEOGRAPHY(Point,4326)
 - status status_enum NOT NULL DEFAULT 'active'
 - created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 - updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
