@@ -68,7 +68,7 @@
 **Partitioning:** LIST on (voivodeship_code)
 
 ### 1.9. profiles
-- user_id UUID PRIMARY KEY
+- user_id UUID PRIMARY KEY REFERENCES users(id) ON UPDATE CASCADE ON DELETE RESTRICT
 - role role_enum NOT NULL
 
 ### 1.10. audit_logs
@@ -97,6 +97,16 @@
 - status_code INTEGER NOT NULL
 - request_path TEXT NOT NULL
 
+### 1.13. users
+
+This table is managed by Supabase Auth
+
+- id UUID PRIMARY KEY DEFAULT gen_random_uuid()
+- email TEXT NOT NULL UNIQUE
+- encrypted_password TEXT NOT NULL
+- created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+- confirmed_at TIMESTAMPTZ
+
 ## 2. Relationships
 
 - voivodeships 1—* districts
@@ -104,6 +114,7 @@
 - communities 1—* cities
 - cities 1—* city_districts, streets
 - providers 1—* buildings
+- users 1—* profiles
 - profiles 1—* audit_logs
 - api_keys 1—* api_requests
 - buildings partitioned by voivodeship_code (LIST)
