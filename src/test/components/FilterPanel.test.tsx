@@ -1,10 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { FilterPanel } from '../../components/features/buildings/FilterPanel';
-import type { BuildingListQueryDTO } from '../../types';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { FilterPanel } from "../../components/features/buildings/FilterPanel";
+import type { BuildingListQueryDTO } from "../../types";
 
-describe('FilterPanel component', () => {
+describe("FilterPanel component", () => {
   const mockOnFiltersChange = vi.fn();
   const mockOnReset = vi.fn();
 
@@ -22,15 +22,15 @@ describe('FilterPanel component', () => {
     vi.clearAllMocks();
   });
 
-  describe('rendering', () => {
-    it('should render filter panel with title and reset button', () => {
+  describe("rendering", () => {
+    it("should render filter panel with title and reset button", () => {
       render(<FilterPanel {...defaultProps} />);
 
-      expect(screen.getByText('Filtry')).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /resetuj/i })).toBeInTheDocument();
+      expect(screen.getByText("Filtry")).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /resetuj/i })).toBeInTheDocument();
     });
 
-    it.skip('should render all filter selects', () => {
+    it.skip("should render all filter selects", () => {
       render(<FilterPanel {...defaultProps} />);
 
       expect(screen.getByLabelText(/województwo/i)).toBeInTheDocument();
@@ -41,25 +41,25 @@ describe('FilterPanel component', () => {
       expect(screen.getByLabelText(/status/i)).toBeInTheDocument();
     }); // Skip due to Radix UI testing issues
 
-    it('should disable controls when loading', () => {
+    it("should disable controls when loading", () => {
       render(<FilterPanel {...defaultProps} isLoading={true} />);
 
-      const resetButton = screen.getByRole('button', { name: /resetuj/i });
+      const resetButton = screen.getByRole("button", { name: /resetuj/i });
       expect(resetButton).toBeDisabled();
 
       // All select triggers should be disabled
-      const selects = screen.getAllByRole('combobox');
-      selects.forEach(select => {
+      const selects = screen.getAllByRole("combobox");
+      selects.forEach((select) => {
         expect(select).toBeDisabled();
       });
     });
   });
 
-  describe('filter interactions', () => {
+  describe("filter interactions", () => {
     // Skip complex Select interaction tests due to Radix UI testing issues
     // Focus on testing the core logic and accessibility instead
 
-    it('should render filter selects with correct labels', () => {
+    it("should render filter selects with correct labels", () => {
       render(<FilterPanel {...defaultProps} />);
 
       expect(screen.getByLabelText(/województwo/i)).toBeInTheDocument();
@@ -70,27 +70,27 @@ describe('FilterPanel component', () => {
       expect(screen.getByLabelText(/status/i)).toBeInTheDocument();
     });
 
-    it('should call onReset when reset button is clicked', async () => {
+    it("should call onReset when reset button is clicked", async () => {
       const user = userEvent.setup();
       render(<FilterPanel {...defaultProps} />);
 
-      const resetButton = screen.getByRole('button', { name: /resetuj/i });
+      const resetButton = screen.getByRole("button", { name: /resetuj/i });
       await user.click(resetButton);
 
       expect(mockOnReset).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('current filter values', () => {
-    it('should render with filter values', () => {
+  describe("current filter values", () => {
+    it("should render with filter values", () => {
       const propsWithValues = {
         ...defaultProps,
         filters: {
           ...defaultProps.filters,
-          voivodeship_code: '14',
-          district_code: '1465',
+          voivodeship_code: "14",
+          district_code: "1465",
           provider_id: 1,
-          status: 'active' as const,
+          status: "active" as const,
         },
       };
 
@@ -101,33 +101,33 @@ describe('FilterPanel component', () => {
     });
   });
 
-  describe('accessibility', () => {
-    it('should have proper button accessibility', () => {
+  describe("accessibility", () => {
+    it("should have proper button accessibility", () => {
       render(<FilterPanel {...defaultProps} />);
 
-      const resetButton = screen.getByRole('button', { name: /resetuj/i });
-      expect(resetButton).toHaveAttribute('aria-label', 'Resetuj filtry');
+      const resetButton = screen.getByRole("button", { name: /resetuj/i });
+      expect(resetButton).toHaveAttribute("aria-label", "Resetuj filtry");
     });
   });
 
-  describe('edge cases', () => {
-    it('should handle empty filter values', () => {
+  describe("edge cases", () => {
+    it("should handle empty filter values", () => {
       const propsWithEmptyFilters = {
         ...defaultProps,
         filters: {
           ...defaultProps.filters,
-          voivodeship_code: '',
-          district_code: '',
+          voivodeship_code: "",
+          district_code: "",
         },
       };
 
       render(<FilterPanel {...propsWithEmptyFilters} />);
 
       // Should render without errors
-      expect(screen.getByText('Filtry')).toBeInTheDocument();
+      expect(screen.getByText("Filtry")).toBeInTheDocument();
     });
 
-    it('should handle undefined filter values', () => {
+    it("should handle undefined filter values", () => {
       const propsWithUndefinedFilters = {
         ...defaultProps,
         filters: {
@@ -140,7 +140,7 @@ describe('FilterPanel component', () => {
       render(<FilterPanel {...propsWithUndefinedFilters} />);
 
       // Should render without errors
-      expect(screen.getByText('Filtry')).toBeInTheDocument();
+      expect(screen.getByText("Filtry")).toBeInTheDocument();
     });
   });
 });

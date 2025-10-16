@@ -94,7 +94,11 @@ function DetailList({ items }: { items: { label: string; value: string | number 
         <div key={index} className="border-b border-border pb-3 last:border-0">
           <dt className="text-sm font-medium text-muted-foreground">{item.label}</dt>
           <dd className="mt-1 text-base">
-            {item.value !== null && item.value !== undefined ? item.value : <span className="text-muted-foreground italic">Brak danych</span>}
+            {item.value !== null && item.value !== undefined ? (
+              item.value
+            ) : (
+              <span className="text-muted-foreground italic">Brak danych</span>
+            )}
           </dd>
         </div>
       ))}
@@ -147,11 +151,13 @@ function ProviderDetailsContent({ providerId }: ProviderDetailsContentProps) {
       {/* Main Content */}
       <div className="rounded-lg border border-border bg-card p-6">
         <h2 className="mb-4 text-xl font-semibold">Informacje o dostawcy</h2>
-        <DetailList items={[
-          { label: "Nazwa", value: provider.name },
-          { label: "Technologia", value: provider.technology },
-          { label: "Przepustowość", value: `${provider.bandwidth} Mbps` },
-        ]} />
+        <DetailList
+          items={[
+            { label: "Nazwa", value: provider.name },
+            { label: "Technologia", value: provider.technology },
+            { label: "Przepustowość", value: `${provider.bandwidth} Mbps` },
+          ]}
+        />
       </div>
     </div>
   );

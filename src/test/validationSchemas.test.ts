@@ -1,6 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from "vitest";
 import { buildingFormSchema, type BuildingFormInput } from "../lib/schemas/buildingFormSchemas";
-import { createBuildingSchema, buildingListQuerySchema, type CreateBuildingInput } from "../lib/schemas/buildingSchemas";
+import {
+  createBuildingSchema,
+  buildingListQuerySchema,
+  type CreateBuildingInput,
+} from "../lib/schemas/buildingSchemas";
 import {
   voivodeshipSchema,
   districtSchema,
@@ -15,7 +19,7 @@ import {
   type CityInput,
   type CityDistrictInput,
   type StreetInput,
-  type TerytListQueryInput
+  type TerytListQueryInput,
 } from "../lib/schemas/terytSchemas";
 
 /**
@@ -190,7 +194,7 @@ describe("BuildingFormSchema Validation", () => {
       building_number: "42A",
       post_code: "00-042",
       longitude: 21.0122, // Within Poland range (14.1-24.1)
-      latitude: 52.2297,  // Within Poland range (49.0-54.8)
+      latitude: 52.2297, // Within Poland range (49.0-54.8)
       provider_id: 1,
     };
 
@@ -214,7 +218,7 @@ describe("BuildingFormSchema Validation", () => {
 
     const result = buildingFormSchema.safeParse(invalidData);
     expect(result.success).toBe(false);
-    expect(result.error?.issues.some(issue => issue.message.includes("Długość geograficzna"))).toBe(true);
+    expect(result.error?.issues.some((issue) => issue.message.includes("Długość geograficzna"))).toBe(true);
   });
 
   it("should reject longitude above Poland maximum", () => {
@@ -233,7 +237,7 @@ describe("BuildingFormSchema Validation", () => {
 
     const result = buildingFormSchema.safeParse(invalidData);
     expect(result.success).toBe(false);
-    expect(result.error?.issues.some(issue => issue.message.includes("Długość geograficzna"))).toBe(true);
+    expect(result.error?.issues.some((issue) => issue.message.includes("Długość geograficzna"))).toBe(true);
   });
 
   it("should reject latitude below Poland minimum", () => {
@@ -252,7 +256,7 @@ describe("BuildingFormSchema Validation", () => {
 
     const result = buildingFormSchema.safeParse(invalidData);
     expect(result.success).toBe(false);
-    expect(result.error?.issues.some(issue => issue.message.includes("Szerokość geograficzna"))).toBe(true);
+    expect(result.error?.issues.some((issue) => issue.message.includes("Szerokość geograficzna"))).toBe(true);
   });
 
   it("should reject latitude above Poland maximum", () => {
@@ -271,7 +275,7 @@ describe("BuildingFormSchema Validation", () => {
 
     const result = buildingFormSchema.safeParse(invalidData);
     expect(result.success).toBe(false);
-    expect(result.error?.issues.some(issue => issue.message.includes("Szerokość geograficzna"))).toBe(true);
+    expect(result.error?.issues.some((issue) => issue.message.includes("Szerokość geograficzna"))).toBe(true);
   });
 
   it("should reject non-numeric coordinates", () => {
@@ -290,16 +294,18 @@ describe("BuildingFormSchema Validation", () => {
 
     const result = buildingFormSchema.safeParse(invalidData);
     expect(result.success).toBe(false);
-    expect(result.error?.issues.some(issue => issue.message.includes("Długość geograficzna musi być liczbą"))).toBe(true);
+    expect(result.error?.issues.some((issue) => issue.message.includes("Długość geograficzna musi być liczbą"))).toBe(
+      true
+    );
   });
 
   it("should reject invalid postal code formats", () => {
     const testCases = [
-      { post_code: "00042", message: "format XX-XXX" },   // No dash
+      { post_code: "00042", message: "format XX-XXX" }, // No dash
       { post_code: "00-0423", message: "format XX-XXX" }, // Too many digits
-      { post_code: "0-042", message: "format XX-XXX" },   // Too few digits
-      { post_code: "AB-123", message: "format XX-XXX" },  // Non-numeric
-      { post_code: "00 042", message: "format XX-XXX" },  // Space instead of dash
+      { post_code: "0-042", message: "format XX-XXX" }, // Too few digits
+      { post_code: "AB-123", message: "format XX-XXX" }, // Non-numeric
+      { post_code: "00 042", message: "format XX-XXX" }, // Space instead of dash
     ];
 
     testCases.forEach(({ post_code, message }) => {
@@ -318,14 +324,14 @@ describe("BuildingFormSchema Validation", () => {
 
       const result = buildingFormSchema.safeParse(invalidData);
       expect(result.success).toBe(false);
-      expect(result.error?.issues.some(issue => issue.message.includes("Kod pocztowy"))).toBe(true);
+      expect(result.error?.issues.some((issue) => issue.message.includes("Kod pocztowy"))).toBe(true);
     });
   });
 
   it("should reject non-positive provider_id", () => {
     const testCases = [0, -1, -5];
 
-    testCases.forEach(provider_id => {
+    testCases.forEach((provider_id) => {
       const invalidData = {
         voivodeship_code: "14",
         district_code: "1465",
@@ -341,7 +347,7 @@ describe("BuildingFormSchema Validation", () => {
 
       const result = buildingFormSchema.safeParse(invalidData);
       expect(result.success).toBe(false);
-      expect(result.error?.issues.some(issue => issue.message.includes("Dostawca jest wymagany"))).toBe(true);
+      expect(result.error?.issues.some((issue) => issue.message.includes("Dostawca jest wymagany"))).toBe(true);
     });
   });
 
@@ -361,7 +367,7 @@ describe("BuildingFormSchema Validation", () => {
 
     const result = buildingFormSchema.safeParse(invalidData);
     expect(result.success).toBe(false);
-    expect(result.error?.issues.some(issue => issue.message.includes("Dostawca jest wymagany"))).toBe(true);
+    expect(result.error?.issues.some((issue) => issue.message.includes("Dostawca jest wymagany"))).toBe(true);
   });
 });
 
@@ -388,7 +394,7 @@ describe("TERYT Schemas Validation", () => {
 
       const result = voivodeshipSchema.safeParse(invalidData);
       expect(result.success).toBe(false);
-      expect(result.error?.issues.some(issue => issue.message.includes("exactly 7 characters"))).toBe(true);
+      expect(result.error?.issues.some((issue) => issue.message.includes("exactly 7 characters"))).toBe(true);
     });
 
     it("should reject voivodeship code with lowercase letters", () => {
@@ -399,7 +405,7 @@ describe("TERYT Schemas Validation", () => {
 
       const result = voivodeshipSchema.safeParse(invalidData);
       expect(result.success).toBe(false);
-      expect(result.error?.issues.some(issue => issue.message.includes("uppercase letters and digits"))).toBe(true);
+      expect(result.error?.issues.some((issue) => issue.message.includes("uppercase letters and digits"))).toBe(true);
     });
 
     it("should reject empty voivodeship name", () => {
@@ -410,7 +416,7 @@ describe("TERYT Schemas Validation", () => {
 
       const result = voivodeshipSchema.safeParse(invalidData);
       expect(result.success).toBe(false);
-      expect(result.error?.issues.some(issue => issue.message.includes("Name is required"))).toBe(true);
+      expect(result.error?.issues.some((issue) => issue.message.includes("Name is required"))).toBe(true);
     });
   });
 
@@ -435,7 +441,7 @@ describe("TERYT Schemas Validation", () => {
 
       const result = districtSchema.safeParse(invalidData);
       expect(result.success).toBe(false);
-      expect(result.error?.issues.some(issue => issue.path.includes("voivodeship_code"))).toBe(true);
+      expect(result.error?.issues.some((issue) => issue.path.includes("voivodeship_code"))).toBe(true);
     });
   });
 
@@ -475,7 +481,7 @@ describe("TERYT Schemas Validation", () => {
 
       const result = communitySchema.safeParse(invalidData);
       expect(result.success).toBe(false);
-      expect(result.error?.issues.some(issue => issue.path.includes("type_id"))).toBe(true);
+      expect(result.error?.issues.some((issue) => issue.path.includes("type_id"))).toBe(true);
     });
   });
 
@@ -525,7 +531,7 @@ describe("TERYT Schemas Validation", () => {
 
       const result = streetSchema.safeParse(invalidData);
       expect(result.success).toBe(false);
-      expect(result.error?.issues.some(issue => issue.message.includes("must not exceed 100 characters"))).toBe(true);
+      expect(result.error?.issues.some((issue) => issue.message.includes("must not exceed 100 characters"))).toBe(true);
     });
   });
 
@@ -566,7 +572,7 @@ describe("TERYT Schemas Validation", () => {
 
       const result = terytListQuerySchema.safeParse(invalidQuery);
       expect(result.success).toBe(false);
-      expect(result.error?.issues.some(issue => issue.path.includes("pageSize"))).toBe(true);
+      expect(result.error?.issues.some((issue) => issue.path.includes("pageSize"))).toBe(true);
     });
 
     it("should reject negative page number", () => {
@@ -576,7 +582,7 @@ describe("TERYT Schemas Validation", () => {
 
       const result = terytListQuerySchema.safeParse(invalidQuery);
       expect(result.success).toBe(false);
-      expect(result.error?.issues.some(issue => issue.path.includes("page"))).toBe(true);
+      expect(result.error?.issues.some((issue) => issue.path.includes("page"))).toBe(true);
     });
 
     it("should reject invalid parent code format", () => {
@@ -586,7 +592,7 @@ describe("TERYT Schemas Validation", () => {
 
       const result = terytListQuerySchema.safeParse(invalidQuery);
       expect(result.success).toBe(false);
-      expect(result.error?.issues.some(issue => issue.message.includes("uppercase letters and digits"))).toBe(true);
+      expect(result.error?.issues.some((issue) => issue.message.includes("uppercase letters and digits"))).toBe(true);
     });
   });
 });

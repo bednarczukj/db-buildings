@@ -83,26 +83,27 @@ function UserManagementContent() {
         <div className="rounded-lg border bg-card p-6">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="text-lg font-medium">Dodaj nowego użytkownika</h3>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowCreateForm(false)}
-            >
+            <Button variant="ghost" size="sm" onClick={() => setShowCreateForm(false)}>
               Anuluj
             </Button>
           </div>
-          <form onSubmit={async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target as HTMLFormElement);
-            const data = {
-              email: formData.get('email') as string,
-              password: formData.get('password') as string,
-              role: formData.get('role') as "ADMIN" | "WRITE" | "READ"
-            };
-            await handleCreateUser(data);
-          }} className="space-y-4">
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const formData = new FormData(e.target as HTMLFormElement);
+              const data = {
+                email: formData.get("email") as string,
+                password: formData.get("password") as string,
+                role: formData.get("role") as "ADMIN" | "WRITE" | "READ",
+              };
+              await handleCreateUser(data);
+            }}
+            className="space-y-4"
+          >
             <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
+              <label htmlFor="email" className="block text-sm font-medium mb-1">
+                Email
+              </label>
               <input
                 id="email"
                 name="email"
@@ -113,7 +114,9 @@ function UserManagementContent() {
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-1">Hasło</label>
+              <label htmlFor="password" className="block text-sm font-medium mb-1">
+                Hasło
+              </label>
               <input
                 id="password"
                 name="password"
@@ -125,13 +128,10 @@ function UserManagementContent() {
               />
             </div>
             <div>
-              <label htmlFor="role" className="block text-sm font-medium mb-1">Rola</label>
-              <select
-                id="role"
-                name="role"
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              >
+              <label htmlFor="role" className="block text-sm font-medium mb-1">
+                Rola
+              </label>
+              <select id="role" name="role" required className="w-full px-3 py-2 border border-gray-300 rounded-md">
                 <option value="READ">READ - Tylko odczyt</option>
                 <option value="WRITE">WRITE - Odczyt i zapis</option>
                 <option value="ADMIN">ADMIN - Pełne uprawnienia</option>

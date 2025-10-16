@@ -9,15 +9,9 @@ import { z } from "zod";
  * - bandwidth (positive integer, required)
  */
 export const createProviderSchema = z.object({
-  name: z
-    .string()
-    .min(1, "Nazwa dostawcy jest wymagana")
-    .max(255, "Nazwa dostawcy nie może przekraczać 255 znaków"),
+  name: z.string().min(1, "Nazwa dostawcy jest wymagana").max(255, "Nazwa dostawcy nie może przekraczać 255 znaków"),
 
-  technology: z
-    .string()
-    .min(1, "Technologia jest wymagana")
-    .max(100, "Technologia nie może przekraczać 100 znaków"),
+  technology: z.string().min(1, "Technologia jest wymagana").max(100, "Technologia nie może przekraczać 100 znaków"),
 
   bandwidth: z
     .number()
@@ -90,4 +84,3 @@ export const providerListQuerySchema = z.object({
 });
 
 export type ProviderListQueryInput = z.infer<typeof providerListQuerySchema>;
-

@@ -3,9 +3,9 @@
  * This file runs before all tests and configures the test environment
  */
 
-import '@testing-library/jest-dom';
-import { cleanup } from '@testing-library/react';
-import { afterEach, vi } from 'vitest';
+import "@testing-library/jest-dom";
+import { cleanup } from "@testing-library/react";
+import { afterEach, vi } from "vitest";
 
 // Cleanup after each test
 afterEach(() => {
@@ -13,7 +13,7 @@ afterEach(() => {
 });
 
 // Mock window.matchMedia
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: vi.fn().mockImplementation((query) => ({
     matches: false,
@@ -48,4 +48,3 @@ global.ResizeObserver = class ResizeObserver {
 
 // Suppress console errors during tests (optional - comment out if you want to see them)
 // vi.spyOn(console, 'error').mockImplementation(() => {});
-

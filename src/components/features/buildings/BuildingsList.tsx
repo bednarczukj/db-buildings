@@ -33,7 +33,7 @@ function BuildingsListContent() {
     isLoading,
     isError,
     buildingsCount: buildings?.length,
-    error: error?.message
+    error: error?.message,
   });
 
   // Error state

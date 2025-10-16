@@ -1,13 +1,13 @@
-import { describe, it, expect } from 'vitest';
-import { transformFormToCommand, transformBuildingToForm } from '../lib/utils/transformers';
-import type { BuildingFormInput, BuildingDTO } from '@/types';
+import { describe, it, expect } from "vitest";
+import { transformFormToCommand, transformBuildingToForm } from "../lib/utils/transformers";
+import type { BuildingFormInput, BuildingDTO } from "@/types";
 
 /**
  * Test data transformation functions
  */
-describe('Data Transformers', () => {
-  describe('transformFormToCommand', () => {
-    it('should transform complete form data to command format', () => {
+describe("Data Transformers", () => {
+  describe("transformFormToCommand", () => {
+    it("should transform complete form data to command format", () => {
       const formData: BuildingFormInput = {
         voivodeship_code: "14",
         district_code: "1465",
@@ -41,7 +41,7 @@ describe('Data Transformers', () => {
       });
     });
 
-    it('should handle optional fields correctly', () => {
+    it("should handle optional fields correctly", () => {
       const formData: BuildingFormInput = {
         voivodeship_code: "14",
         district_code: "1465",
@@ -62,7 +62,7 @@ describe('Data Transformers', () => {
       expect(result.street_code).toBeUndefined();
     });
 
-    it('should handle rural buildings without street code', () => {
+    it("should handle rural buildings without street code", () => {
       const formData: BuildingFormInput = {
         voivodeship_code: "14",
         district_code: "1417",
@@ -83,7 +83,7 @@ describe('Data Transformers', () => {
       expect(result.city_district_code).toBeUndefined();
     });
 
-    it('should convert coordinates to GeoJSON Point format', () => {
+    it("should convert coordinates to GeoJSON Point format", () => {
       const formData: BuildingFormInput = {
         voivodeship_code: "14",
         district_code: "1465",
@@ -106,7 +106,7 @@ describe('Data Transformers', () => {
       });
     });
 
-    it('should handle zero coordinates', () => {
+    it("should handle zero coordinates", () => {
       const formData: BuildingFormInput = {
         voivodeship_code: "14",
         district_code: "1465",
@@ -129,7 +129,7 @@ describe('Data Transformers', () => {
       });
     });
 
-    it('should handle negative coordinates', () => {
+    it("should handle negative coordinates", () => {
       const formData: BuildingFormInput = {
         voivodeship_code: "14",
         district_code: "1465",
@@ -153,8 +153,8 @@ describe('Data Transformers', () => {
     });
   });
 
-  describe('transformBuildingToForm', () => {
-    it('should transform complete building data to form format', () => {
+  describe("transformBuildingToForm", () => {
+    it("should transform complete building data to form format", () => {
       const building: BuildingDTO = {
         id: "123",
         voivodeship_code: "14",
@@ -189,7 +189,7 @@ describe('Data Transformers', () => {
       });
     });
 
-    it('should handle null/undefined optional fields', () => {
+    it("should handle null/undefined optional fields", () => {
       const building: BuildingDTO = {
         id: "123",
         voivodeship_code: "14",
@@ -216,7 +216,7 @@ describe('Data Transformers', () => {
       expect(result.latitude).toBe(0);
     });
 
-    it('should handle undefined optional fields', () => {
+    it("should handle undefined optional fields", () => {
       const building: BuildingDTO = {
         id: "123",
         voivodeship_code: "14",
@@ -243,7 +243,7 @@ describe('Data Transformers', () => {
       expect(result.latitude).toBe(0);
     });
 
-    it('should handle rural buildings without street', () => {
+    it("should handle rural buildings without street", () => {
       const building: BuildingDTO = {
         id: "123",
         voivodeship_code: "14",
@@ -267,7 +267,7 @@ describe('Data Transformers', () => {
       expect(result.city_district_code).toBe("");
     });
 
-    it('should preserve exact coordinate values', () => {
+    it("should preserve exact coordinate values", () => {
       const building: BuildingDTO = {
         id: "123",
         voivodeship_code: "14",
@@ -291,7 +291,7 @@ describe('Data Transformers', () => {
       expect(result.latitude).toBe(52.2297123456);
     });
 
-    it('should handle zero coordinates', () => {
+    it("should handle zero coordinates", () => {
       const building: BuildingDTO = {
         id: "123",
         voivodeship_code: "14",
@@ -316,8 +316,8 @@ describe('Data Transformers', () => {
     });
   });
 
-  describe('Round-trip transformation', () => {
-    it('should preserve data integrity through form->command->form cycle', () => {
+  describe("Round-trip transformation", () => {
+    it("should preserve data integrity through form->command->form cycle", () => {
       const originalForm: BuildingFormInput = {
         voivodeship_code: "14",
         district_code: "1465",
@@ -369,7 +369,7 @@ describe('Data Transformers', () => {
       expect(reconstructedForm).toEqual(originalForm);
     });
 
-    it('should handle optional fields correctly in round-trip', () => {
+    it("should handle optional fields correctly in round-trip", () => {
       const originalForm: BuildingFormInput = {
         voivodeship_code: "14",
         district_code: "1465",

@@ -142,29 +142,17 @@ export function UsersTable({
                     <option value="ADMIN">ADMIN</option>
                   </select>
                 ) : (
-                  <Badge variant={getRoleBadgeVariant(user.role)}>
-                    {user.role}
-                  </Badge>
+                  <Badge variant={getRoleBadgeVariant(user.role)}>{user.role}</Badge>
                 )}
               </TableCell>
               <TableCell className="text-right">
                 {editingUser === user.user_id ? (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onEdit(null)}
-                    className="h-6 w-6 p-0"
-                  >
+                  <Button variant="ghost" size="sm" onClick={() => onEdit(null)} className="h-6 w-6 p-0">
                     ✕
                   </Button>
                 ) : (
                   <div className="flex justify-end space-x-1">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onEdit(user.user_id)}
-                      className="h-8 w-8 p-0"
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => onEdit(user.user_id)} className="h-8 w-8 p-0">
                       <Edit2 className="h-4 w-4" />
                     </Button>
                     <Button

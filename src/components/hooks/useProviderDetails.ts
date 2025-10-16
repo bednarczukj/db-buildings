@@ -9,7 +9,7 @@ export function useProviderDetails(providerId: string) {
     queryKey: ["provider", providerId],
     queryFn: async () => {
       const response = await fetch(`/api/v1/providers/${providerId}`, {
-        credentials: 'include',
+        credentials: "include",
       });
 
       if (!response.ok) {

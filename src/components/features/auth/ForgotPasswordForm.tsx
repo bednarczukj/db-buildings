@@ -17,7 +17,7 @@ interface ForgotPasswordFormProps {
 export default function ForgotPasswordForm({ onSubmit, isLoading = false, error, success }: ForgotPasswordFormProps) {
   const form = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
-    mode: 'onTouched',
+    mode: "onTouched",
     defaultValues: {
       email: "",
     },

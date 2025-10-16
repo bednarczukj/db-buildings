@@ -3,7 +3,7 @@
  * Implements the Page Object pattern for maintainable E2E tests
  */
 
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator } from "@playwright/test";
 
 export class LoginPage {
   readonly page: Page;
@@ -21,7 +21,7 @@ export class LoginPage {
   }
 
   async goto() {
-    await this.page.goto('/auth/login');
+    await this.page.goto("/auth/login");
   }
 
   async login(email: string, password: string) {
@@ -38,4 +38,3 @@ export class LoginPage {
     return await this.errorMessage.isVisible();
   }
 }
-

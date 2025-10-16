@@ -26,7 +26,8 @@ function TerytFormContent({ resource, mode, code }: TerytFormProps) {
   const [selectedParent, setSelectedParent] = useState<string>("");
 
   // Use code prop for edit mode, or try to get from window if not provided (client-side fallback)
-  const editCode = code || (typeof window !== 'undefined' && mode === "edit" ? window.location.pathname.split('/').pop() : undefined);
+  const editCode =
+    code || (typeof window !== "undefined" && mode === "edit" ? window.location.pathname.split("/").pop() : undefined);
 
   // Get resource display name
   const getResourceDisplayName = (resource: TerytResource): string => {
@@ -125,9 +126,7 @@ function TerytFormContent({ resource, mode, code }: TerytFormProps) {
           className="uppercase"
           maxLength={7}
         />
-        {form.formState.errors.code && (
-          <p className="text-sm text-destructive">{form.formState.errors.code.message}</p>
-        )}
+        {form.formState.errors.code && <p className="text-sm text-destructive">{form.formState.errors.code.message}</p>}
       </div>
     );
 
@@ -135,14 +134,8 @@ function TerytFormContent({ resource, mode, code }: TerytFormProps) {
     fields.push(
       <div key="name" className="space-y-2">
         <Label htmlFor="name">Nazwa</Label>
-        <Input
-          id="name"
-          {...form.register("name")}
-          placeholder={`Wprowadź nazwę ${displayName.toLowerCase()}`}
-        />
-        {form.formState.errors.name && (
-          <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>
-        )}
+        <Input id="name" {...form.register("name")} placeholder={`Wprowadź nazwę ${displayName.toLowerCase()}`} />
+        {form.formState.errors.name && <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>}
       </div>
     );
 
@@ -199,11 +192,7 @@ function TerytFormContent({ resource, mode, code }: TerytFormProps) {
         </div>,
         <div key="type" className="space-y-2">
           <Label htmlFor="type">Typ</Label>
-          <Input
-            id="type"
-            {...form.register("type")}
-            placeholder="Typ gminy (opcjonalne)"
-          />
+          <Input id="type" {...form.register("type")} placeholder="Typ gminy (opcjonalne)" />
           {form.formState.errors.type && (
             <p className="text-sm text-destructive">{form.formState.errors.type.message}</p>
           )}

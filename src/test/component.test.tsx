@@ -3,10 +3,10 @@
  * Demonstrates testing React components with Testing Library
  */
 
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import React from 'react';
+import { describe, it, expect, vi } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import React from "react";
 
 // Example simple component to test
 const Button = ({ onClick, children }: { onClick: () => void; children: React.ReactNode }) => (
@@ -17,8 +17,8 @@ const Button = ({ onClick, children }: { onClick: () => void; children: React.Re
 
 // Example form component
 const LoginForm = ({ onSubmit }: { onSubmit: (email: string, password: string) => void }) => {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,66 +46,65 @@ const LoginForm = ({ onSubmit }: { onSubmit: (email: string, password: string) =
   );
 };
 
-describe('React Component Tests', () => {
-  describe('Button Component', () => {
-    it('should render button with text', () => {
+describe("React Component Tests", () => {
+  describe("Button Component", () => {
+    it("should render button with text", () => {
       render(<Button onClick={() => {}}>Click me</Button>);
-      
-      expect(screen.getByTestId('test-button')).toBeInTheDocument();
-      expect(screen.getByText('Click me')).toBeInTheDocument();
+
+      expect(screen.getByTestId("test-button")).toBeInTheDocument();
+      expect(screen.getByText("Click me")).toBeInTheDocument();
     });
 
-    it('should call onClick when clicked', () => {
+    it("should call onClick when clicked", () => {
       const handleClick = vi.fn();
       render(<Button onClick={handleClick}>Click me</Button>);
-      
-      const button = screen.getByTestId('test-button');
+
+      const button = screen.getByTestId("test-button");
       fireEvent.click(button);
-      
+
       expect(handleClick).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('LoginForm Component', () => {
-    it('should render form fields', () => {
+  describe("LoginForm Component", () => {
+    it("should render form fields", () => {
       render(<LoginForm onSubmit={() => {}} />);
-      
-      expect(screen.getByTestId('email-input')).toBeInTheDocument();
-      expect(screen.getByTestId('password-input')).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
+
+      expect(screen.getByTestId("email-input")).toBeInTheDocument();
+      expect(screen.getByTestId("password-input")).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument();
     });
 
-    it('should update input values', async () => {
+    it("should update input values", async () => {
       const user = userEvent.setup();
       render(<LoginForm onSubmit={() => {}} />);
-      
-      const emailInput = screen.getByTestId('email-input') as HTMLInputElement;
-      const passwordInput = screen.getByTestId('password-input') as HTMLInputElement;
-      
-      await user.type(emailInput, 'test@example.com');
-      await user.type(passwordInput, 'password123');
-      
-      expect(emailInput.value).toBe('test@example.com');
-      expect(passwordInput.value).toBe('password123');
+
+      const emailInput = screen.getByTestId("email-input") as HTMLInputElement;
+      const passwordInput = screen.getByTestId("password-input") as HTMLInputElement;
+
+      await user.type(emailInput, "test@example.com");
+      await user.type(passwordInput, "password123");
+
+      expect(emailInput.value).toBe("test@example.com");
+      expect(passwordInput.value).toBe("password123");
     });
 
-    it('should call onSubmit with form data', async () => {
+    it("should call onSubmit with form data", async () => {
       const user = userEvent.setup();
       const handleSubmit = vi.fn();
       render(<LoginForm onSubmit={handleSubmit} />);
-      
-      const emailInput = screen.getByTestId('email-input');
-      const passwordInput = screen.getByTestId('password-input');
-      const submitButton = screen.getByRole('button', { name: /login/i });
-      
-      await user.type(emailInput, 'test@example.com');
-      await user.type(passwordInput, 'password123');
+
+      const emailInput = screen.getByTestId("email-input");
+      const passwordInput = screen.getByTestId("password-input");
+      const submitButton = screen.getByRole("button", { name: /login/i });
+
+      await user.type(emailInput, "test@example.com");
+      await user.type(passwordInput, "password123");
       await user.click(submitButton);
-      
+
       await waitFor(() => {
-        expect(handleSubmit).toHaveBeenCalledWith('test@example.com', 'password123');
+        expect(handleSubmit).toHaveBeenCalledWith("test@example.com", "password123");
       });
     });
   });
 });
-

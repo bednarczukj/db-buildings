@@ -98,11 +98,7 @@ function transformBuildingToViewModel(building: BuildingDTO): BuildingDetailsVie
     {
       label: "Status",
       value:
-        building.status === "active"
-          ? "Aktywny"
-          : building.status === "deleted"
-            ? "Usunięty"
-            : building.status || null,
+        building.status === "active" ? "Aktywny" : building.status === "deleted" ? "Usunięty" : building.status || null,
     },
   ];
 

@@ -25,10 +25,7 @@ const terytCodeSchema = z
 /**
  * Schema for TERYT names
  */
-const terytNameSchema = z
-  .string()
-  .min(1, "Name is required")
-  .max(100, "Name must not exceed 100 characters");
+const terytNameSchema = z.string().min(1, "Name is required").max(100, "Name must not exceed 100 characters");
 
 /**
  * Schema for creating/updating a voivodeship
@@ -171,12 +168,11 @@ export const terytSchemas = {
 /**
  * Type map for TERYT inputs
  */
-export type TerytInputs = {
+export interface TerytInputs {
   voivodeships: VoivodeshipInput;
   districts: DistrictInput;
   communities: CommunityInput;
   cities: CityInput;
   city_districts: CityDistrictInput;
   streets: StreetInput;
-};
-
+}

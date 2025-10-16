@@ -50,11 +50,11 @@ function TerytTableContent({ resource, hasWriteAccess, hasAdminAccess }: TerytTa
   };
 
   const handlePageChange = (newPage: number) => {
-    setQuery(prev => ({ ...prev, page: newPage }));
+    setQuery((prev) => ({ ...prev, page: newPage }));
   };
 
   const handlePageSizeChange = (newPageSize: number) => {
-    setQuery(prev => ({ ...prev, page: 1, pageSize: newPageSize }));
+    setQuery((prev) => ({ ...prev, page: 1, pageSize: newPageSize }));
   };
   // Get resource display name
   const getResourceDisplayName = (resource: TerytResource): string => {
@@ -122,9 +122,7 @@ function TerytTableContent({ resource, hasWriteAccess, hasAdminAccess }: TerytTa
         <div className="p-4 border-b">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">{displayName}</h2>
-            {hasWriteAccess && (
-              <Skeleton className="h-9 w-24" />
-            )}
+            {hasWriteAccess && <Skeleton className="h-9 w-24" />}
           </div>
         </div>
         <Table>
@@ -133,9 +131,7 @@ function TerytTableContent({ resource, hasWriteAccess, hasAdminAccess }: TerytTa
               {columns.map((column) => (
                 <TableHead key={column}>{column}</TableHead>
               ))}
-              {(hasWriteAccess || hasAdminAccess) && (
-                <TableHead className="text-right">Akcje</TableHead>
-              )}
+              {(hasWriteAccess || hasAdminAccess) && <TableHead className="text-right">Akcje</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -178,15 +174,16 @@ function TerytTableContent({ resource, hasWriteAccess, hasAdminAccess }: TerytTa
             {columns.map((column) => (
               <TableHead key={column}>{column}</TableHead>
             ))}
-            {(hasWriteAccess || hasAdminAccess) && (
-              <TableHead className="text-right">Akcje</TableHead>
-            )}
+            {(hasWriteAccess || hasAdminAccess) && <TableHead className="text-right">Akcje</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
           {entries.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={columns.length + (hasWriteAccess || hasAdminAccess ? 1 : 0)} className="text-center py-8 text-muted-foreground">
+              <TableCell
+                colSpan={columns.length + (hasWriteAccess || hasAdminAccess ? 1 : 0)}
+                className="text-center py-8 text-muted-foreground"
+              >
                 Brak wpisów w słowniku
               </TableCell>
             </TableRow>
@@ -194,19 +191,13 @@ function TerytTableContent({ resource, hasWriteAccess, hasAdminAccess }: TerytTa
             entries.map((entry) => (
               <TableRow key={entry.code}>
                 {columns.map((_, index) => (
-                  <TableCell key={index}>
-                    {renderCellValue(entry, index, columns)}
-                  </TableCell>
+                  <TableCell key={index}>{renderCellValue(entry, index, columns)}</TableCell>
                 ))}
                 {(hasWriteAccess || hasAdminAccess) && (
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
                       {hasWriteAccess && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleEdit(entry.code)}
-                        >
+                        <Button variant="ghost" size="sm" onClick={() => handleEdit(entry.code)}>
                           <Pencil className="h-4 w-4" />
                         </Button>
                       )}

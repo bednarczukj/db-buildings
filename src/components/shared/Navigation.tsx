@@ -30,10 +30,7 @@ export function Navigation({ user, userRole }: NavigationProps) {
           )}
 
           {hasWriteAccess && (
-            <a
-              href="/providers"
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-            >
+            <a href="/providers" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
               Zarządzaj Dostawcami
             </a>
           )}

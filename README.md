@@ -1,5 +1,7 @@
 # Polish Buildings Database (BBP)
 
+![CI/CD Pipeline](https://github.com/jacekbednarczuk/db-buildings/actions/workflows/ci.yml/badge.svg)
+
 A web application for manual entry, browsing, and management of building data in Poland, including broadband provider information. Includes role-based access control, autocomplete search, and a public REST API.
 
 ---
@@ -9,11 +11,12 @@ A web application for manual entry, browsing, and management of building data in
 1. [Tech Stack](#tech-stack)
 2. [Getting Started Locally](#getting-started-locally)
 3. [Available Scripts](#available-scripts)
-4. [Project Scope](#project-scope)
+4. [CI/CD](#cicd)
+5. [Project Scope](#project-scope)
    - [In Scope (MVP)](#in-scope-mvp)
    - [Out of Scope (MVP)](#out-of-scope-mvp)
-5. [Project Status](#project-status)
-6. [License](#license)
+6. [Project Status](#project-status)
+7. [License](#license)
 
 ---
 
@@ -89,6 +92,42 @@ From the project root, you can run:
 
 - `npm run format`  
   Format all `.json`, `.css`, and `.md` files with Prettier.
+
+---
+
+## CI/CD
+
+This project uses **GitHub Actions** for continuous integration and deployment.
+
+### Pipeline Overview
+
+The CI/CD pipeline automatically runs on:
+- Push to `master` branch
+- Pull requests to `master`
+- Manual trigger via GitHub Actions UI
+
+### What's Tested
+
+- ✅ **Lint & Code Quality** - ESLint and Prettier checks
+- ✅ **Unit Tests** - Vitest with coverage reporting
+- ✅ **Production Build** - Verifies production build succeeds
+
+### Getting Started
+
+To set up CI/CD for your fork:
+
+1. **Quick Start:** Read [`.github/SETUP-GUIDE.md`](.github/SETUP-GUIDE.md) for step-by-step instructions
+2. **Technical Docs:** See [`.github/README.md`](.github/README.md) for detailed documentation
+3. **Architecture:** Check [`.github/ARCHITECTURE.md`](.github/ARCHITECTURE.md) for diagrams and details
+
+### Required Secrets
+
+Add these secrets in GitHub `Settings → Secrets and variables → Actions`:
+
+- `SUPABASE_ANON_KEY` - Your Supabase anonymous key
+- `SUPABASE_SERVICE_ROLE_KEY` - Your Supabase service role key
+
+See [`.github/SETUP-GUIDE.md`](.github/SETUP-GUIDE.md) for more details.
 
 ---
 

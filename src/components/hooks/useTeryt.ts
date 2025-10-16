@@ -5,10 +5,7 @@ import type { TerytListResponse } from "../../lib/schemas/terytSchemas";
 /**
  * Hook for fetching TERYT entries list
  */
-export function useTerytEntries(
-  resource: TerytResource,
-  query: TerytListQueryInput = {}
-) {
+export function useTerytEntries(resource: TerytResource, query: TerytListQueryInput = {}) {
   return useQuery({
     queryKey: ["teryt", resource, query],
     queryFn: async (): Promise<TerytListResponse> => {
@@ -160,4 +157,3 @@ export function useDeleteTerytEntry(resource: TerytResource) {
     },
   });
 }
-

@@ -100,7 +100,10 @@ function ProviderFormContent({ providerId }: ProviderFormProps) {
     isUpdateSuccess,
   } = useProviderForm(providerId);
 
-  const { register, formState: { errors } } = form;
+  const {
+    register,
+    formState: { errors },
+  } = form;
 
   // Handle successful submission
   if (isCreateSuccess) {
@@ -126,92 +129,79 @@ function ProviderFormContent({ providerId }: ProviderFormProps) {
 
   return (
     <div className="space-y-6">
-        {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            {isEditing ? "Edytuj dostawcę" : "Nowy dostawca"}
-          </h1>
-          <p className="text-muted-foreground">
-            {isEditing
-              ? "Zaktualizuj informacje o dostawcy internetowym."
-              : "Dodaj nowego dostawcę internetowego do systemu."}
-          </p>
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">{isEditing ? "Edytuj dostawcę" : "Nowy dostawca"}</h1>
+        <p className="text-muted-foreground">
+          {isEditing
+            ? "Zaktualizuj informacje o dostawcy internetowym."
+            : "Dodaj nowego dostawcę internetowego do systemu."}
+        </p>
+      </div>
+
+      {/* Form */}
+      <form onSubmit={onSubmit} className="space-y-6">
+        {/* Name field */}
+        <div className="space-y-2">
+          <Label htmlFor="name">
+            Nazwa dostawcy <span className="text-destructive">*</span>
+          </Label>
+          <Input
+            id="name"
+            type="text"
+            placeholder="np. Orange, Play, UPC"
+            {...register("name")}
+            className={errors.name ? "border-destructive" : ""}
+          />
+          {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
         </div>
 
-        {/* Form */}
-        <form onSubmit={onSubmit} className="space-y-6">
-          {/* Name field */}
-          <div className="space-y-2">
-            <Label htmlFor="name">
-              Nazwa dostawcy <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="name"
-              type="text"
-              placeholder="np. Orange, Play, UPC"
-              {...register("name")}
-              className={errors.name ? "border-destructive" : ""}
-            />
-            {errors.name && (
-              <p className="text-sm text-destructive">{errors.name.message}</p>
-            )}
-          </div>
+        {/* Technology field */}
+        <div className="space-y-2">
+          <Label htmlFor="technology">
+            Technologia <span className="text-destructive">*</span>
+          </Label>
+          <Input
+            id="technology"
+            type="text"
+            placeholder="np. FTTH, DSL, LTE, 5G"
+            {...register("technology")}
+            className={errors.technology ? "border-destructive" : ""}
+          />
+          {errors.technology && <p className="text-sm text-destructive">{errors.technology.message}</p>}
+        </div>
 
-          {/* Technology field */}
-          <div className="space-y-2">
-            <Label htmlFor="technology">
-              Technologia <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="technology"
-              type="text"
-              placeholder="np. FTTH, DSL, LTE, 5G"
-              {...register("technology")}
-              className={errors.technology ? "border-destructive" : ""}
-            />
-            {errors.technology && (
-              <p className="text-sm text-destructive">{errors.technology.message}</p>
-            )}
-          </div>
+        {/* Bandwidth field */}
+        <div className="space-y-2">
+          <Label htmlFor="bandwidth">
+            Przepustowość (Mbps) <span className="text-destructive">*</span>
+          </Label>
+          <Input
+            id="bandwidth"
+            type="number"
+            placeholder="np. 100, 500, 1000"
+            min="1"
+            max="1000000"
+            {...register("bandwidth", { valueAsNumber: true })}
+            className={errors.bandwidth ? "border-destructive" : ""}
+          />
+          {errors.bandwidth && <p className="text-sm text-destructive">{errors.bandwidth.message}</p>}
+        </div>
 
-          {/* Bandwidth field */}
-          <div className="space-y-2">
-            <Label htmlFor="bandwidth">
-              Przepustowość (Mbps) <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="bandwidth"
-              type="number"
-              placeholder="np. 100, 500, 1000"
-              min="1"
-              max="1000000"
-              {...register("bandwidth", { valueAsNumber: true })}
-              className={errors.bandwidth ? "border-destructive" : ""}
-            />
-            {errors.bandwidth && (
-              <p className="text-sm text-destructive">{errors.bandwidth.message}</p>
-            )}
-          </div>
-
-          {/* Action buttons */}
-          <div className="flex gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => window.history.back()}
-              disabled={isSubmitting}
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Anuluj
-            </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              <Save className="mr-2 h-4 w-4" />
-              {isSubmitting ? "Zapisywanie..." : "Zapisz"}
-            </Button>
-          </div>
-        </form>
-      </div>
-    );
+        {/* Action buttons */}
+        <div className="flex gap-2">
+          <Button type="button" variant="outline" onClick={() => window.history.back()} disabled={isSubmitting}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Anuluj
+          </Button>
+          <Button type="submit" disabled={isSubmitting}>
+            <Save className="mr-2 h-4 w-4" />
+            {isSubmitting ? "Zapisywanie..." : "Zapisz"}
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
 }
 
 /**

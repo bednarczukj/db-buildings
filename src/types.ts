@@ -95,14 +95,14 @@ export type CreateApiKeyCommand = Omit<TablesInsert<"api_keys">, "id" | "created
 
 // USERS
 export type UserProfileDTO = Tables<"profiles">;
-export type CreateUserCommand = {
+export interface CreateUserCommand {
   email: string;
   password: string;
   role: RoleEnum;
-};
-export type UpdateUserCommand = {
+}
+export interface UpdateUserCommand {
   role: RoleEnum;
-};
+}
 
 /**
  * Public API Query DTOs

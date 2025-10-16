@@ -48,7 +48,7 @@ export class TerytService {
     const offset = (page - 1) * pageSize;
 
     // Start building the query
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     let queryBuilder = this.supabase.from(tableName as any).select("*", { count: "exact" });
 
     // Apply parent filter if provided and resource has parent
@@ -74,7 +74,6 @@ export class TerytService {
     }
 
     return {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       data: (data || []) as any[],
       page,
       pageSize,
@@ -89,7 +88,7 @@ export class TerytService {
     const tableName = this.getTableName(resource);
 
     const { data, error } = await this.supabase
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       .from(tableName as any)
       .select("*")
       .eq("code", code)
@@ -113,14 +112,13 @@ export class TerytService {
     const parentColumn = this.getParentColumn(resource);
 
     // Validate parent reference exists if applicable
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     if (parentColumn && (input as any)[parentColumn]) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await this.validateParentReference(resource, (input as any)[parentColumn]);
     }
 
     const { data, error } = await this.supabase
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       .from(tableName as any)
       .insert(input)
       .select()
@@ -147,14 +145,13 @@ export class TerytService {
     const parentColumn = this.getParentColumn(resource);
 
     // Validate parent reference exists if being updated
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     if (parentColumn && (input as any)[parentColumn]) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await this.validateParentReference(resource, (input as any)[parentColumn]);
     }
 
     const { data, error } = await this.supabase
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       .from(tableName as any)
       .update(input)
       .eq("code", code)
@@ -181,7 +178,7 @@ export class TerytService {
     const tableName = this.getTableName(resource);
 
     const { error } = await this.supabase
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       .from(tableName as any)
       .delete()
       .eq("code", code);
@@ -203,7 +200,7 @@ export class TerytService {
 
     const parentTable = this.getTableName(parentResource);
     const { data, error } = await this.supabase
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       .from(parentTable as any)
       .select("code")
       .eq("code", parentCode)
@@ -246,7 +243,7 @@ export class TerytService {
     const tableName = this.getTableName(parentResource);
 
     const { data, error } = await this.supabase
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       .from(tableName as any)
       .select("code, name")
       .order("name");

@@ -32,7 +32,7 @@ export function useBuildings() {
   // Fetch buildings from API
   const fetchBuildings = async (): Promise<BuildingsApiResponseViewModel> => {
     const response = await fetch(`/api/v1/buildings?${queryParams}`, {
-      credentials: 'include',
+      credentials: "include",
     });
 
     if (!response.ok) {

@@ -26,7 +26,7 @@ export function ProvidersTable({
   onDetails,
   canEdit = true,
   canDelete = true,
-  canViewDetails = true
+  canViewDetails = true,
 }: ProvidersTableProps) {
   if (isLoading) {
     return (
@@ -91,23 +91,13 @@ export function ProvidersTable({
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
                   {canViewDetails && onDetails && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onDetails(provider)}
-                      className="h-8 w-8 p-0"
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => onDetails(provider)} className="h-8 w-8 p-0">
                       <Eye className="h-4 w-4" />
                       <span className="sr-only">Szczegóły dostawcy</span>
                     </Button>
                   )}
                   {canEdit && onEdit && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onEdit(provider)}
-                      className="h-8 w-8 p-0"
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => onEdit(provider)} className="h-8 w-8 p-0">
                       <Pencil className="h-4 w-4" />
                       <span className="sr-only">Edytuj dostawcę</span>
                     </Button>
@@ -132,4 +122,3 @@ export function ProvidersTable({
     </div>
   );
 }
-

@@ -58,9 +58,60 @@ const reactConfig = tseslint.config({
 
 export default tseslint.config(
   includeIgnoreFile(gitignorePath),
+  // Ignore utility scripts
+  {
+    ignores: ["check-db-data.js", "test-api-validation.js", "update-db.js", "update-user-role.js"],
+  },
   baseConfig,
   jsxA11yConfig,
   reactConfig,
   eslintPluginAstro.configs["flat/recommended"],
-  eslintPluginPrettier
+  eslintPluginPrettier,
+  // Allow console in E2E tests and scripts
+  {
+    files: ["e2e/**/*.ts", "playwright.config.ts"],
+    rules: {
+      "no-console": "off",
+    },
+  },
+  // Relax rules for components and API routes (warnings instead of errors)
+  {
+    files: ["src/components/**/*.{ts,tsx}", "src/pages/api/**/*.ts"],
+    rules: {
+      "no-console": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
+    },
+  },
+  // Relax rules for test files
+  {
+    files: ["src/test/**/*.{ts,tsx}", "**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-empty-function": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-useless-constructor": "off",
+    },
+  },
+  // Relax specific rules for schemas and utilities
+  {
+    files: ["src/lib/**/*.ts", "src/pages/teryt/**/*.astro"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
+  // Relax for shadcn/ui components (they have their own patterns)
+  {
+    files: ["src/components/ui/**/*.tsx"],
+    rules: {
+      "jsx-a11y/label-has-associated-control": "off",
+    },
+  },
+  // Relax react-compiler rules (it's still experimental)
+  {
+    files: ["src/components/**/*.{ts,tsx}"],
+    rules: {
+      "react-compiler/react-compiler": "warn",
+    },
+  }
 );

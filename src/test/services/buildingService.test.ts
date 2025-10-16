@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { BuildingService } from '../../lib/services/buildingService';
-import type { SupabaseClient, PostgrestResponse } from '@supabase/supabase-js';
-import type { Database } from '../../db/database.types';
-import type { BuildingDTO, CreateBuildingInput } from '../../types';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { BuildingService } from "../../lib/services/buildingService";
+import type { SupabaseClient, PostgrestResponse } from "@supabase/supabase-js";
+import type { Database } from "../../db/database.types";
+import type { BuildingDTO, CreateBuildingInput } from "../../types";
 
 // Mock Supabase client
 const mockSupabase = {
@@ -46,7 +46,7 @@ const mockSupabase = {
   })),
 } as unknown as SupabaseClient<Database>;
 
-describe('BuildingService', () => {
+describe("BuildingService", () => {
   let service: BuildingService;
 
   beforeEach(() => {
@@ -54,19 +54,19 @@ describe('BuildingService', () => {
     service = new BuildingService(mockSupabase);
   });
 
-  describe('getBuildings', () => {
-    it('should fetch buildings with pagination and filters', async () => {
+  describe("getBuildings", () => {
+    it("should fetch buildings with pagination and filters", async () => {
       const mockData: BuildingDTO[] = [
         {
-          id: '1',
-          voivodeship_code: '14',
-          district_code: '1465',
-          community_code: '1465011',
-          city_code: '0918123',
-          building_number: '42A',
+          id: "1",
+          voivodeship_code: "14",
+          district_code: "1465",
+          community_code: "1465011",
+          city_code: "0918123",
+          building_number: "42A",
           provider_id: 1,
-          created_at: '2024-01-01T00:00:00Z',
-          updated_at: '2024-01-01T00:00:00Z',
+          created_at: "2024-01-01T00:00:00Z",
+          updated_at: "2024-01-01T00:00:00Z",
         } as BuildingDTO,
       ];
       const mockResponse: PostgrestResponse<BuildingDTO[]> = {
@@ -74,7 +74,7 @@ describe('BuildingService', () => {
         error: null,
         count: 1,
         status: 200,
-        statusText: 'OK',
+        statusText: "OK",
       };
 
       // Mock filter validations
@@ -83,7 +83,7 @@ describe('BuildingService', () => {
           select: vi.fn().mockReturnValue({
             eq: vi.fn().mockReturnThis(),
             single: vi.fn().mockResolvedValue({
-              data: { code: '14' },
+              data: { code: "14" },
               error: null,
             }),
           }),
@@ -92,7 +92,7 @@ describe('BuildingService', () => {
           select: vi.fn().mockReturnValue({
             eq: vi.fn().mockReturnThis(),
             single: vi.fn().mockResolvedValue({
-              data: { code: '1465' },
+              data: { code: "1465" },
               error: null,
             }),
           }),
@@ -101,7 +101,7 @@ describe('BuildingService', () => {
           select: vi.fn().mockReturnValue({
             eq: vi.fn().mockReturnThis(),
             single: vi.fn().mockResolvedValue({
-              data: { code: '1465011' },
+              data: { code: "1465011" },
               error: null,
             }),
           }),
@@ -110,7 +110,7 @@ describe('BuildingService', () => {
           select: vi.fn().mockReturnValue({
             eq: vi.fn().mockReturnThis(),
             single: vi.fn().mockResolvedValue({
-              data: { code: '0918123' },
+              data: { code: "0918123" },
               error: null,
             }),
           }),
@@ -134,12 +134,12 @@ describe('BuildingService', () => {
       const result = await service.getBuildings({
         page: 1,
         pageSize: 10,
-        voivodeship_code: '14',
-        district_code: '1465',
-        community_code: '1465011',
-        city_code: '0918123',
+        voivodeship_code: "14",
+        district_code: "1465",
+        community_code: "1465011",
+        city_code: "0918123",
         provider_id: 1,
-        status: 'active',
+        status: "active",
       });
 
       expect(result).toEqual({
@@ -150,29 +150,31 @@ describe('BuildingService', () => {
       });
     });
 
-    it('should validate filter references exist', async () => {
+    it("should validate filter references exist", async () => {
       mockSupabase.from.mockReturnValue({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnThis(),
           single: vi.fn().mockResolvedValue({
             data: null,
-            error: { code: 'PGRST116' } as any,
+            error: { code: "PGRST116" } as any,
           }),
         }),
       });
 
-      await expect(service.getBuildings({
-        voivodeship_code: '9999999', // Invalid code
-      })).rejects.toThrow('Invalid voivodeship_code: 9999999');
+      await expect(
+        service.getBuildings({
+          voivodeship_code: "9999999", // Invalid code
+        })
+      ).rejects.toThrow("Invalid voivodeship_code: 9999999");
     });
 
-    it('should throw error for page out of range', async () => {
+    it("should throw error for page out of range", async () => {
       const mockResponse: PostgrestResponse<BuildingDTO[]> = {
         data: [],
         error: null,
         count: 5, // Total 5 records
         status: 200,
-        statusText: 'OK',
+        statusText: "OK",
       };
 
       mockSupabase.from
@@ -180,7 +182,7 @@ describe('BuildingService', () => {
           select: vi.fn().mockReturnValue({
             eq: vi.fn().mockReturnThis(),
             single: vi.fn().mockResolvedValue({
-              data: { code: '14' },
+              data: { code: "14" },
               error: null,
             }),
           }),
@@ -192,20 +194,22 @@ describe('BuildingService', () => {
           }),
         });
 
-      await expect(service.getBuildings({
-        page: 3, // Page 3 with pageSize 10 would be offset 20, but only 5 records exist
-        pageSize: 10,
-        voivodeship_code: '14',
-      })).rejects.toThrow('Page out of range');
+      await expect(
+        service.getBuildings({
+          page: 3, // Page 3 with pageSize 10 would be offset 20, but only 5 records exist
+          pageSize: 10,
+          voivodeship_code: "14",
+        })
+      ).rejects.toThrow("Page out of range");
     });
 
-    it('should handle database errors', async () => {
+    it("should handle database errors", async () => {
       const mockResponse: PostgrestResponse<BuildingDTO[]> = {
         data: null,
-        error: { message: 'Database connection failed' } as any,
+        error: { message: "Database connection failed" } as any,
         count: null,
         status: 500,
-        statusText: 'Internal Server Error',
+        statusText: "Internal Server Error",
       };
 
       mockSupabase.from.mockReturnValue({
@@ -214,18 +218,18 @@ describe('BuildingService', () => {
         }),
       });
 
-      await expect(service.getBuildings({})).rejects.toThrow('Failed to fetch buildings: Database connection failed');
+      await expect(service.getBuildings({})).rejects.toThrow("Failed to fetch buildings: Database connection failed");
     });
   });
 
-  describe('validateFilterReferences', () => {
-    it('should validate all filter references successfully', async () => {
+  describe("validateFilterReferences", () => {
+    it("should validate all filter references successfully", async () => {
       const mockReferences = [
-        { table: 'voivodeships', field: 'code', value: '14' },
-        { table: 'districts', field: 'code', value: '1465' },
-        { table: 'communities', field: 'code', value: '1465011' },
-        { table: 'cities', field: 'code', value: '0918123' },
-        { table: 'providers', field: 'id', value: 1 },
+        { table: "voivodeships", field: "code", value: "14" },
+        { table: "districts", field: "code", value: "1465" },
+        { table: "communities", field: "code", value: "1465011" },
+        { table: "cities", field: "code", value: "0918123" },
+        { table: "providers", field: "id", value: 1 },
       ];
 
       mockReferences.forEach(({ table, field, value }) => {
@@ -240,99 +244,106 @@ describe('BuildingService', () => {
         });
       });
 
-      await expect(service['validateFilterReferences']({
-        voivodeship_code: '14',
-        district_code: '1465',
-        community_code: '1465011',
-        city_code: '0918123',
-        provider_id: 1,
-      })).resolves.toBeUndefined();
+      await expect(
+        service["validateFilterReferences"]({
+          voivodeship_code: "14",
+          district_code: "1465",
+          community_code: "1465011",
+          city_code: "0918123",
+          provider_id: 1,
+        })
+      ).resolves.toBeUndefined();
     });
 
-    it('should throw error for invalid voivodeship code', async () => {
+    it("should throw error for invalid voivodeship code", async () => {
       mockSupabase.from.mockReturnValue({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnThis(),
           single: vi.fn().mockResolvedValue({
             data: null,
-            error: { code: 'PGRST116' } as any,
+            error: { code: "PGRST116" } as any,
           }),
         }),
       });
 
-      await expect(service['validateFilterReferences']({
-        voivodeship_code: '9999999',
-      })).rejects.toThrow('Invalid voivodeship_code: 9999999');
+      await expect(
+        service["validateFilterReferences"]({
+          voivodeship_code: "9999999",
+        })
+      ).rejects.toThrow("Invalid voivodeship_code: 9999999");
     });
 
-    it('should throw error for invalid provider id', async () => {
+    it("should throw error for invalid provider id", async () => {
       mockSupabase.from.mockReturnValue({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnThis(),
           single: vi.fn().mockResolvedValue({
             data: null,
-            error: { code: 'PGRST116' } as any,
+            error: { code: "PGRST116" } as any,
           }),
         }),
       });
 
-      await expect(service['validateFilterReferences']({
-        provider_id: 999,
-      })).rejects.toThrow('Invalid provider_id: 999');
+      await expect(
+        service["validateFilterReferences"]({
+          provider_id: 999,
+        })
+      ).rejects.toThrow("Invalid provider_id: 999");
     });
   });
 
-  describe('createBuilding', () => {
+  describe("createBuilding", () => {
     const validBuildingData: CreateBuildingInput = {
-      voivodeship_code: '14',
-      district_code: '1465',
-      community_code: '1465011',
-      city_code: '0918123',
-      city_district_code: '0950001',
-      street_code: '10270',
-      building_number: '42A',
-      post_code: '00-042',
+      voivodeship_code: "14",
+      district_code: "1465",
+      community_code: "1465011",
+      city_code: "0918123",
+      city_district_code: "0950001",
+      street_code: "10270",
+      building_number: "42A",
+      post_code: "00-042",
       location: {
-        type: 'Point',
+        type: "Point",
         coordinates: [21.0122, 52.2297],
       },
       provider_id: 1,
     };
 
-    it('should create building successfully with all validations', async () => {
+    it("should create building successfully with all validations", async () => {
       const mockBuilding: BuildingDTO = {
-        id: '123',
+        id: "123",
         ...validBuildingData,
-        voivodeship_name: 'Mazowieckie',
-        district_name: 'Warszawa',
-        community_name: 'Warszawa',
-        city_name: 'Warszawa',
-        city_district_name: 'Śródmieście',
-        street_name: 'Marszałkowska',
+        voivodeship_name: "Mazowieckie",
+        district_name: "Warszawa",
+        community_name: "Warszawa",
+        city_name: "Warszawa",
+        city_district_name: "Śródmieście",
+        street_name: "Marszałkowska",
         latitude: 52.2297,
         longitude: 21.0122,
-        status: 'active',
-        created_by: 'user1',
-        updated_by: 'user1',
-        created_at: '2024-01-01T00:00:00Z',
-        updated_at: '2024-01-01T00:00:00Z',
+        status: "active",
+        created_by: "user1",
+        updated_by: "user1",
+        created_at: "2024-01-01T00:00:00Z",
+        updated_at: "2024-01-01T00:00:00Z",
       };
 
       // Mock all the reference validations
       const mockReferences = [
-        { data: { code: '14', name: 'Mazowieckie' } },
-        { data: { code: '1465', name: 'Warszawa' } },
-        { data: { code: '1465011', name: 'Warszawa' } },
-        { data: { code: '0918123', name: 'Warszawa' } },
+        { data: { code: "14", name: "Mazowieckie" } },
+        { data: { code: "1465", name: "Warszawa" } },
+        { data: { code: "1465011", name: "Warszawa" } },
+        { data: { code: "0918123", name: "Warszawa" } },
         { data: { id: 1 } },
-        { data: { code: '0950001', name: 'Śródmieście' } },
-        { data: { code: '10270', name: 'Marszałkowska' } },
+        { data: { code: "0950001", name: "Śródmieście" } },
+        { data: { code: "10270", name: "Marszałkowska" } },
         { data: null }, // No duplicate
         { data: mockBuilding }, // Created building
       ];
 
       mockReferences.forEach((response, index) => {
-        if (index < 8) { // First 8 are validation queries
+        if (index < 8) {
+          // First 8 are validation queries
           mockSupabase.from.mockReturnValueOnce({
             select: vi.fn().mockReturnValue({
               eq: vi.fn().mockReturnThis(),
@@ -343,7 +354,8 @@ describe('BuildingService', () => {
               is: vi.fn().mockReturnThis(),
             }),
           });
-        } else { // Last one is insert
+        } else {
+          // Last one is insert
           mockSupabase.from.mockReturnValueOnce({
             insert: vi.fn().mockReturnValue({
               select: vi.fn().mockReturnValue({
@@ -357,37 +369,36 @@ describe('BuildingService', () => {
         }
       });
 
-      const result = await service.createBuilding(validBuildingData, 'user1');
+      const result = await service.createBuilding(validBuildingData, "user1");
 
       expect(result).toEqual(mockBuilding);
     });
 
-    it('should throw error for invalid voivodeship code', async () => {
+    it("should throw error for invalid voivodeship code", async () => {
       mockSupabase.from.mockReturnValue({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnThis(),
           single: vi.fn().mockResolvedValue({
             data: null,
-            error: { code: 'PGRST116' } as any,
+            error: { code: "PGRST116" } as any,
           }),
         }),
       });
 
-      await expect(service.createBuilding(validBuildingData, 'user1'))
-        .rejects.toThrow('Invalid voivodeship_code: 14');
+      await expect(service.createBuilding(validBuildingData, "user1")).rejects.toThrow("Invalid voivodeship_code: 14");
     });
 
-    it('should throw error for duplicate building', async () => {
+    it("should throw error for duplicate building", async () => {
       // Mock successful validations
       const mockValidations = [
-        { data: { code: '14', name: 'Mazowieckie' } },
-        { data: { code: '1465', name: 'Warszawa' } },
-        { data: { code: '1465011', name: 'Warszawa' } },
-        { data: { code: '0918123', name: 'Warszawa' } },
+        { data: { code: "14", name: "Mazowieckie" } },
+        { data: { code: "1465", name: "Warszawa" } },
+        { data: { code: "1465011", name: "Warszawa" } },
+        { data: { code: "0918123", name: "Warszawa" } },
         { data: { id: 1 } },
-        { data: { code: '0950001', name: 'Śródmieście' } },
-        { data: { code: '10270', name: 'Marszałkowska' } },
-        { data: { id: 'existing-id' } }, // Duplicate found
+        { data: { code: "0950001", name: "Śródmieście" } },
+        { data: { code: "10270", name: "Marszałkowska" } },
+        { data: { id: "existing-id" } }, // Duplicate found
       ];
 
       mockValidations.forEach((response) => {
@@ -403,54 +414,54 @@ describe('BuildingService', () => {
         });
       });
 
-      await expect(service.createBuilding(validBuildingData, 'user1'))
-        .rejects.toThrow('Building already exists');
+      await expect(service.createBuilding(validBuildingData, "user1")).rejects.toThrow("Building already exists");
     });
 
-    it('should handle buildings without street code', async () => {
+    it("should handle buildings without street code", async () => {
       const ruralBuildingData: CreateBuildingInput = {
-        voivodeship_code: '14',
-        district_code: '1417',
-        community_code: '1417052',
-        city_code: '0674922',
-        building_number: '15',
-        post_code: '00-042',
+        voivodeship_code: "14",
+        district_code: "1417",
+        community_code: "1417052",
+        city_code: "0674922",
+        building_number: "15",
+        post_code: "00-042",
         location: {
-          type: 'Point',
+          type: "Point",
           coordinates: [21.0122, 52.2297],
         },
         provider_id: 1,
       };
 
       const mockBuilding: BuildingDTO = {
-        id: '123',
+        id: "123",
         ...ruralBuildingData,
-        voivodeship_name: 'Mazowieckie',
-        district_name: 'Warszawa',
-        community_name: 'Warszawa',
-        city_name: 'Warszawa',
+        voivodeship_name: "Mazowieckie",
+        district_name: "Warszawa",
+        community_name: "Warszawa",
+        city_name: "Warszawa",
         latitude: 52.2297,
         longitude: 21.0122,
-        status: 'active',
-        created_by: 'user1',
-        updated_by: 'user1',
-        created_at: '2024-01-01T00:00:00Z',
-        updated_at: '2024-01-01T00:00:00Z',
+        status: "active",
+        created_by: "user1",
+        updated_by: "user1",
+        created_at: "2024-01-01T00:00:00Z",
+        updated_at: "2024-01-01T00:00:00Z",
       };
 
       // Mock validations (without street and city district)
       const mockValidations = [
-        { data: { code: '14', name: 'Mazowieckie' } },
-        { data: { code: '1417', name: 'Warszawa' } },
-        { data: { code: '1417052', name: 'Warszawa' } },
-        { data: { code: '0674922', name: 'Warszawa' } },
+        { data: { code: "14", name: "Mazowieckie" } },
+        { data: { code: "1417", name: "Warszawa" } },
+        { data: { code: "1417052", name: "Warszawa" } },
+        { data: { code: "0674922", name: "Warszawa" } },
         { data: { id: 1 } },
         { data: null }, // No duplicate
         { data: mockBuilding }, // Created building
       ];
 
       mockValidations.forEach((response, index) => {
-        if (index < 6) { // First 6 are validation queries
+        if (index < 6) {
+          // First 6 are validation queries
           mockSupabase.from.mockReturnValueOnce({
             select: vi.fn().mockReturnValue({
               eq: vi.fn().mockReturnThis(),
@@ -461,7 +472,8 @@ describe('BuildingService', () => {
               is: vi.fn().mockReturnThis(),
             }),
           });
-        } else { // Last one is insert
+        } else {
+          // Last one is insert
           mockSupabase.from.mockReturnValueOnce({
             insert: vi.fn().mockReturnValue({
               select: vi.fn().mockReturnValue({
@@ -475,22 +487,22 @@ describe('BuildingService', () => {
         }
       });
 
-      const result = await service.createBuilding(ruralBuildingData, 'user1');
+      const result = await service.createBuilding(ruralBuildingData, "user1");
 
       expect(result.street_code).toBeUndefined();
       expect(result.city_district_code).toBeUndefined();
     });
   });
 
-  describe('getById', () => {
-    it('should return building by ID', async () => {
+  describe("getById", () => {
+    it("should return building by ID", async () => {
       const mockBuilding: BuildingDTO = {
-        id: '123',
-        voivodeship_code: '14',
-        building_number: '42A',
+        id: "123",
+        voivodeship_code: "14",
+        building_number: "42A",
         provider_id: 1,
-        created_at: '2024-01-01T00:00:00Z',
-        updated_at: '2024-01-01T00:00:00Z',
+        created_at: "2024-01-01T00:00:00Z",
+        updated_at: "2024-01-01T00:00:00Z",
       } as BuildingDTO;
 
       mockSupabase.from.mockReturnValue({
@@ -503,52 +515,52 @@ describe('BuildingService', () => {
         }),
       });
 
-      const result = await service.getById('123');
+      const result = await service.getById("123");
 
       expect(result).toEqual(mockBuilding);
     });
 
-    it('should throw error for non-existent building', async () => {
+    it("should throw error for non-existent building", async () => {
       mockSupabase.from.mockReturnValue({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnThis(),
           single: vi.fn().mockResolvedValue({
             data: null,
-            error: { code: 'PGRST116' } as any,
+            error: { code: "PGRST116" } as any,
           }),
         }),
       });
 
-      await expect(service.getById('non-existent')).rejects.toThrow('Building not found');
+      await expect(service.getById("non-existent")).rejects.toThrow("Building not found");
     });
   });
 
-  describe('updateBuilding', () => {
+  describe("updateBuilding", () => {
     const updateData: CreateBuildingInput = {
-      voivodeship_code: '14',
-      district_code: '1465',
-      community_code: '1465011',
-      city_code: '0918123',
-      building_number: '42B', // Changed
-      post_code: '00-042',
+      voivodeship_code: "14",
+      district_code: "1465",
+      community_code: "1465011",
+      city_code: "0918123",
+      building_number: "42B", // Changed
+      post_code: "00-042",
       location: {
-        type: 'Point',
+        type: "Point",
         coordinates: [21.0122, 52.2297],
       },
       provider_id: 1,
     };
 
-    it('should update building successfully', async () => {
+    it("should update building successfully", async () => {
       const existingBuilding: BuildingDTO = {
-        id: '123',
-        voivodeship_code: '12', // Different from update
-        district_code: '1465',
-        community_code: '1465011',
-        city_code: '0918123',
-        building_number: '42A', // Will be changed
+        id: "123",
+        voivodeship_code: "12", // Different from update
+        district_code: "1465",
+        community_code: "1465011",
+        city_code: "0918123",
+        building_number: "42A", // Will be changed
         provider_id: 1,
-        created_at: '2024-01-01T00:00:00Z',
-        updated_at: '2024-01-01T00:00:00Z',
+        created_at: "2024-01-01T00:00:00Z",
+        updated_at: "2024-01-01T00:00:00Z",
       } as BuildingDTO;
 
       // Mock getById
@@ -567,7 +579,7 @@ describe('BuildingService', () => {
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnThis(),
           single: vi.fn().mockResolvedValue({
-            data: { code: '14', name: 'Mazowieckie' },
+            data: { code: "14", name: "Mazowieckie" },
             error: null,
           }),
         }),
@@ -587,7 +599,7 @@ describe('BuildingService', () => {
       });
 
       // Mock update
-      const updatedBuilding = { ...existingBuilding, voivodeship_code: '14', building_number: '42B' };
+      const updatedBuilding = { ...existingBuilding, voivodeship_code: "14", building_number: "42B" };
       mockSupabase.from.mockReturnValueOnce({
         update: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnThis(),
@@ -600,38 +612,37 @@ describe('BuildingService', () => {
         }),
       });
 
-      const result = await service.updateBuilding('123', updateData, 'user2');
+      const result = await service.updateBuilding("123", updateData, "user2");
 
-      expect(result.voivodeship_code).toBe('14');
-      expect(result.building_number).toBe('42B');
+      expect(result.voivodeship_code).toBe("14");
+      expect(result.building_number).toBe("42B");
     });
 
-    it('should throw error for non-existent building', async () => {
+    it("should throw error for non-existent building", async () => {
       mockSupabase.from.mockReturnValue({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnThis(),
           single: vi.fn().mockResolvedValue({
             data: null,
-            error: { code: 'PGRST116' } as any,
+            error: { code: "PGRST116" } as any,
           }),
         }),
       });
 
-      await expect(service.updateBuilding('non-existent', updateData, 'user1'))
-        .rejects.toThrow('Building not found');
+      await expect(service.updateBuilding("non-existent", updateData, "user1")).rejects.toThrow("Building not found");
     });
 
-    it('should throw error for invalid new voivodeship code', async () => {
+    it("should throw error for invalid new voivodeship code", async () => {
       const existingBuilding: BuildingDTO = {
-        id: '123',
-        voivodeship_code: '12',
-        district_code: '1465',
-        community_code: '1465011',
-        city_code: '0918123',
-        building_number: '42A',
+        id: "123",
+        voivodeship_code: "12",
+        district_code: "1465",
+        community_code: "1465011",
+        city_code: "0918123",
+        building_number: "42A",
         provider_id: 1,
-        created_at: '2024-01-01T00:00:00Z',
-        updated_at: '2024-01-01T00:00:00Z',
+        created_at: "2024-01-01T00:00:00Z",
+        updated_at: "2024-01-01T00:00:00Z",
       } as BuildingDTO;
 
       // Mock getById
@@ -651,31 +662,30 @@ describe('BuildingService', () => {
           eq: vi.fn().mockReturnThis(),
           single: vi.fn().mockResolvedValue({
             data: null,
-            error: { code: 'PGRST116' } as any,
+            error: { code: "PGRST116" } as any,
           }),
         }),
       });
 
-      await expect(service.updateBuilding('123', updateData, 'user1'))
-        .rejects.toThrow('Invalid voivodeship_code: 14');
+      await expect(service.updateBuilding("123", updateData, "user1")).rejects.toThrow("Invalid voivodeship_code: 14");
     });
 
-    it('should handle partial updates correctly', async () => {
+    it("should handle partial updates correctly", async () => {
       const existingBuilding: BuildingDTO = {
-        id: '123',
-        voivodeship_code: '14',
-        district_code: '1465',
-        community_code: '1465011',
-        city_code: '0918123',
-        building_number: '42A',
+        id: "123",
+        voivodeship_code: "14",
+        district_code: "1465",
+        community_code: "1465011",
+        city_code: "0918123",
+        building_number: "42A",
         provider_id: 1,
-        created_at: '2024-01-01T00:00:00Z',
-        updated_at: '2024-01-01T00:00:00Z',
+        created_at: "2024-01-01T00:00:00Z",
+        updated_at: "2024-01-01T00:00:00Z",
       } as BuildingDTO;
 
       const partialUpdate = {
-        building_number: '42C',
-        post_code: '00-043',
+        building_number: "42C",
+        post_code: "00-043",
       };
 
       // Mock getById
@@ -703,7 +713,7 @@ describe('BuildingService', () => {
       });
 
       // Mock update
-      const updatedBuilding = { ...existingBuilding, building_number: '42C', post_code: '00-043' };
+      const updatedBuilding = { ...existingBuilding, building_number: "42C", post_code: "00-043" };
       mockSupabase.from.mockReturnValueOnce({
         update: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnThis(),
@@ -716,12 +726,12 @@ describe('BuildingService', () => {
         }),
       });
 
-      const result = await service.updateBuilding('123', partialUpdate as CreateBuildingInput, 'user2');
+      const result = await service.updateBuilding("123", partialUpdate as CreateBuildingInput, "user2");
 
-      expect(result.building_number).toBe('42C');
-      expect(result.post_code).toBe('00-043');
+      expect(result.building_number).toBe("42C");
+      expect(result.post_code).toBe("00-043");
       // Other fields unchanged
-      expect(result.voivodeship_code).toBe('14');
+      expect(result.voivodeship_code).toBe("14");
     });
   });
 });

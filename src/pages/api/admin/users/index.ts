@@ -45,11 +45,7 @@ export const GET: APIRoute = async ({ locals }) => {
 
     // Check if user has admin role
     const supabase = locals.supabase;
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("user_id", user.id)
-      .single();
+    const { data: profile } = await supabase.from("profiles").select("role").eq("user_id", user.id).single();
 
     if (!profile || profile.role !== "ADMIN") {
       return new Response(JSON.stringify({ error: "Brak uprawnień administratora" }), {
@@ -61,9 +57,7 @@ export const GET: APIRoute = async ({ locals }) => {
     }
 
     // Get all user profiles
-    const { data: profiles, error: profilesError } = await supabase
-      .from("profiles")
-      .select("*");
+    const { data: profiles, error: profilesError } = await supabase.from("profiles").select("*");
 
     if (profilesError) {
       console.error("Error fetching profiles:", profilesError);
@@ -84,10 +78,7 @@ export const GET: APIRoute = async ({ locals }) => {
         try {
           const serviceRoleKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
           if (serviceRoleKey) {
-            const serviceSupabase = createClient(
-              import.meta.env.PUBLIC_SUPABASE_URL,
-              serviceRoleKey
-            );
+            const serviceSupabase = createClient(import.meta.env.PUBLIC_SUPABASE_URL, serviceRoleKey);
 
             const { data: authUser, error: authError } = await serviceSupabase.auth.admin.getUserById(profile.user_id);
 
@@ -98,7 +89,7 @@ export const GET: APIRoute = async ({ locals }) => {
               console.log(`❌ No email found for user ${profile.user_id}`);
               if (authError) {
                 console.log(`   Auth error: ${authError.message} (code: ${authError.status})`);
-                if (authError.message?.includes('not_admin')) {
+                if (authError.message?.includes("not_admin")) {
                   console.log(`   🔑 Service role key may not have admin privileges`);
                   console.log(`   Check: Supabase Dashboard → Settings → API → service_role secret`);
                 }
@@ -177,11 +168,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     // Check if user has admin role
     const supabase = locals.supabase;
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("user_id", user.id)
-      .single();
+    const { data: profile } = await supabase.from("profiles").select("role").eq("user_id", user.id).single();
 
     if (!profile || profile.role !== "ADMIN") {
       return new Response(JSON.stringify({ error: "Brak uprawnień administratora" }), {
@@ -210,15 +197,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
       validatedData = createUserSchema.parse(requestData);
     } catch (error) {
       if (error instanceof ZodError) {
-        return new Response(JSON.stringify({
-          error: "Błąd walidacji danych",
-          details: error.errors
-        }), {
-          status: 400,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        return new Response(
+          JSON.stringify({
+            error: "Błąd walidacji danych",
+            details: error.errors,
+          }),
+          {
+            status: 400,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
       }
       throw error;
     }
@@ -226,21 +216,21 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // Check if service role key is available for creating users
     const serviceRoleKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
     if (!serviceRoleKey) {
-      return new Response(JSON.stringify({
-        error: "Brak uprawnień do tworzenia użytkowników. Skonfiguruj SUPABASE_SERVICE_ROLE_KEY."
-      }), {
-        status: 403,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      return new Response(
+        JSON.stringify({
+          error: "Brak uprawnień do tworzenia użytkowników. Skonfiguruj SUPABASE_SERVICE_ROLE_KEY.",
+        }),
+        {
+          status: 403,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
     }
 
     // Create service client for auth operations
-    const serviceSupabase = createClient(
-      import.meta.env.PUBLIC_SUPABASE_URL,
-      serviceRoleKey
-    );
+    const serviceSupabase = createClient(import.meta.env.PUBLIC_SUPABASE_URL, serviceRoleKey);
 
     // Check if user with this email already exists in auth.users
     const { data: existingUsers, error: listError } = await serviceSupabase.auth.admin.listUsers();
@@ -254,7 +244,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       });
     }
 
-    const emailExists = existingUsers.users.some(u => u.email === validatedData.email);
+    const emailExists = existingUsers.users.some((u) => u.email === validatedData.email);
     if (emailExists) {
       return new Response(JSON.stringify({ error: "Użytkownik z tym adresem email już istnieje" }), {
         status: 409,

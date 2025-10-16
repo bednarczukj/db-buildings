@@ -30,11 +30,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
 
     // Check if user has admin role
     const supabase = locals.supabase;
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("user_id", user.id)
-      .single();
+    const { data: profile } = await supabase.from("profiles").select("role").eq("user_id", user.id).single();
 
     if (!profile || profile.role !== "ADMIN") {
       return new Response(JSON.stringify({ error: "Brak uprawnień administratora" }), {
@@ -77,10 +73,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
     try {
       const serviceRoleKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
       if (serviceRoleKey) {
-        const serviceSupabase = createClient(
-          import.meta.env.PUBLIC_SUPABASE_URL,
-          serviceRoleKey
-        );
+        const serviceSupabase = createClient(import.meta.env.PUBLIC_SUPABASE_URL, serviceRoleKey);
 
         const { data: authUser, error: authError } = await serviceSupabase.auth.admin.getUserById(userProfile.user_id);
         if (!authError && authUser?.user?.email) {
@@ -145,11 +138,7 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
 
     // Check if user has admin role
     const supabase = locals.supabase;
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("user_id", user.id)
-      .single();
+    const { data: profile } = await supabase.from("profiles").select("role").eq("user_id", user.id).single();
 
     if (!profile || profile.role !== "ADMIN") {
       return new Response(JSON.stringify({ error: "Brak uprawnień administratora" }), {
@@ -188,25 +177,24 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
       validatedData = updateUserRoleSchema.parse(requestData);
     } catch (error) {
       if (error instanceof ZodError) {
-        return new Response(JSON.stringify({
-          error: "Błąd walidacji danych",
-          details: error.errors
-        }), {
-          status: 400,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        return new Response(
+          JSON.stringify({
+            error: "Błąd walidacji danych",
+            details: error.errors,
+          }),
+          {
+            status: 400,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
       }
       throw error;
     }
 
     // Check if user exists
-    const { data: existingProfile } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", userId)
-      .single();
+    const { data: existingProfile } = await supabase.from("profiles").select("*").eq("user_id", userId).single();
 
     if (!existingProfile) {
       return new Response(JSON.stringify({ error: "Użytkownik nie został znaleziony" }), {
@@ -290,11 +278,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
 
     // Check if user has admin role
     const supabase = locals.supabase;
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("user_id", user.id)
-      .single();
+    const { data: profile } = await supabase.from("profiles").select("role").eq("user_id", user.id).single();
 
     if (!profile || profile.role !== "ADMIN") {
       return new Response(JSON.stringify({ error: "Brak uprawnień administratora" }), {
@@ -326,11 +310,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
     }
 
     // Check if user exists
-    const { data: existingProfile } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", userId)
-      .single();
+    const { data: existingProfile } = await supabase.from("profiles").select("*").eq("user_id", userId).single();
 
     if (!existingProfile) {
       return new Response(JSON.stringify({ error: "Użytkownik nie został znaleziony" }), {
@@ -342,10 +322,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
     }
 
     // Delete user profile first (due to foreign key constraint)
-    const { error: profileDeleteError } = await supabase
-      .from("profiles")
-      .delete()
-      .eq("user_id", userId);
+    const { error: profileDeleteError } = await supabase.from("profiles").delete().eq("user_id", userId);
 
     if (profileDeleteError) {
       console.error("Error deleting user profile:", profileDeleteError);

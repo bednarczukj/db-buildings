@@ -28,7 +28,7 @@ export function useProviders() {
   // Fetch providers from API
   const fetchProviders = async (): Promise<ProvidersApiResponseViewModel> => {
     const response = await fetch(`/api/v1/providers?${queryParams}`, {
-      credentials: 'include',
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -93,4 +93,3 @@ export function useProviders() {
     refetch,
   };
 }
-

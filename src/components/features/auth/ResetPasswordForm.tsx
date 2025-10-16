@@ -22,7 +22,7 @@ export default function ResetPasswordForm({ onSubmit, isLoading = false, error, 
 
   const form = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
-    mode: 'onTouched',
+    mode: "onTouched",
     defaultValues: {
       password: "",
       confirmPassword: "",

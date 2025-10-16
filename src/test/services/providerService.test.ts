@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ProviderService } from '../../lib/services/providerService';
-import type { SupabaseClient, PostgrestResponse } from '@supabase/supabase-js';
-import type { Database } from '../../db/database.types';
-import type { ProviderDTO, CreateProviderInput, UpdateProviderInput } from '../../types';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { ProviderService } from "../../lib/services/providerService";
+import type { SupabaseClient, PostgrestResponse } from "@supabase/supabase-js";
+import type { Database } from "../../db/database.types";
+import type { ProviderDTO, CreateProviderInput, UpdateProviderInput } from "../../types";
 
 // Mock Supabase client
 const mockSupabase = {
@@ -41,7 +41,7 @@ const mockSupabase = {
   })),
 } as unknown as SupabaseClient<Database>;
 
-describe('ProviderService', () => {
+describe("ProviderService", () => {
   let service: ProviderService;
 
   beforeEach(() => {
@@ -49,16 +49,16 @@ describe('ProviderService', () => {
     service = new ProviderService(mockSupabase);
   });
 
-  describe('getProviders', () => {
-    it('should fetch providers with pagination and filters', async () => {
+  describe("getProviders", () => {
+    it("should fetch providers with pagination and filters", async () => {
       const mockData: ProviderDTO[] = [
         {
           id: 1,
-          name: 'Provider A',
-          technology: 'Fiber',
+          name: "Provider A",
+          technology: "Fiber",
           bandwidth: 100,
-          created_at: '2024-01-01T00:00:00Z',
-          updated_at: '2024-01-01T00:00:00Z',
+          created_at: "2024-01-01T00:00:00Z",
+          updated_at: "2024-01-01T00:00:00Z",
         } as ProviderDTO,
       ];
       const mockResponse: PostgrestResponse<ProviderDTO[]> = {
@@ -66,7 +66,7 @@ describe('ProviderService', () => {
         error: null,
         count: 1,
         status: 200,
-        statusText: 'OK',
+        statusText: "OK",
       };
 
       mockSupabase.from.mockReturnValue({
@@ -79,8 +79,8 @@ describe('ProviderService', () => {
       const result = await service.getProviders({
         page: 1,
         pageSize: 10,
-        search: 'Provider',
-        technology: 'Fiber',
+        search: "Provider",
+        technology: "Fiber",
       });
 
       expect(result).toEqual({
@@ -89,16 +89,16 @@ describe('ProviderService', () => {
         pageSize: 10,
         total: 1,
       });
-      expect(mockSupabase.from).toHaveBeenCalledWith('providers');
+      expect(mockSupabase.from).toHaveBeenCalledWith("providers");
     });
 
-    it('should handle search filter', async () => {
+    it("should handle search filter", async () => {
       const mockResponse: PostgrestResponse<ProviderDTO[]> = {
         data: [],
         error: null,
         count: 0,
         status: 200,
-        statusText: 'OK',
+        statusText: "OK",
       };
 
       const mockQuery = {
@@ -111,19 +111,19 @@ describe('ProviderService', () => {
       });
 
       await service.getProviders({
-        search: 'test provider',
+        search: "test provider",
       });
 
-      expect(mockQuery.ilike).toHaveBeenCalledWith('name', '%test provider%');
+      expect(mockQuery.ilike).toHaveBeenCalledWith("name", "%test provider%");
     });
 
-    it('should handle technology filter', async () => {
+    it("should handle technology filter", async () => {
       const mockResponse: PostgrestResponse<ProviderDTO[]> = {
         data: [],
         error: null,
         count: 0,
         status: 200,
-        statusText: 'OK',
+        statusText: "OK",
       };
 
       const mockQuery = {
@@ -136,19 +136,19 @@ describe('ProviderService', () => {
       });
 
       await service.getProviders({
-        technology: 'DSL',
+        technology: "DSL",
       });
 
-      expect(mockQuery.ilike).toHaveBeenCalledWith('technology', '%DSL%');
+      expect(mockQuery.ilike).toHaveBeenCalledWith("technology", "%DSL%");
     });
 
-    it('should throw error for page out of range', async () => {
+    it("should throw error for page out of range", async () => {
       const mockResponse: PostgrestResponse<ProviderDTO[]> = {
         data: [],
         error: null,
         count: 3, // Total 3 records
         status: 200,
-        statusText: 'OK',
+        statusText: "OK",
       };
 
       mockSupabase.from.mockReturnValue({
@@ -157,19 +157,21 @@ describe('ProviderService', () => {
         }),
       });
 
-      await expect(service.getProviders({
-        page: 3, // Page 3 with pageSize 10 would be offset 20, but only 3 records exist
-        pageSize: 10,
-      })).rejects.toThrow('Page out of range');
+      await expect(
+        service.getProviders({
+          page: 3, // Page 3 with pageSize 10 would be offset 20, but only 3 records exist
+          pageSize: 10,
+        })
+      ).rejects.toThrow("Page out of range");
     });
 
-    it('should handle database errors', async () => {
+    it("should handle database errors", async () => {
       const mockResponse: PostgrestResponse<ProviderDTO[]> = {
         data: null,
-        error: { message: 'Database connection failed' } as any,
+        error: { message: "Database connection failed" } as any,
         count: null,
         status: 500,
-        statusText: 'Internal Server Error',
+        statusText: "Internal Server Error",
       };
 
       mockSupabase.from.mockReturnValue({
@@ -178,23 +180,23 @@ describe('ProviderService', () => {
         }),
       });
 
-      await expect(service.getProviders({})).rejects.toThrow('Failed to fetch providers: Database connection failed');
+      await expect(service.getProviders({})).rejects.toThrow("Failed to fetch providers: Database connection failed");
     });
   });
 
-  describe('createProvider', () => {
+  describe("createProvider", () => {
     const validProviderData: CreateProviderInput = {
-      name: 'New Provider',
-      technology: 'Fiber',
+      name: "New Provider",
+      technology: "Fiber",
       bandwidth: 1000,
     };
 
-    it('should create provider successfully', async () => {
+    it("should create provider successfully", async () => {
       const mockProvider: ProviderDTO = {
         id: 1,
         ...validProviderData,
-        created_at: '2024-01-01T00:00:00Z',
-        updated_at: '2024-01-01T00:00:00Z',
+        created_at: "2024-01-01T00:00:00Z",
+        updated_at: "2024-01-01T00:00:00Z",
       };
 
       // Mock duplicate check (no duplicate)
@@ -203,7 +205,7 @@ describe('ProviderService', () => {
           eq: vi.fn().mockReturnThis(),
           single: vi.fn().mockResolvedValue({
             data: null,
-            error: { code: 'PGRST116' } as any, // No rows returned
+            error: { code: "PGRST116" } as any, // No rows returned
           }),
         }),
       });
@@ -220,12 +222,12 @@ describe('ProviderService', () => {
         }),
       });
 
-      const result = await service.createProvider(validProviderData, 'user1');
+      const result = await service.createProvider(validProviderData, "user1");
 
       expect(result).toEqual(mockProvider);
     });
 
-    it('should throw error for duplicate provider name', async () => {
+    it("should throw error for duplicate provider name", async () => {
       // Mock duplicate check (duplicate found)
       mockSupabase.from.mockReturnValue({
         select: vi.fn().mockReturnValue({
@@ -237,18 +239,19 @@ describe('ProviderService', () => {
         }),
       });
 
-      await expect(service.createProvider(validProviderData, 'user1'))
-        .rejects.toThrow('Provider with this name already exists');
+      await expect(service.createProvider(validProviderData, "user1")).rejects.toThrow(
+        "Provider with this name already exists"
+      );
     });
 
-    it('should handle database unique constraint violation', async () => {
+    it("should handle database unique constraint violation", async () => {
       // Mock duplicate check (no duplicate)
       mockSupabase.from.mockReturnValueOnce({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnThis(),
           single: vi.fn().mockResolvedValue({
             data: null,
-            error: { code: 'PGRST116' } as any,
+            error: { code: "PGRST116" } as any,
           }),
         }),
       });
@@ -259,24 +262,25 @@ describe('ProviderService', () => {
           select: vi.fn().mockReturnValue({
             single: vi.fn().mockResolvedValue({
               data: null,
-              error: { code: '23505' } as any, // unique_violation
+              error: { code: "23505" } as any, // unique_violation
             }),
           }),
         }),
       });
 
-      await expect(service.createProvider(validProviderData, 'user1'))
-        .rejects.toThrow('Provider with this name already exists');
+      await expect(service.createProvider(validProviderData, "user1")).rejects.toThrow(
+        "Provider with this name already exists"
+      );
     });
 
-    it('should handle other database errors during creation', async () => {
+    it("should handle other database errors during creation", async () => {
       // Mock duplicate check (no duplicate)
       mockSupabase.from.mockReturnValueOnce({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnThis(),
           single: vi.fn().mockResolvedValue({
             data: null,
-            error: { code: 'PGRST116' } as any,
+            error: { code: "PGRST116" } as any,
           }),
         }),
       });
@@ -287,26 +291,27 @@ describe('ProviderService', () => {
           select: vi.fn().mockReturnValue({
             single: vi.fn().mockResolvedValue({
               data: null,
-              error: { message: 'Insert failed' } as any,
+              error: { message: "Insert failed" } as any,
             }),
           }),
         }),
       });
 
-      await expect(service.createProvider(validProviderData, 'user1'))
-        .rejects.toThrow('Failed to create provider: Insert failed');
+      await expect(service.createProvider(validProviderData, "user1")).rejects.toThrow(
+        "Failed to create provider: Insert failed"
+      );
     });
   });
 
-  describe('getById', () => {
-    it('should return provider by ID', async () => {
+  describe("getById", () => {
+    it("should return provider by ID", async () => {
       const mockProvider: ProviderDTO = {
         id: 1,
-        name: 'Provider A',
-        technology: 'Fiber',
+        name: "Provider A",
+        technology: "Fiber",
         bandwidth: 100,
-        created_at: '2024-01-01T00:00:00Z',
-        updated_at: '2024-01-01T00:00:00Z',
+        created_at: "2024-01-01T00:00:00Z",
+        updated_at: "2024-01-01T00:00:00Z",
       };
 
       mockSupabase.from.mockReturnValue({
@@ -324,36 +329,36 @@ describe('ProviderService', () => {
       expect(result).toEqual(mockProvider);
     });
 
-    it('should throw error for non-existent provider', async () => {
+    it("should throw error for non-existent provider", async () => {
       mockSupabase.from.mockReturnValue({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnThis(),
           single: vi.fn().mockResolvedValue({
             data: null,
-            error: { code: 'PGRST116' } as any,
+            error: { code: "PGRST116" } as any,
           }),
         }),
       });
 
-      await expect(service.getById(999)).rejects.toThrow('Provider not found');
+      await expect(service.getById(999)).rejects.toThrow("Provider not found");
     });
   });
 
-  describe('updateProvider', () => {
+  describe("updateProvider", () => {
     const updateData: UpdateProviderInput = {
-      name: 'Updated Provider',
-      technology: 'DSL',
+      name: "Updated Provider",
+      technology: "DSL",
       bandwidth: 50,
     };
 
-    it('should update provider successfully', async () => {
+    it("should update provider successfully", async () => {
       const existingProvider: ProviderDTO = {
         id: 1,
-        name: 'Old Provider',
-        technology: 'Fiber',
+        name: "Old Provider",
+        technology: "Fiber",
         bandwidth: 100,
-        created_at: '2024-01-01T00:00:00Z',
-        updated_at: '2024-01-01T00:00:00Z',
+        created_at: "2024-01-01T00:00:00Z",
+        updated_at: "2024-01-01T00:00:00Z",
       };
 
       // Mock getById
@@ -374,7 +379,7 @@ describe('ProviderService', () => {
           neq: vi.fn().mockReturnThis(),
           single: vi.fn().mockResolvedValue({
             data: null,
-            error: { code: 'PGRST116' } as any,
+            error: { code: "PGRST116" } as any,
           }),
         }),
       });
@@ -393,21 +398,21 @@ describe('ProviderService', () => {
         }),
       });
 
-      const result = await service.updateProvider(1, updateData, 'user2');
+      const result = await service.updateProvider(1, updateData, "user2");
 
-      expect(result.name).toBe('Updated Provider');
-      expect(result.technology).toBe('DSL');
+      expect(result.name).toBe("Updated Provider");
+      expect(result.technology).toBe("DSL");
       expect(result.bandwidth).toBe(50);
     });
 
-    it('should throw error for name conflict', async () => {
+    it("should throw error for name conflict", async () => {
       const existingProvider: ProviderDTO = {
         id: 1,
-        name: 'Old Provider',
-        technology: 'Fiber',
+        name: "Old Provider",
+        technology: "Fiber",
         bandwidth: 100,
-        created_at: '2024-01-01T00:00:00Z',
-        updated_at: '2024-01-01T00:00:00Z',
+        created_at: "2024-01-01T00:00:00Z",
+        updated_at: "2024-01-01T00:00:00Z",
       };
 
       // Mock getById
@@ -433,18 +438,19 @@ describe('ProviderService', () => {
         }),
       });
 
-      await expect(service.updateProvider(1, { name: 'Conflicting Name' }, 'user1'))
-        .rejects.toThrow('Provider with this name already exists');
+      await expect(service.updateProvider(1, { name: "Conflicting Name" }, "user1")).rejects.toThrow(
+        "Provider with this name already exists"
+      );
     });
 
-    it('should handle partial updates', async () => {
+    it("should handle partial updates", async () => {
       const existingProvider: ProviderDTO = {
         id: 1,
-        name: 'Provider A',
-        technology: 'Fiber',
+        name: "Provider A",
+        technology: "Fiber",
         bandwidth: 100,
-        created_at: '2024-01-01T00:00:00Z',
-        updated_at: '2024-01-01T00:00:00Z',
+        created_at: "2024-01-01T00:00:00Z",
+        updated_at: "2024-01-01T00:00:00Z",
       };
 
       const partialUpdate = { bandwidth: 200 };
@@ -474,20 +480,20 @@ describe('ProviderService', () => {
         }),
       });
 
-      const result = await service.updateProvider(1, partialUpdate, 'user2');
+      const result = await service.updateProvider(1, partialUpdate, "user2");
 
       expect(result.bandwidth).toBe(200);
-      expect(result.name).toBe('Provider A'); // Unchanged
+      expect(result.name).toBe("Provider A"); // Unchanged
     });
 
-    it('should handle database unique constraint violation', async () => {
+    it("should handle database unique constraint violation", async () => {
       const existingProvider: ProviderDTO = {
         id: 1,
-        name: 'Old Provider',
-        technology: 'Fiber',
+        name: "Old Provider",
+        technology: "Fiber",
         bandwidth: 100,
-        created_at: '2024-01-01T00:00:00Z',
-        updated_at: '2024-01-01T00:00:00Z',
+        created_at: "2024-01-01T00:00:00Z",
+        updated_at: "2024-01-01T00:00:00Z",
       };
 
       // Mock getById
@@ -508,7 +514,7 @@ describe('ProviderService', () => {
           neq: vi.fn().mockReturnThis(),
           single: vi.fn().mockResolvedValue({
             data: null,
-            error: { code: 'PGRST116' } as any,
+            error: { code: "PGRST116" } as any,
           }),
         }),
       });
@@ -520,26 +526,27 @@ describe('ProviderService', () => {
           select: vi.fn().mockReturnValue({
             single: vi.fn().mockResolvedValue({
               data: null,
-              error: { code: '23505' } as any, // unique_violation
+              error: { code: "23505" } as any, // unique_violation
             }),
           }),
         }),
       });
 
-      await expect(service.updateProvider(1, updateData, 'user1'))
-        .rejects.toThrow('Provider with this name already exists');
+      await expect(service.updateProvider(1, updateData, "user1")).rejects.toThrow(
+        "Provider with this name already exists"
+      );
     });
   });
 
-  describe('deleteProvider', () => {
-    it('should delete provider successfully', async () => {
+  describe("deleteProvider", () => {
+    it("should delete provider successfully", async () => {
       const existingProvider: ProviderDTO = {
         id: 1,
-        name: 'Provider A',
-        technology: 'Fiber',
+        name: "Provider A",
+        technology: "Fiber",
         bandwidth: 100,
-        created_at: '2024-01-01T00:00:00Z',
-        updated_at: '2024-01-01T00:00:00Z',
+        created_at: "2024-01-01T00:00:00Z",
+        updated_at: "2024-01-01T00:00:00Z",
       };
 
       // Mock getById
@@ -574,17 +581,17 @@ describe('ProviderService', () => {
         }),
       });
 
-      await expect(service.deleteProvider(1, 'user1')).resolves.toBeUndefined();
+      await expect(service.deleteProvider(1, "user1")).resolves.toBeUndefined();
     });
 
-    it('should throw error when provider is referenced by buildings', async () => {
+    it("should throw error when provider is referenced by buildings", async () => {
       const existingProvider: ProviderDTO = {
         id: 1,
-        name: 'Provider A',
-        technology: 'Fiber',
+        name: "Provider A",
+        technology: "Fiber",
         bandwidth: 100,
-        created_at: '2024-01-01T00:00:00Z',
-        updated_at: '2024-01-01T00:00:00Z',
+        created_at: "2024-01-01T00:00:00Z",
+        updated_at: "2024-01-01T00:00:00Z",
       };
 
       // Mock getById
@@ -603,29 +610,30 @@ describe('ProviderService', () => {
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnThis(),
           limit: vi.fn().mockResolvedValue({
-            data: [{ id: 'building-1' }],
+            data: [{ id: "building-1" }],
             error: null,
           }),
         }),
       });
 
-      await expect(service.deleteProvider(1, 'user1'))
-        .rejects.toThrow('Cannot delete provider that is referenced by buildings');
+      await expect(service.deleteProvider(1, "user1")).rejects.toThrow(
+        "Cannot delete provider that is referenced by buildings"
+      );
     });
 
-    it('should throw error for non-existent provider', async () => {
+    it("should throw error for non-existent provider", async () => {
       // Mock getById (provider not found)
       mockSupabase.from.mockReturnValue({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnThis(),
           single: vi.fn().mockResolvedValue({
             data: null,
-            error: { code: 'PGRST116' } as any,
+            error: { code: "PGRST116" } as any,
           }),
         }),
       });
 
-      await expect(service.deleteProvider(999, 'user1')).rejects.toThrow('Provider not found');
+      await expect(service.deleteProvider(999, "user1")).rejects.toThrow("Provider not found");
     });
   });
 });

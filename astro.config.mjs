@@ -15,7 +15,7 @@ export default defineConfig({
   },
   integrations: [react()],
   vite: {
-    // @ts-ignore - Tailwind Vite plugin has type compatibility issues with Astro
+    // @ts-expect-error - Tailwind Vite plugin has type compatibility issues with Astro
     plugins: [tailwindcss()],
   },
 });

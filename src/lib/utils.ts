@@ -14,11 +14,7 @@ export async function userHasRole(user: any, requiredRole: string, supabase: any
   if (!user) return false;
 
   try {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("user_id", user.id)
-      .single();
+    const { data: profile } = await supabase.from("profiles").select("role").eq("user_id", user.id).single();
 
     const userRole = profile?.role;
     return userRole === requiredRole || userRole === "ADMIN";

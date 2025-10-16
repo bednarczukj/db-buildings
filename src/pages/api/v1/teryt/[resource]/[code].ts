@@ -166,7 +166,11 @@ export const PUT: APIRoute = async ({ request, params, locals }) => {
 
     // Create service instance and update entry
     const terytService = new TerytService(supabase);
-    const updatedEntry = await terytService.updateTerytEntry(resource as (typeof TERYT_RESOURCES)[number], code, validatedData);
+    const updatedEntry = await terytService.updateTerytEntry(
+      resource as (typeof TERYT_RESOURCES)[number],
+      code,
+      validatedData
+    );
 
     // Return successful response
     return new Response(JSON.stringify(updatedEntry), {

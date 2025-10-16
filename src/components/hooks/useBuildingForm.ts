@@ -49,7 +49,7 @@ export function useBuildingForm(buildingId?: string) {
   // Initialize form with react-hook-form
   const form = useForm<BuildingFormInput>({
     resolver: zodResolver(buildingFormSchema),
-    mode: 'onBlur',
+    mode: "onBlur",
     defaultValues: {
       voivodeship_code: "",
       district_code: "",

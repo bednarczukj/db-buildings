@@ -2,7 +2,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { createProviderSchema, updateProviderSchema, type CreateProviderInput, type UpdateProviderInput } from "@/lib/schemas/providersSchemas";
+import {
+  createProviderSchema,
+  updateProviderSchema,
+  type CreateProviderInput,
+  type UpdateProviderInput,
+} from "@/lib/schemas/providersSchemas";
 import type { ProviderDTO } from "@/types";
 
 /**
@@ -60,7 +65,7 @@ export function useProviderForm(providerId?: number) {
     queryKey: ["provider", providerId],
     queryFn: async () => {
       const response = await fetch(`/api/v1/providers/${providerId}`, {
-        credentials: 'include',
+        credentials: "include",
       });
 
       if (!response.ok) {
@@ -92,7 +97,7 @@ export function useProviderForm(providerId?: number) {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify(transformCreateToCommand(data)),
       });
 
@@ -120,7 +125,7 @@ export function useProviderForm(providerId?: number) {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify(transformUpdateToCommand(data)),
       });
 
@@ -176,4 +181,3 @@ export function useProviderForm(providerId?: number) {
     provider,
   };
 }
-

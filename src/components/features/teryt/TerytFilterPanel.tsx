@@ -87,11 +87,7 @@ function TerytFilterPanelContent({ resource, onFiltersChange }: TerytFilterPanel
         {/* Parent filter dropdown */}
         {parentResource && (
           <div className="min-w-[200px]">
-            <Select
-              value={localParentCode}
-              onValueChange={setLocalParentCode}
-              disabled={isLoadingParents}
-            >
+            <Select value={localParentCode} onValueChange={setLocalParentCode} disabled={isLoadingParents}>
               <SelectTrigger>
                 <SelectValue placeholder={`Wszystkie ${getParentDisplayName(parentResource).toLowerCase()}`} />
               </SelectTrigger>
@@ -130,14 +126,13 @@ function TerytFilterPanelContent({ resource, onFiltersChange }: TerytFilterPanel
             <span>Aktywne filtry:</span>
             {localSearch.trim() && (
               <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                Nazwa: "{localSearch.trim()}"
+                Nazwa: &quot;{localSearch.trim()}&quot;
               </span>
             )}
             {localParentCode && parentResource && (
               <span className="bg-green-100 text-green-800 px-2 py-1 rounded">
-                {getParentDisplayName(parentResource)}: {
-                  parentOptions.find(p => p.code === localParentCode)?.name || localParentCode
-                }
+                {getParentDisplayName(parentResource)}:{" "}
+                {parentOptions.find((p) => p.code === localParentCode)?.name || localParentCode}
               </span>
             )}
           </div>
