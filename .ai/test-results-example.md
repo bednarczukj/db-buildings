@@ -258,15 +258,15 @@ curl -X GET "http://localhost:3000/api/v1/buildings/550e8400-e29b-41d4-a716-4466
 
 ## 📊 Podsumowanie testów
 
-| Test | Scenariusz            | Expected Status | Walidacja |
-| ---- | --------------------- | --------------- | --------- |
-| 1    | ID=550e8400...001 (exists) | 200 OK          | ✅        |
-| 2    | ID=550e8400...002 (exists) | 200 OK          | ✅        |
-| 3    | ID=550e8400...003 (deleted) | 200 OK          | ✅        |
-| 4    | ID=550e8400...000 (not exists) | 404 Not Found   | ✅        |
-| 5    | ID=abc (not UUID)     | 400 Bad Request | ✅        |
-| 6    | ID=123 (too short)    | 400 Bad Request | ✅        |
-| 7    | ID=550e8400...000 (no hyphens) | 400 Bad Request | ✅        |
+| Test | Scenariusz                        | Expected Status | Walidacja |
+| ---- | --------------------------------- | --------------- | --------- |
+| 1    | ID=550e8400...001 (exists)        | 200 OK          | ✅        |
+| 2    | ID=550e8400...002 (exists)        | 200 OK          | ✅        |
+| 3    | ID=550e8400...003 (deleted)       | 200 OK          | ✅        |
+| 4    | ID=550e8400...000 (not exists)    | 404 Not Found   | ✅        |
+| 5    | ID=abc (not UUID)                 | 400 Bad Request | ✅        |
+| 6    | ID=123 (too short)                | 400 Bad Request | ✅        |
+| 7    | ID=550e8400...000 (no hyphens)    | 400 Bad Request | ✅        |
 | 8    | ID=550e8400...00g (invalid chars) | 400 Bad Request | ✅        |
 
 ---

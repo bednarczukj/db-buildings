@@ -5,6 +5,7 @@
 **Typ aplikacji**: Webowa baza danych budynków w Polsce z systemem zarządzania danymi geograficznymi TERYT i informacjami o dostawcach szerokopasmowych.
 
 **Główne funkcjonalności**:
+
 - **Zarządzanie budynkami**: CRUD operacje z walidacją współrzędnych geograficznych i kodów TERYT
 - **Słowniki TERYT**: Zarządzanie hierarchią administracyjną Polski (województwa → powiaty → gminy → miasta → ulice)
 - **Zarządzanie dostawcami**: Katalog dostawców internetu z technologiami i przepustowością
@@ -18,12 +19,14 @@
 ## 2. Strategia testowania
 
 ### Podejście ogólne
+
 - **Test-Driven Development (TDD)** dla nowych funkcjonalności
 - **Behavior-Driven Development (BDD)** dla testów integracyjnych i akceptacyjnych
 - **Risk-Based Testing** z priorytetami opartymi na krytyczności biznesowej
 - **Progressive Testing** - od testów jednostkowych do testów end-to-end
 
 ### Uwagi specyficzne dla stosu technologicznego
+
 - **Astro 5 + React 19**: Testowanie komponentów SSR/SSG oraz interaktywnych komponentów React
 - **TypeScript 5**: Silne typowanie wymaga testów typów i guard clauses
 - **Supabase**: Testowanie integracji z bazą danych, RLS policies, auth
@@ -38,6 +41,7 @@
 **Lokalizacja**: `src/lib/tests/unit/`
 
 **Obszary pokrycia**:
+
 - **Serwisy biznesowe** (`src/lib/services/`):
   - `BuildingService`: walidacja filtrów, paginacja, obsługa błędów
   - `ProviderService`: operacje CRUD, wyszukiwanie
@@ -58,33 +62,34 @@
   - Form components: walidacja, stan loading
 
 **Przykłady testów**:
+
 ```typescript
 // buildingService.test.ts
-describe('BuildingService.getBuildings', () => {
-  it('should validate filter references before querying', async () => {
+describe("BuildingService.getBuildings", () => {
+  it("should validate filter references before querying", async () => {
     // Test walidacji referencji TERYT
   });
 
-  it('should handle pagination correctly', async () => {
+  it("should handle pagination correctly", async () => {
     // Test paginacji i offset calculations
   });
 
-  it('should throw error for invalid TERYT codes', async () => {
+  it("should throw error for invalid TERYT codes", async () => {
     // Test błędnych kodów TERYT
   });
 });
 
 // buildingSchemas.test.ts
-describe('createBuildingSchema', () => {
-  it('should accept valid Polish coordinates', () => {
+describe("createBuildingSchema", () => {
+  it("should accept valid Polish coordinates", () => {
     // Test granic geograficznych Polski
   });
 
-  it('should reject coordinates outside Poland', () => {
+  it("should reject coordinates outside Poland", () => {
     // Test walidacji zasięgu geograficznego
   });
 
-  it('should validate TERYT code formats', () => {
+  it("should validate TERYT code formats", () => {
     // Test formatów kodów (2, 4, 7 cyfr)
   });
 });
@@ -96,6 +101,7 @@ describe('createBuildingSchema', () => {
 **Lokalizacja**: `src/lib/tests/integration/`
 
 **Obszary pokrycia**:
+
 - **API Endpoints** (`src/pages/api/`):
   - `GET /api/v1/buildings`: filtrowanie, paginacja, sortowanie
   - `POST /api/v1/buildings`: tworzenie z walidacją duplikatów
@@ -113,18 +119,19 @@ describe('createBuildingSchema', () => {
   - Session management
 
 **Przykłady testów**:
+
 ```typescript
 // api/buildings.integration.test.ts
-describe('Buildings API', () => {
-  it('should create building with valid TERYT codes', async () => {
+describe("Buildings API", () => {
+  it("should create building with valid TERYT codes", async () => {
     // End-to-end tworzenie budynku
   });
 
-  it('should reject duplicate building numbers', async () => {
+  it("should reject duplicate building numbers", async () => {
     // Test unikalności adresów
   });
 
-  it('should filter by voivodeship with pagination', async () => {
+  it("should filter by voivodeship with pagination", async () => {
     // Test filtrowania i paginacji
   });
 });
@@ -136,6 +143,7 @@ describe('Buildings API', () => {
 **Lokalizacja**: `e2e/tests/`
 
 **Scenariusze testowe**:
+
 - **Workflow zarządzania budynkami**:
   - Tworzenie nowego budynku (formularz + mapa)
   - Edycja istniejącego budynku
@@ -159,17 +167,18 @@ describe('Buildings API', () => {
   - API key rotation
 
 **Przykłady testów**:
+
 ```typescript
 // e2e/buildings.spec.ts
-test('user can create building with valid data', async ({ page }) => {
+test("user can create building with valid data", async ({ page }) => {
   // Kompletny workflow tworzenia budynku
 });
 
-test('read-only user cannot access admin functions', async ({ page }) => {
+test("read-only user cannot access admin functions", async ({ page }) => {
   // Test autoryzacji
 });
 
-test('map displays building markers correctly', async ({ page }) => {
+test("map displays building markers correctly", async ({ page }) => {
   // Test integracji z Leaflet
 });
 ```
@@ -178,11 +187,13 @@ test('map displays building markers correctly', async ({ page }) => {
 
 **Narzędzia**: Lighthouse CI, WebPageTest, custom scripts
 **Metryki**:
+
 - **Frontend**: Core Web Vitals (FCP, LCP, CLS, FID)
 - **API**: Response time < 500ms, throughput
 - **Database**: Query execution time, connection pooling
 
 **Scenariusze**:
+
 - Lista budynków z 1000+ rekordami
 - Autocomplete search z debounce
 - Map rendering z wieloma markerami
@@ -192,6 +203,7 @@ test('map displays building markers correctly', async ({ page }) => {
 
 **Narzędzia**: OWASP ZAP, manual testing
 **Obszary**:
+
 - **Autentyfikacja**: Brute force protection, session management
 - **Autoryzacja**: Privilege escalation, IDOR vulnerabilities
 - **API Security**: API key exposure, rate limiting bypass
@@ -206,6 +218,7 @@ test('map displays building markers correctly', async ({ page }) => {
 ## 4. Obszary priorytetowe
 
 ### Krytyczne (P1) - Wymagane przed releasem
+
 1. **Walidacja danych geograficznych**: Współrzędne w granicach Polski, format GeoJSON
 2. **Walidacja kodów TERYT**: Poprawne formaty i relacje hierarchiczne
 3. **Autentyfikacja Supabase**: Login, rejestracja, zarządzanie sesjami
@@ -214,6 +227,7 @@ test('map displays building markers correctly', async ({ page }) => {
 6. **API pagination**: Prawidłowe offset calculations i meta dane
 
 ### Wysoki priorytet (P2) - Pierwsze iteracje
+
 1. **Formularze React**: Walidacja, error handling, loading states
 2. **Autocomplete search**: Debounce, API integration, UX
 3. **Audit logging**: Wszystkie zmiany są logowane
@@ -221,6 +235,7 @@ test('map displays building markers correctly', async ({ page }) => {
 5. **Error boundaries**: Graceful error handling w UI
 
 ### Średni priorytet (P3) - Poprawa jakości
+
 1. **Performance**: Optymalizacja zapytań, lazy loading
 2. **Accessibility**: WCAG compliance
 3. **Internationalization**: Tłumaczenia interfejsu
@@ -229,6 +244,7 @@ test('map displays building markers correctly', async ({ page }) => {
 ## 5. Narzędzia testowe
 
 ### Test Frameworks & Libraries
+
 ```json
 {
   "devDependencies": {
@@ -246,12 +262,14 @@ test('map displays building markers correctly', async ({ page }) => {
 ```
 
 ### Konfiguracja
+
 - **Vitest**: `vitest.config.ts` z setup dla React Testing Library
 - **Playwright**: `playwright.config.ts` z browser configurations
 - **Husky**: Pre-commit hooks dla lint + test
 - **GitHub Actions**: CI/CD pipeline z test execution
 
 ### Środowiska testowe
+
 - **Unit/Integration**: Node.js environment z mocked Supabase
 - **E2E**: Full browser environment z test database
 - **Performance**: Staging environment z production-like data
@@ -259,30 +277,35 @@ test('map displays building markers correctly', async ({ page }) => {
 ## 6. Plan wykonania
 
 ### Faza 1: Podstawowa infrastruktura (1-2 tygodnie)
+
 1. Skonfigurować Vitest + React Testing Library
 2. Stworzyć test utils i mocks dla Supabase
 3. Zaimplementować testy jednostkowe dla schematów Zod
 4. CI/CD pipeline z podstawowymi testami
 
 ### Faza 2: Core functionality (2-3 tygodnie)
+
 1. Testy jednostkowe dla wszystkich serwisów
 2. Testy integracyjne dla API endpoints
 3. Testy komponentów React (forms, tables, maps)
 4. Testy autentyfikacji i autoryzacji
 
 ### Faza 3: End-to-end testing (1-2 tygodnie)
+
 1. Skonfigurować Playwright
 2. Zaimplementować critical user journeys
 3. Testy role-based access
 4. Cross-browser testing
 
 ### Faza 4: Quality assurance (1 tydzień)
+
 1. Performance testing
 2. Security testing
 3. Accessibility testing
 4. Test data generation
 
 ### Faza 5: Monitoring i utrzymanie
+
 1. Test coverage reporting
 2. Automated regression testing
 3. Performance monitoring
@@ -291,24 +314,28 @@ test('map displays building markers correctly', async ({ page }) => {
 ## 7. Kryteria akceptacji
 
 ### Test Coverage
+
 - **Unit tests**: Min. 80% coverage dla serwisów i schematów
 - **Integration tests**: Wszystkie API endpoints pokryte
 - **E2E tests**: Wszystkie critical user journeys
 - **Performance**: Core Web Vitals w zielonym zakresie
 
 ### Quality Gates
+
 - **Linting**: Zero errors, warnings reviewed
 - **TypeScript**: Strict mode, no `any` types
 - **Security**: Brak high/critical vulnerabilities
 - **Accessibility**: WCAG 2.1 AA compliance
 
 ### Success Metrics
+
 - **Reliability**: < 0.1% API error rate
 - **Performance**: API response time < 500ms (p95)
 - **Security**: Zero authentication bypasses
 - **Usability**: Form completion rate > 95%
 
 ### Go-live Checklist
+
 - [ ] Wszystkie P1 testy pass
 - [ ] Security audit completed
 - [ ] Performance benchmarks met

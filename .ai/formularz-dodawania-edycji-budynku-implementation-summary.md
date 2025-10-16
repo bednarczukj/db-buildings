@@ -12,11 +12,13 @@ Zaimplementowano w pełni funkcjonalny formularz do dodawania i edycji budynków
 ### 1. Routing (Strony Astro)
 
 #### `/src/pages/buildings/new.astro`
+
 - Strona do tworzenia nowego budynku
 - Renderuje komponent `BuildingForm` bez `buildingId`
 - Używa `client:load` dla pełnej interaktywności
 
 #### `/src/pages/buildings/[id]/edit.astro`
+
 - Strona do edycji istniejącego budynku
 - Renderuje komponent `BuildingForm` z `buildingId` z parametru URL
 - Używa `client:load` dla pełnej interaktywności
@@ -24,7 +26,9 @@ Zaimplementowano w pełni funkcjonalny formularz do dodawania i edycji budynków
 ### 2. Typy i schematy
 
 #### `/src/types.ts`
+
 Dodano nowy typ:
+
 ```typescript
 export interface BuildingFormViewModel {
   voivodeship_code: string;
@@ -42,7 +46,9 @@ export interface BuildingFormViewModel {
 ```
 
 #### `/src/lib/schemas/buildingFormSchemas.ts`
+
 Nowy plik ze schematem walidacji Zod:
+
 - `buildingFormSchema` - pełna walidacja wszystkich pól formularza
 - Walidacja długości kodów TERYT (7 znaków)
 - Walidacja formatu kodu pocztowego (XX-XXX)
@@ -54,9 +60,11 @@ Nowy plik ze schematem walidacji Zod:
 ### 3. Custom Hook
 
 #### `/src/components/hooks/useBuildingForm.ts`
+
 Kompleksowy hook zarządzający stanem formularza:
 
 **Funkcjonalności:**
+
 - Integracja z `react-hook-form` + Zod resolver
 - Wykrywanie trybu (create vs edit) na podstawie `buildingId`
 - `useQuery` do pobierania danych budynku w trybie edycji
@@ -70,6 +78,7 @@ Kompleksowy hook zarządzający stanem formularza:
 - Invalidacja cache po sukcesie
 
 **Zwracane wartości:**
+
 - `form` - obiekt react-hook-form
 - `onSubmit` - handler wysyłania formularza
 - `isEditMode` - boolean określający tryb
@@ -85,12 +94,14 @@ Kompleksowy hook zarządzający stanem formularza:
 #### `/src/components/features/buildings/BuildingForm.tsx`
 
 **Struktura komponentu:**
+
 - `FormSkeleton` - loader dla trybu edycji
 - `ErrorMessage` - komponent obsługi błędów
 - `BuildingFormContent` - główny komponent z logiką
 - `BuildingForm` - wrapper z QueryProvider
 
 **Funkcjonalności:**
+
 - Automatyczne przekierowanie po sukcesie na `/buildings/{id}`
 - Warning przed opuszczeniem strony z niezapisanymi zmianami
 - Wyświetlanie błędów API w czytelny sposób
@@ -100,6 +111,7 @@ Kompleksowy hook zarządzający stanem formularza:
 - Przyciski akcji z obsługą stanu disabled podczas submita
 
 **Sekcje formularza:**
+
 1. **Hierarchia TERYT** - tymczasowe pola tekstowe (6 pól)
 2. **Dane adresowe** - numer budynku, kod pocztowy
 3. **Współrzędne geograficzne** - longitude, latitude
@@ -108,9 +120,11 @@ Kompleksowy hook zarządzający stanem formularza:
 ### 5. Komponenty pomocnicze
 
 #### `/src/components/features/buildings/CoordinatesInputGroup.tsx`
+
 Komponent do wprowadzania współrzędnych geograficznych.
 
 **Właściwości:**
+
 - Dwa pola input: longitude i latitude
 - Typ: `number` z `step="0.000001"`
 - Integracja przez `Controller` z react-hook-form
@@ -121,9 +135,11 @@ Komponent do wprowadzania współrzędnych geograficznych.
 - Responsywny grid (2 kolumny na sm+)
 
 #### `/src/components/features/buildings/ProviderSelect.tsx`
+
 Komponent do wyboru dostawcy internetu.
 
 **Właściwości:**
+
 - Native `<select>` element
 - Integracja przez `Controller` z react-hook-form
 - Konwersja wartości string → number (parseInt)
@@ -140,6 +156,7 @@ Komponent do wyboru dostawcy internetu.
 #### Dodana metoda: `updateBuilding(id, data, userId)`
 
 **Proces aktualizacji:**
+
 1. Weryfikacja istnienia budynku (getById)
 2. Walidacja wszystkich kodów TERYT (jeśli się zmieniły)
 3. Walidacja provider_id (jeśli się zmienił)
@@ -151,8 +168,9 @@ Komponent do wyboru dostawcy internetu.
 9. Zwrócenie zaktualizowanego BuildingDTO
 
 **Obsługiwane błędy:**
+
 - "Building not found" - budynek nie istnieje
-- "Invalid {field}_code" - nieprawidłowy kod TERYT
+- "Invalid {field}\_code" - nieprawidłowy kod TERYT
 - "Invalid provider_id" - nieprawidłowy provider
 - "Building already exists" - duplikat po edycji
 - Błędy bazy danych
@@ -162,11 +180,13 @@ Komponent do wyboru dostawcy internetu.
 #### Dodany endpoint: `PUT /api/v1/buildings/:id`
 
 **Request:**
+
 - Method: `PUT`
 - URL param: `id` (UUID budynku)
 - Body: `CreateBuildingInput` (wszystkie pola jak w POST)
 
 **Responses:**
+
 - `200 OK` - budynek zaktualizowany (zwraca BuildingDTO)
 - `400 Bad Request` - błąd walidacji lub nieprawidłowy UUID
 - `404 Not Found` - budynek nie znaleziony lub nieprawidłowy kod TERYT/provider
@@ -175,6 +195,7 @@ Komponent do wyboru dostawcy internetu.
 - `500 Internal Server Error` - nieoczekiwany błąd serwera
 
 **Walidacja:**
+
 - UUID w parametrze URL (validateId)
 - JSON w body (try/catch)
 - Zod schema (createBuildingSchema - ten sam co POST)
@@ -183,6 +204,7 @@ Komponent do wyboru dostawcy internetu.
 ## 📦 Zależności
 
 ### Zainstalowane pakiety:
+
 ```json
 {
   "react-hook-form": "^7.x.x",
@@ -191,6 +213,7 @@ Komponent do wyboru dostawcy internetu.
 ```
 
 ### Istniejące zależności (wykorzystane):
+
 - `@tanstack/react-query` - data fetching i cache
 - `zod` - walidacja schematów
 - `react` - komponenty UI
@@ -199,6 +222,7 @@ Komponent do wyboru dostawcy internetu.
 ## 🎨 Style i UX
 
 ### Tailwind classes (standardowe pattern z projektu)
+
 - Karty: `rounded-lg border border-border bg-card p-6`
 - Inputy: `flex h-10 w-full rounded-md border...`
 - Buttony: komponenty z `/src/components/ui/button.tsx`
@@ -206,12 +230,14 @@ Komponent do wyboru dostawcy internetu.
 - Spacing: `space-y-{n}`
 
 ### Komunikaty błędów (polskie tłumaczenia)
+
 - "Wysłano nieprawidłowe dane" (400/422)
 - "Jeden z wybranych zasobów nie istnieje. Odśwież stronę i spróbuj ponownie." (404)
 - "Budynek o podanych parametrach już istnieje w bazie danych." (409)
 - "Wystąpił nieoczekiwany błąd serwera." (500)
 
 ### UX Features
+
 - ✅ Skeleton loader podczas ładowania danych (edit mode)
 - ✅ Real-time validation (onBlur)
 - ✅ Error messages pod każdym polem
@@ -225,6 +251,7 @@ Komponent do wyboru dostawcy internetu.
 ## 🔄 Flow użytkownika
 
 ### Tworzenie nowego budynku
+
 1. Nawigacja do `/buildings/new`
 2. Wypełnienie wszystkich wymaganych pól
 3. Walidacja w czasie rzeczywistym (po onBlur)
@@ -235,6 +262,7 @@ Komponent do wyboru dostawcy internetu.
 8. Po błędzie: wyświetlenie komunikatu błędu
 
 ### Edycja istniejącego budynku
+
 1. Nawigacja do `/buildings/{id}/edit`
 2. Pokazanie skeleton loadera
 3. Pobranie danych budynku (GET `/api/v1/buildings/{id}`)
@@ -249,22 +277,28 @@ Komponent do wyboru dostawcy internetu.
 ## 📝 Tymczasowe rozwiązania
 
 ### 1. Pola TERYT jako text inputy
+
 **Stan obecny:**
+
 - 6 pól tekstowych wymagających ręcznego wpisania kodów TERYT
 - Walidacja długości (7 znaków dla większości)
 - Brak kaskadowej logiki
 
 **Planowane w przyszłości:**
+
 - Implementacja komponentu `TerytCascadeSelects`
 - Endpointy API dla słowników TERYT
 - Kaskadowa logika: wybór w nadrzędnym polu odblokowuje podrzędne
 
 ### 2. Mock data dla Providers
+
 **Stan obecny:**
+
 - `ProviderSelect` używa `mockProviders` z `/src/lib/mocks/providerMocks.ts`
 - 5 providerów: Orange, T-Mobile, Play, Netia, UPC
 
 **Planowane w przyszłości:**
+
 - Endpoint `GET /api/v1/providers`
 - Odkomentowanie useQuery w ProviderSelect
 - Usunięcie importu mockProviders
@@ -272,18 +306,23 @@ Komponent do wyboru dostawcy internetu.
 ## 🧪 Testowanie
 
 ### Build
+
 ```bash
 npm run build
 ```
+
 ✅ **Status:** Sukces (bez błędów)
 
 ### Linting
+
 ```bash
 npm run lint
 ```
+
 ✅ **Status:** Bez błędów w nowych plikach
 
 ### Pliki do przetestowania manualnie:
+
 1. `/buildings/new` - tworzenie budynku
 2. `/buildings/{id}/edit` - edycja budynku
 3. Walidacja pól (puste, nieprawidłowe formaty)
@@ -325,7 +364,9 @@ pages/api/v1/buildings/
 ## 🚀 Następne kroki (opcjonalne)
 
 ### 1. Endpointy TERYT API
+
 Implementacja endpointów dla słowników terytorialnych:
+
 - `GET /api/v1/voivodeships`
 - `GET /api/v1/districts?voivodeship_code={code}`
 - `GET /api/v1/communities?district_code={code}`
@@ -334,25 +375,31 @@ Implementacja endpointów dla słowników terytorialnych:
 - `GET /api/v1/streets?city_code={code}`
 
 ### 2. Endpoint Providers API
+
 ```
 GET /api/v1/providers
 ```
+
 Zwraca listę wszystkich dostępnych dostawców internetu.
 
 ### 3. TerytCascadeSelects component
+
 Zaawansowany komponent z kaskadową logiką:
+
 - Automatyczne ładowanie opcji na podstawie wyboru w nadrzędnym polu
 - Odblokowanie/zablokowanie pól podrzędnych
 - Czyszczenie wartości podrzędnych przy zmianie nadrzędnych
 - Obsługa stanów loading dla każdego selecta
 
 ### 4. Testy jednostkowe
+
 - Testy dla `useBuildingForm` hook
 - Testy dla komponentów (CoordinatesInputGroup, ProviderSelect)
 - Testy dla transformacji danych
 - Testy integracyjne formularza
 
 ### 5. Walidacja cross-field
+
 - Sprawdzanie zgodności hierarchii TERYT
 - Walidacja, czy city_district należy do city
 - Walidacja, czy street należy do city
@@ -360,21 +407,25 @@ Zaawansowany komponent z kaskadową logiką:
 ## 📊 Metryki
 
 ### Pliki utworzone: 7
+
 - 2 strony Astro
 - 3 komponenty React
 - 1 custom hook
 - 1 plik ze schematami Zod
 
 ### Pliki zaktualizowane: 3
+
 - `buildingService.ts` (dodana metoda updateBuilding)
 - `[id].ts` (dodany endpoint PUT)
 - `types.ts` (dodany BuildingFormViewModel)
 
 ### Linie kodu: ~1200+
+
 - Backend: ~300 linii
 - Frontend: ~900 linii
 
 ### Zależności dodane: 2
+
 - react-hook-form
 - @hookform/resolvers
 
@@ -400,9 +451,9 @@ Zaawansowany komponent z kaskadową logiką:
 ## 🎯 Status: Gotowy do użycia
 
 Formularz jest w pełni funkcjonalny i gotowy do produkcji z następującymi zastrzeżeniami:
+
 1. Pola TERYT wymagają ręcznego wpisania kodów (7 znaków)
 2. ProviderSelect używa mock danych (do czasu implementacji API)
 3. Brak kaskadowych selectów TERYT (planowane w przyszłości)
 
 Wszystkie kluczowe funkcjonalności zostały zaimplementowane zgodnie z planem, a formularz jest w pełni zintegrowany z backendem i gotowy do użycia przez użytkowników.
-

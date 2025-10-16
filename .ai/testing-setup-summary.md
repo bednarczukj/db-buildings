@@ -7,6 +7,7 @@ Successfully configured a comprehensive testing environment for the db-buildings
 ## Installed Dependencies
 
 ### Unit Testing (Vitest)
+
 - `vitest` - Fast unit test framework
 - `@vitest/ui` - UI mode for better test visualization
 - `@vitest/coverage-v8` - Code coverage reporting
@@ -18,12 +19,14 @@ Successfully configured a comprehensive testing environment for the db-buildings
 - `@vitejs/plugin-react` - React support for Vitest
 
 ### E2E Testing (Playwright)
+
 - `@playwright/test` - E2E testing framework
 - `supertest` - HTTP assertions for API testing
 - `@types/supertest` - TypeScript types for Supertest
 - `testcontainers` - Docker containers for integration tests
 
 ### Browsers
+
 - Chromium (installed via Playwright CLI)
 - FFMPEG for video recording
 - Chromium Headless Shell
@@ -31,6 +34,7 @@ Successfully configured a comprehensive testing environment for the db-buildings
 ## Configuration Files
 
 ### Vitest Configuration (`vitest.config.ts`)
+
 - Environment: jsdom
 - Setup files: `src/test/setup.ts`
 - Coverage provider: v8
@@ -39,6 +43,7 @@ Successfully configured a comprehensive testing environment for the db-buildings
 - Excludes: node_modules, dist, .astro, e2e directories
 
 ### Playwright Configuration (`playwright.config.ts`)
+
 - Test directory: `./e2e`
 - Browser: Chromium only (as per guidelines)
 - Base URL: http://localhost:4321
@@ -78,6 +83,7 @@ db-buildings/
 ## NPM Scripts
 
 ### Unit Tests
+
 - `npm run test` - Run tests in watch mode
 - `npm run test:ui` - Run tests with UI mode
 - `npm run test:run` - Run tests once
@@ -85,6 +91,7 @@ db-buildings/
 - `npm run test:coverage` - Run tests with coverage
 
 ### E2E Tests
+
 - `npm run test:e2e` - Run all E2E tests
 - `npm run test:e2e:ui` - Run E2E tests with UI mode
 - `npm run test:e2e:headed` - Run E2E tests in headed mode
@@ -93,12 +100,15 @@ db-buildings/
 - `npm run test:e2e:report` - Show Playwright HTML report
 
 ### Combined
+
 - `npm run test:all` - Run all unit and E2E tests
 
 ## Setup Files
 
 ### `src/test/setup.ts`
+
 Global setup for Vitest that includes:
+
 - @testing-library/jest-dom matchers
 - Automatic cleanup after each test
 - Mock for window.matchMedia
@@ -106,13 +116,17 @@ Global setup for Vitest that includes:
 - Mock for ResizeObserver
 
 ### `e2e/fixtures/auth.fixtures.ts`
+
 Authentication fixtures for Playwright that provide:
+
 - Authenticated context for tests
 - Reusable login flow
 - Environment variable support for test credentials
 
 ### `.env.test`
+
 Template for test environment variables:
+
 - Test user credentials
 - Supabase test configuration
 - Base URL for tests
@@ -120,6 +134,7 @@ Template for test environment variables:
 ## Example Test Files
 
 ### Unit Tests
+
 1. **`example.test.ts`** - Demonstrates:
    - Basic assertions
    - Mocking functions
@@ -134,6 +149,7 @@ Template for test environment variables:
    - Testing Library best practices
 
 ### E2E Tests
+
 1. **`example.spec.ts`** - Demonstrates:
    - Basic navigation
    - Form interactions
@@ -150,6 +166,7 @@ Template for test environment variables:
 ## Best Practices Implemented
 
 ### Vitest
+
 ✅ Factory patterns for mocks
 ✅ Reusable setup files
 ✅ Coverage configuration
@@ -158,6 +175,7 @@ Template for test environment variables:
 ✅ Path aliases for clean imports
 
 ### Playwright
+
 ✅ Chromium-only configuration (as per guidelines)
 ✅ Page Object Model for maintainability
 ✅ Browser contexts for isolation
@@ -169,6 +187,7 @@ Template for test environment variables:
 ## Verification
 
 Successfully ran example tests:
+
 - ✅ All 10 unit tests passed
 - ✅ No linter errors in configuration files
 - ✅ Test environment properly configured
@@ -201,6 +220,7 @@ Successfully ran example tests:
 ## Documentation
 
 Comprehensive testing guide available in `README.testing.md` covering:
+
 - Running tests
 - Writing tests
 - Best practices
@@ -215,4 +235,3 @@ Comprehensive testing guide available in `README.testing.md` covering:
 - Test database configuration should be set up separately for integration tests
 - Visual regression testing is available but currently commented out in examples
 - All configurations follow modern best practices for 2025
-

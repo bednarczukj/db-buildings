@@ -1,14 +1,17 @@
 # Podsumowanie implementacji widoku: Lista Budynków
 
 ## Data implementacji
+
 2025-10-13
 
 ## Status
+
 ✅ **UKOŃCZONE** - Wszystkie komponenty zaimplementowane zgodnie z planem
 
 ## Przegląd zmian
 
 ### 1. Zainstalowane zależności
+
 - `@tanstack/react-query` (v5.x) - zarządzanie stanem i pobieranie danych
 - Komponenty shadcn/ui:
   - `skeleton` - stany ładowania
@@ -18,7 +21,9 @@
   - `card` - struktura layoutu
 
 ### 2. Typy (src/types.ts)
+
 Dodano nowy typ dla odpowiedzi API:
+
 ```typescript
 export interface BuildingsApiResponseViewModel {
   data: BuildingDTO[];
@@ -31,6 +36,7 @@ export interface BuildingsApiResponseViewModel {
 ### 3. Struktura komponentów
 
 #### Utworzone pliki:
+
 ```
 src/
 ├── components/
@@ -52,6 +58,7 @@ src/
 ### 4. Szczegóły implementacji komponentów
 
 #### useBuildings Hook
+
 - **Lokalizacja**: `src/components/hooks/useBuildings.ts`
 - **Funkcjonalność**:
   - Zarządzanie stanem filtrów i paginacji
@@ -63,6 +70,7 @@ src/
 - **Zwracane wartości**: `buildings`, `page`, `pageSize`, `total`, `filters`, `isLoading`, `isError`, `error`, `updateFilters`, `resetFilters`, `setPage`, `refetch`
 
 #### QueryProvider
+
 - **Lokalizacja**: `src/components/providers/QueryProvider.tsx`
 - **Funkcjonalność**:
   - Wrapper dla React Query Client
@@ -71,6 +79,7 @@ src/
   - Retry: 1 próba domyślnie
 
 #### BuildingsList (Główny komponent)
+
 - **Lokalizacja**: `src/components/features/buildings/BuildingsList.tsx`
 - **Funkcjonalność**:
   - Orkiestracja wszystkich podkomponentów
@@ -81,6 +90,7 @@ src/
   - Container z paddingiem
 
 #### FilterPanel
+
 - **Lokalizacja**: `src/components/features/buildings/FilterPanel.tsx`
 - **Funkcjonalność**:
   - Filtry TERYT (Województwo, Powiat, Gmina, Miasto)
@@ -92,6 +102,7 @@ src/
   - **Uwaga**: Zawiera TODO - wymaga podłączenia do API słowników TERYT i dostawców
 
 #### BuildingsTable
+
 - **Lokalizacja**: `src/components/features/buildings/BuildingsTable.tsx`
 - **Funkcjonalność**:
   - Tabela z kolumnami: Kod TERYT, Miejscowość, Ulica, Numer, Dostawca, Status, Akcje
@@ -102,6 +113,7 @@ src/
   - Nawigacja przez window.location.href (SSR-safe)
 
 #### PaginationControls
+
 - **Lokalizacja**: `src/components/shared/PaginationControls.tsx`
 - **Funkcjonalność**:
   - Przyciski "Poprzednia" i "Następna"
@@ -111,6 +123,7 @@ src/
   - Ikony z lucide-react (ChevronLeft, ChevronRight)
 
 #### buildings.astro
+
 - **Lokalizacja**: `src/pages/buildings.astro`
 - **Funkcjonalność**:
   - Strona pod routingiem `/buildings`
@@ -123,6 +136,7 @@ src/
 **Endpoint**: `GET /api/v1/buildings`
 
 **Parametry query**:
+
 - `page` - numer strony
 - `pageSize` - liczba rekordów na stronę
 - `voivodeship_code` - filtr województwa
@@ -133,6 +147,7 @@ src/
 - `status` - filtr statusu
 
 **Odpowiedź** (zgodna z `BuildingsApiResponseViewModel`):
+
 ```json
 {
   "data": [...],
@@ -145,6 +160,7 @@ src/
 ### 6. Interakcje użytkownika
 
 #### ✅ Zaimplementowane:
+
 1. **Filtrowanie**:
    - Wybór wartości w polach Select
    - Automatyczne resetowanie zależnych pól TERYT
@@ -178,6 +194,7 @@ src/
 ### 7. Stylowanie i UX
 
 #### Wykorzystane techniki:
+
 - **Tailwind CSS 4**: Wszystkie style utility-first
 - **Shadcn/ui New York**: Wariant komponentów
 - **Responsywność**:
@@ -194,6 +211,7 @@ src/
 ### 8. Przypadki brzegowe i walidacja
 
 #### ✅ Obsłużone:
+
 1. **Pusta lista** - Komunikat "Nie znaleziono budynków..."
 2. **Błąd API** - Ekran błędu z przyciskiem retry
 3. **Stan ładowania** - Skeleton w tabeli
@@ -207,6 +225,7 @@ src/
 ### 9. Wydajność
 
 #### Zastosowane optymalizacje:
+
 - ✅ React Query cache (5 minut)
 - ✅ Automatyczne deduplikowanie zapytań
 - ✅ `useMemo` dla parametrów URL
@@ -217,12 +236,12 @@ src/
 ### 10. Co wymaga dalszej pracy (TODO)
 
 #### 🔴 Krytyczne - Wymagane do pełnej funkcjonalności:
+
 1. **API dla słowników TERYT**:
    - `GET /api/v1/voivodeships` - lista województw
    - `GET /api/v1/districts?voivodeship_code={code}` - powiaty dla województwa
    - `GET /api/v1/communities?district_code={code}` - gminy dla powiatu
    - `GET /api/v1/cities?community_code={code}` - miasta dla gminy
-   
 2. **API dla dostawców**:
    - `GET /api/v1/providers` - lista dostawców
 
@@ -239,6 +258,7 @@ src/
    - Loading states w Select'ach
 
 #### 🟡 Nice to have - Ulepszenia UX:
+
 1. **Debounce dla filtrów** (obecnie nie ma filtrów tekstowych, ale można dodać)
 2. **URL params sync** - synchronizacja filtrów z URL (deep linking)
 3. **Persystencja filtrów** - localStorage/sessionStorage
@@ -249,6 +269,7 @@ src/
 8. **Bulk actions** - zaznaczanie wielu budynków
 
 #### 🟢 Opcjonalne - Dalszy rozwój:
+
 1. **Sortowanie kolumn** - kliknięcie na header sortuje
 2. **Widok kart** - alternatywa dla tabeli na mobile
 3. **Szczegółowa strona budynku** - `/buildings/:id`
@@ -261,6 +282,7 @@ src/
 ### 11. Testowanie
 
 #### Testy manualne - Checklist:
+
 - [ ] Strona ładuje się pod `/buildings`
 - [ ] Tabela wyświetla dane z API
 - [ ] Skeleton loading działa
@@ -275,6 +297,7 @@ src/
 - [ ] Dark mode działa poprawnie
 
 #### Testy automatyczne (do napisania):
+
 - [ ] Unit testy dla `useBuildings` hook
 - [ ] Unit testy dla komponentów
 - [ ] Integration testy dla całego widoku
@@ -283,39 +306,43 @@ src/
 ### 12. Dokumentacja
 
 #### Utworzone pliki dokumentacji:
+
 - ✅ `lista-budynkow-view-implementation-plan.md` - plan implementacji
 - ✅ `lista-budynkow-implementation-summary.md` - niniejsze podsumowanie
 
 #### Komentarze w kodzie:
+
 - ✅ Wszystkie komponenty mają JSDoc
 - ✅ Wszystkie funkcje mają opisy
 - ✅ TODO komentarze w miejscach wymagających API
 
 ### 13. Zgodność z planem
 
-| Punkt planu | Status | Uwagi |
-|-------------|--------|-------|
-| 1. Utworzenie struktury plików | ✅ | Wszystkie pliki utworzone |
-| 2. Implementacja useBuildings | ✅ | Z React Query, cache, retry |
-| 3. Implementacja FilterPanel | ✅ | Wymaga API słowników |
-| 4. Implementacja BuildingsTable | ✅ | Z Skeleton i Badge |
-| 5. Implementacja PaginationControls | ✅ | Z disabled states |
-| 6. Złożenie BuildingsList | ✅ | Z error handling |
-| 7. Renderowanie w Astro | ✅ | client:load directive |
-| 8. Komunikacja z backendem | ⚠️ | API buildings OK, brak API słowników |
-| 9. Stylowanie i UX | ✅ | Tailwind + shadcn/ui |
-| 10. Testowanie | ⏳ | Wymaga testów manualnych |
+| Punkt planu                         | Status | Uwagi                                |
+| ----------------------------------- | ------ | ------------------------------------ |
+| 1. Utworzenie struktury plików      | ✅     | Wszystkie pliki utworzone            |
+| 2. Implementacja useBuildings       | ✅     | Z React Query, cache, retry          |
+| 3. Implementacja FilterPanel        | ✅     | Wymaga API słowników                 |
+| 4. Implementacja BuildingsTable     | ✅     | Z Skeleton i Badge                   |
+| 5. Implementacja PaginationControls | ✅     | Z disabled states                    |
+| 6. Złożenie BuildingsList           | ✅     | Z error handling                     |
+| 7. Renderowanie w Astro             | ✅     | client:load directive                |
+| 8. Komunikacja z backendem          | ⚠️     | API buildings OK, brak API słowników |
+| 9. Stylowanie i UX                  | ✅     | Tailwind + shadcn/ui                 |
+| 10. Testowanie                      | ⏳     | Wymaga testów manualnych             |
 
 **Legenda**: ✅ Ukończone | ⚠️ Częściowo | ⏳ Do zrobienia
 
 ### 14. Zmiany względem planu
 
 #### Różnice:
+
 1. **QueryProvider** - dodany jako osobny komponent (nie było w planie, ale poprawia architekturę)
 2. **Badge component** - użyty zamiast custom styling (lepsza spójność z shadcn/ui)
 3. **Card component** - zainstalowany ale jeszcze nieużywany (można użyć do ulepszenia layoutu)
 
 #### Uzasadnienie:
+
 - QueryProvider zapewnia lepszą separację odpowiedzialności
 - Badge zapewnia spójność z systemem designu
 - Wszystkie zmiany są zgodne z zasadami implementacji
@@ -323,15 +350,18 @@ src/
 ### 15. Następne kroki
 
 #### Priorytet 1 (Backend):
+
 1. Implementacja API endpointów dla słowników TERYT
 2. Implementacja API endpoint dla providers
 
 #### Priorytet 2 (Frontend):
+
 1. Stworzenie hooków do pobierania danych słownikowych
 2. Aktualizacja FilterPanel z dynamicznymi danymi
 3. Testy manualne całego flow
 
 #### Priorytet 3 (Feature complete):
+
 1. Implementacja widoku szczegółów budynku `/buildings/:id`
 2. Implementacja widoku edycji `/buildings/:id/edit`
 3. Dodanie URL params sync
@@ -341,6 +371,7 @@ src/
 **Implementacja została wykonana zgodnie z planem** i wszystkie wymagane komponenty są gotowe. Widok jest w pełni funkcjonalny z aktualnym API (`GET /api/v1/buildings`), ale wymaga implementacji API dla słowników TERYT i dostawców aby filtry mogły działać z dynamicznymi danymi.
 
 **Kod jest**:
+
 - ✅ Zgodny z zasadami implementacji
 - ✅ Bez błędów lintingu
 - ✅ Responsywny
@@ -350,4 +381,3 @@ src/
 - ✅ Gotowy do użycia
 
 **Następny krok**: Testy manualne i implementacja brakujących API dla słowników.
-

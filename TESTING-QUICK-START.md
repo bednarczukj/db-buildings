@@ -8,7 +8,7 @@ npm test                    # Watch mode
 npm run test:ui            # UI mode (recommended)
 npm run test:coverage      # With coverage
 
-# E2E Tests  
+# E2E Tests
 npm run test:e2e           # Run all E2E tests
 npm run test:e2e:ui        # UI mode (recommended)
 npm run test:e2e:debug     # Debug mode
@@ -21,11 +21,11 @@ npm run test:e2e:codegen   # Record interactions
 
 ```typescript
 // src/lib/myFeature.test.ts
-import { describe, it, expect } from 'vitest';
-import { myFunction } from './myFeature';
+import { describe, it, expect } from "vitest";
+import { myFunction } from "./myFeature";
 
-describe('myFunction', () => {
-  it('should do something', () => {
+describe("myFunction", () => {
+  it("should do something", () => {
     expect(myFunction(input)).toBe(expected);
   });
 });
@@ -35,18 +35,19 @@ describe('myFunction', () => {
 
 ```typescript
 // e2e/my-feature.spec.ts
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test('should perform action', async ({ page }) => {
-  await page.goto('/');
-  await page.click('button');
-  await expect(page.locator('.result')).toBeVisible();
+test("should perform action", async ({ page }) => {
+  await page.goto("/");
+  await page.click("button");
+  await expect(page.locator(".result")).toBeVisible();
 });
 ```
 
 ## 🎯 Testing Guidelines
 
 ### Unit Tests (Vitest)
+
 - Place in same directory as code: `feature.ts` → `feature.test.ts`
 - Or in `src/test/` for shared utilities
 - Mock external dependencies
@@ -54,6 +55,7 @@ test('should perform action', async ({ page }) => {
 - Use Testing Library for React components
 
 ### E2E Tests (Playwright)
+
 - Place in `e2e/` directory
 - Use Page Object Model for complex pages
 - Test critical user journeys
@@ -69,6 +71,7 @@ test('should perform action', async ({ page }) => {
 ## 📊 Coverage Reports
 
 After running `npm run test:coverage`:
+
 ```bash
 open coverage/index.html
 ```
@@ -76,13 +79,15 @@ open coverage/index.html
 ## 🐛 Debugging
 
 ### Vitest
+
 ```typescript
-test.only('focus on this test', () => {
+test.only("focus on this test", () => {
   // Your test
 });
 ```
 
 ### Playwright
+
 ```bash
 npm run test:e2e:debug      # Step through tests
 ```
@@ -94,8 +99,8 @@ See `README.testing.md` for comprehensive guide.
 ## ✅ Verification
 
 Run these to verify setup:
+
 ```bash
 npm run test:run            # Should pass 10 tests
 npm run test:e2e           # May fail until server setup
 ```
-

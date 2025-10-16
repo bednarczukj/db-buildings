@@ -12,6 +12,7 @@ Pipeline CI/CD jest zaimplementowany przy użyciu GitHub Actions i zawiera:
 ## Uruchamianie Pipeline
 
 Pipeline uruchamia się automatycznie:
+
 - **Po push do branch `master`**
 - **Przy tworzeniu Pull Request do `master`**
 - **Manualnie** przez zakładkę "Actions" w GitHub
@@ -45,6 +46,7 @@ Przejdź do `Settings → Secrets and variables → Actions` i dodaj:
 ## Struktura Pipeline
 
 ### Job 1: Lint & Code Quality
+
 ```yaml
 - Sprawdza kod przez ESLint
 - Weryfikuje formatowanie przez Prettier
@@ -52,6 +54,7 @@ Przejdź do `Settings → Secrets and variables → Actions` i dodaj:
 ```
 
 ### Job 2: Unit Tests
+
 ```yaml
 - Uruchamia testy jednostkowe (Vitest)
 - Generuje raport pokrycia kodu
@@ -60,6 +63,7 @@ Przejdź do `Settings → Secrets and variables → Actions` i dodaj:
 ```
 
 ### Job 3: E2E Tests
+
 ```yaml
 - Startuje lokalną instancję Supabase
 - Aplikuje migracje bazy danych
@@ -70,6 +74,7 @@ Przejdź do `Settings → Secrets and variables → Actions` i dodaj:
 ```
 
 ### Job 4: Production Build
+
 ```yaml
 - Buduje wersję produkcyjną
 - Weryfikuje poprawność buildu
@@ -78,6 +83,7 @@ Przejdź do `Settings → Secrets and variables → Actions` i dodaj:
 ```
 
 ### Job 5: Summary
+
 ```yaml
 - Zbiera wyniki wszystkich jobów
 - Generuje podsumowanie
@@ -178,4 +184,3 @@ Dodaj badge status do README.md:
 ```
 
 Zastąp `{username}` i `{repo}` swoimi wartościami.
-

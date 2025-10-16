@@ -39,10 +39,10 @@ Tests should be placed in `**/*.test.ts` or `**/*.spec.ts` files.
 **Example basic test:**
 
 ```typescript
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from "vitest";
 
-describe('MyFunction', () => {
-  it('should return expected value', () => {
+describe("MyFunction", () => {
+  it("should return expected value", () => {
     expect(myFunction(2, 3)).toBe(5);
   });
 });
@@ -58,9 +58,9 @@ describe('MyComponent', () => {
   it('should handle user interaction', async () => {
     const user = userEvent.setup();
     render(<MyComponent />);
-    
+
     await user.click(screen.getByRole('button'));
-    
+
     expect(screen.getByText('Clicked')).toBeInTheDocument();
   });
 });
@@ -112,10 +112,10 @@ Tests should be placed in the `e2e/` directory with `.spec.ts` extension.
 **Example basic E2E test:**
 
 ```typescript
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test('should load homepage', async ({ page }) => {
-  await page.goto('/');
+test("should load homepage", async ({ page }) => {
+  await page.goto("/");
   await expect(page).toHaveTitle(/Expected Title/);
 });
 ```
@@ -123,15 +123,15 @@ test('should load homepage', async ({ page }) => {
 **Example with Page Object Model:**
 
 ```typescript
-import { test, expect } from '@playwright/test';
-import { LoginPage } from './page-objects/LoginPage';
+import { test, expect } from "@playwright/test";
+import { LoginPage } from "./page-objects/LoginPage";
 
-test('should login successfully', async ({ page }) => {
+test("should login successfully", async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.goto();
-  await loginPage.login('user@example.com', 'password');
-  
-  await expect(page).toHaveURL('/dashboard');
+  await loginPage.login("user@example.com", "password");
+
+  await expect(page).toHaveURL("/dashboard");
 });
 ```
 
@@ -169,6 +169,7 @@ BASE_URL=http://localhost:4321
 ### Test Database
 
 For integration tests, consider using:
+
 - A separate Supabase project for testing
 - TestContainers for isolated PostgreSQL instances
 - In-memory databases for faster tests
@@ -189,17 +190,17 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: '20'
-      
+          node-version: "20"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run unit tests
         run: npm run test:run
-      
+
       - name: Run E2E tests
         run: npm run test:e2e
-      
+
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
@@ -226,6 +227,7 @@ jobs:
 ## Coverage
 
 Coverage reports are generated in the `coverage/` directory:
+
 - HTML report: `coverage/index.html`
 - LCOV format: `coverage/lcov.info`
 
@@ -242,4 +244,3 @@ open coverage/index.html
 - [Testing Library Documentation](https://testing-library.com/)
 - [Playwright Documentation](https://playwright.dev/)
 - [Testing Best Practices](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library)
-

@@ -34,6 +34,7 @@ Komponenty zostaną zorganizowane w następującej hierarchii. Główna strona `
 ## 4. Szczegóły komponentów
 
 ### `BuildingDetailsView.tsx`
+
 - **Opis komponentu:** Główny komponent React, który orkiestruje cały widok. Odpowiada za pobranie danych, obsługę stanu ładowania/błędu i renderowanie odpowiednich komponentów podrzędnych.
 - **Główne elementy:** Wykorzystuje customowy hook `useBuildingDetails` do logiki. Renderuje warunkowo `SkeletonLoader`, `ErrorMessage` lub layout ze szczegółami.
 - **Obsługiwane interakcje:** Brak bezpośrednich interakcji, deleguje je do komponentów dzieci.
@@ -41,6 +42,7 @@ Komponenty zostaną zorganizowane w następującej hierarchii. Główna strona `
 - **Propsy:** `buildingId: string`.
 
 ### `ActionButtons.tsx`
+
 - **Opis komponentu:** Zestaw przycisków akcji dla widoku szczegółów.
 - **Główne elementy:** Dwa komponenty `Button` (z biblioteki Shadcn/ui) opakowane w `Link` z Astro lub `<a>` do nawigacji.
 - **Obsługiwane interakcje:** Kliknięcie przycisku "Edytuj" przenosi do formularza edycji, "Powrót" do listy budynków.
@@ -48,6 +50,7 @@ Komponenty zostaną zorganizowane w następującej hierarchii. Główna strona `
 - **Propsy:** `buildingId: string`.
 
 ### `DetailList.tsx`
+
 - **Opis komponentu:** Prezentuje dane w formie czytelnej listy par "etykieta-wartość".
 - **Główne elementy:** Struktura oparta o `<dl>`, `<dt>`, `<dd>` lub podobne semantyczne tagi do wyświetlania danych.
 - **Obsługiwane interakcje:** Brak.
@@ -55,6 +58,7 @@ Komponenty zostaną zorganizowane w następującej hierarchii. Główna strona `
 - **Propsy:** `items: { label: string; value: React.ReactNode }[]`.
 
 ### `MapPlaceholder.tsx`
+
 - **Opis komponentu:** Wizualny placeholder w miejscu, gdzie w przyszłości znajdzie się interaktywna mapa.
 - **Główne elementy:** `<div>` ze stylami (np. tło, obramowanie) i ikoną mapy lub tekstem.
 - **Obsługiwane interakcje:** Brak.
@@ -62,6 +66,7 @@ Komponenty zostaną zorganizowane w następującej hierarchii. Główna strona `
 - **Propsy:** `coordinates: { lat: number, lon: number }`.
 
 ### `HistoryLink.tsx`
+
 - **Opis komponentu:** Link prowadzący do historii zmian dla bieżącego budynku.
 - **Główne elementy:** Komponent `<a>` lub `Link` z odpowiednio sformatowanym URL.
 - **Obsługiwane interakcje:** Kliknięcie przenosi do widoku logów audytu.
@@ -103,11 +108,12 @@ interface BuildingDetailsViewModel {
 Stan będzie zarządzany globalnie za pomocą **React Query**. Zostanie stworzony dedykowany customowy hook, który zamknie w sobie całą logikę pobierania i przetwarzania danych.
 
 **`useBuildingDetails(buildingId: string)`**
+
 - **Odpowiedzialność:**
-    1. Użycie `useQuery` do pobrania `BuildingDTO` z endpointu `/api/v1/buildings/:id`.
-    2. Jeśli `provider_id` jest dostępne, użycie `useQuery` do pobrania `ProviderDTO`.
-    3. Po pomyślnym pobraniu danych, transformacja ich do `BuildingDetailsViewModel`.
-    4. Zwrócenie obiektu `{ building: BuildingDetailsViewModel, isLoading: boolean, isError: boolean }`.
+  1. Użycie `useQuery` do pobrania `BuildingDTO` z endpointu `/api/v1/buildings/:id`.
+  2. Jeśli `provider_id` jest dostępne, użycie `useQuery` do pobrania `ProviderDTO`.
+  3. Po pomyślnym pobraniu danych, transformacja ich do `BuildingDetailsViewModel`.
+  4. Zwrócenie obiektu `{ building: BuildingDetailsViewModel, isLoading: boolean, isError: boolean }`.
 - **Zalety:** Hermetyzacja logiki, automatyczne cache'owanie i odświeżanie danych, prosta obsługa stanu w komponencie.
 
 ## 7. Integracja API

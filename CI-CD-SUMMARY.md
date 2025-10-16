@@ -11,23 +11,27 @@ Projekt został wyposażony w **minimalny, ale kompletny pipeline CI/CD** wykorz
 Pipeline składa się z następujących jobów:
 
 #### Job 1: Lint & Code Quality
+
 - Sprawdzenie kodu przez ESLint
 - Weryfikacja formatowania przez Prettier
 - ⏱️ Czas: ~1-2 minuty
 
 #### Job 2: Unit Tests
+
 - Uruchomienie testów jednostkowych (Vitest)
 - Generowanie raportu coverage
 - Opcjonalny upload do Codecov
 - ⏱️ Czas: ~2-3 minuty
 
 #### Job 3: Production Build
+
 - Budowanie wersji produkcyjnej
 - Weryfikacja poprawności buildu
 - Upload artifacts (dostępne przez 7 dni)
 - ⏱️ Czas: ~2-3 minuty
 
 #### Job 4: Summary
+
 - Zbieranie wyników wszystkich jobów
 - Generowanie podsumowania
 - Oznaczanie pipeline jako failed/success
@@ -38,6 +42,7 @@ Pipeline składa się z następujących jobów:
 ### 2. Triggery
 
 Pipeline uruchamia się:
+
 - ✅ **Automatycznie** po push do branch `master`
 - ✅ **Automatycznie** przy tworzeniu Pull Request do `master`
 - ✅ **Manualnie** przez zakładkę Actions w GitHub
@@ -51,6 +56,7 @@ Pipeline uruchamia się:
 ### 4. E2E Tests (opcjonalnie)
 
 E2E testy są przygotowane, ale zakomentowane w workflow, ponieważ wymagają:
+
 - Dedykowanego środowiska testowego Supabase
 - Dodatkowych secrets dla test environment
 
@@ -98,19 +104,19 @@ Pipeline powinien zakończyć się sukcesem w ~6-8 minut.
 
 Szczegółowa dokumentacja znajduje się w następujących plikach:
 
-| Plik | Zawartość |
-|------|-----------|
-| `.github/SETUP-GUIDE.md` | 🚀 **START TUTAJ** - Przewodnik konfiguracji krok po kroku (5 min) |
-| `.github/QUICK-REFERENCE.md` | ⚡ Szybka ściągawka - wszystko na jednej stronie |
-| `.github/README.md` | 📖 Dokumentacja techniczna, troubleshooting, FAQ |
-| `.github/ARCHITECTURE.md` | 🏗️ Architektura, diagramy Mermaid, szczegóły implementacji |
-| `.env.example` | ⚙️ Przykładowe zmienne środowiskowe |
+| Plik                         | Zawartość                                                          |
+| ---------------------------- | ------------------------------------------------------------------ |
+| `.github/SETUP-GUIDE.md`     | 🚀 **START TUTAJ** - Przewodnik konfiguracji krok po kroku (5 min) |
+| `.github/QUICK-REFERENCE.md` | ⚡ Szybka ściągawka - wszystko na jednej stronie                   |
+| `.github/README.md`          | 📖 Dokumentacja techniczna, troubleshooting, FAQ                   |
+| `.github/ARCHITECTURE.md`    | 🏗️ Architektura, diagramy Mermaid, szczegóły implementacji         |
+| `.env.example`               | ⚙️ Przykładowe zmienne środowiskowe                                |
 
 ## 🔐 Wymagane Secrets
 
-| Secret | Opis | Gdzie znaleźć |
-|--------|------|---------------|
-| `SUPABASE_ANON_KEY` | Klucz publiczny Supabase | Dashboard → Settings → API → anon public |
+| Secret                      | Opis                     | Gdzie znaleźć                             |
+| --------------------------- | ------------------------ | ----------------------------------------- |
+| `SUPABASE_ANON_KEY`         | Klucz publiczny Supabase | Dashboard → Settings → API → anon public  |
 | `SUPABASE_SERVICE_ROLE_KEY` | Klucz serwisowy Supabase | Dashboard → Settings → API → service_role |
 
 ## ⚡ Co działa out-of-the-box
@@ -158,45 +164,49 @@ npm run build          # Zweryfikuj build
 ### Branch Protection (opcjonalnie)
 
 Włącz w `Settings` → `Branches` → `Branch protection rules`:
+
 - ✅ Require status checks to pass before merging
 - ✅ Require branches to be up to date before merging
 
 ## 🆘 Troubleshooting
 
 ### Pipeline nie uruchamia się
+
 - Sprawdź czy workflow jest w branch `master`
 - Sprawdź czy Actions są włączone w Settings
 
 ### Testy failują
+
 - Uruchom testy lokalnie: `npm run test:run`
 - Sprawdź logi w zakładce Actions
 
 ### Build failuje
+
 - Uruchom build lokalnie: `npm run build`
 - Sprawdź czy wszystkie zależności są w package.json
 
 ## 📞 Wsparcie
 
 W razie problemów:
+
 1. Sprawdź logi w zakładce Actions
 2. Przeczytaj dokumentację w `.github/README.md`
 3. Zweryfikuj czy lokalne testy działają
 
 ## ✨ Status
 
-| Feature | Status |
-|---------|--------|
-| Lint & Code Quality | ✅ Implemented |
-| Unit Tests | ✅ Implemented |
-| Production Build | ✅ Implemented |
-| Artifacts Upload | ✅ Implemented |
-| E2E Tests | 🔄 Ready (disabled) |
-| Deployment | 📋 Planned |
-| Notifications | 📋 Planned |
+| Feature             | Status              |
+| ------------------- | ------------------- |
+| Lint & Code Quality | ✅ Implemented      |
+| Unit Tests          | ✅ Implemented      |
+| Production Build    | ✅ Implemented      |
+| Artifacts Upload    | ✅ Implemented      |
+| E2E Tests           | 🔄 Ready (disabled) |
+| Deployment          | 📋 Planned          |
+| Notifications       | 📋 Planned          |
 
 ---
 
 **Pipeline jest gotowy do użycia!** 🎉
 
 Rozpocznij od przeczytania `.github/SETUP-GUIDE.md` i skonfiguruj secrets.
-

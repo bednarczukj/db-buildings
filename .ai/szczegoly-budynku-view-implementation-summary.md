@@ -29,6 +29,7 @@ if (!id) {
 ```
 
 **Funkcjonalność:**
+
 - Dynamiczny routing dla parametru `id` (UUID budynku)
 - Walidacja obecności ID - redirect do `/buildings` jeśli brak
 - Przekazanie ID jako props do komponentu React
@@ -37,6 +38,7 @@ if (!id) {
 ### 2. Custom Hook - `/src/components/hooks/useBuildingDetails.ts`
 
 **Interfejs `BuildingDetailsViewModel`:**
+
 ```typescript
 interface BuildingDetailsViewModel {
   id: string;
@@ -50,6 +52,7 @@ interface BuildingDetailsViewModel {
 ```
 
 **Funkcjonalność hooka:**
+
 - Integracja z **React Query** dla automatycznego cache'owania (5 min stale time)
 - Pobieranie danych z API: `GET /api/v1/buildings/:id`
 - Transformacja `BuildingDTO` → `BuildingDetailsViewModel`
@@ -60,6 +63,7 @@ interface BuildingDetailsViewModel {
 - Zwracanie pełnego stanu: `{ building, isLoading, isError, error }`
 
 **Transformacja danych:**
+
 - Budowanie pełnego adresu z dostępnych pól
 - Przygotowanie tablicy `details` z 11 polami:
   - Województwo, Powiat, Gmina, Miejscowość, Dzielnica
@@ -71,6 +75,7 @@ interface BuildingDetailsViewModel {
 ### 3. Główny komponent - `/src/components/features/buildings/BuildingDetailsView.tsx`
 
 **Struktura hierarchiczna:**
+
 ```
 BuildingDetailsView (export default)
 ├── QueryProvider
@@ -97,12 +102,14 @@ BuildingDetailsView (export default)
 **Zaimplementowane podkomponenty:**
 
 #### `SkeletonLoader`
+
 - 11 skeleton items odpowiadających polom w DetailList
 - Skeleton dla nagłówka, przycisków akcji
 - Skeleton dla mapy (400px height)
 - Skeleton dla linku do historii
 
 #### `ErrorMessage`
+
 - Wyświetla ikonę `AlertCircle`
 - Przyjazny komunikat błędu (parametryzowany)
 - Przyciski akcji:
@@ -110,12 +117,14 @@ BuildingDetailsView (export default)
   - "Spróbuj ponownie" (opcjonalny)
 
 #### `ActionButtons`
+
 - Przycisk "Edytuj" → `/buildings/:id/edit`
 - Przycisk "Powrót" → `/buildings`
 - Ikony z `lucide-react` (Edit, ArrowLeft)
 - Shadcn/ui Button component
 
 #### `DetailList`
+
 - Semantyczna struktura: `<dl>`, `<dt>`, `<dd>`
 - 11 pól informacji o budynku
 - Obsługa brakujących wartości: "Brak danych" (italic, muted)
@@ -123,6 +132,7 @@ BuildingDetailsView (export default)
 - Responsywny spacing
 
 #### `MapPlaceholder`
+
 - Wizualny placeholder z ikoną mapy SVG
 - Wyświetlanie współrzędnych: "Lat: X.XXXXXX, Lon: Y.YYYYYY"
 - Fixed height: 400px
@@ -130,12 +140,14 @@ BuildingDetailsView (export default)
 - Informacja: "Mapa będzie dostępna wkrótce"
 
 #### `HistoryLink`
+
 - Link do `/audit-logs?building_id={id}`
 - Ikona zegara (clock)
 - Tekst: "Zobacz historię zmian"
 - Styling: primary color, hover underline
 
 #### `ErrorBoundary`
+
 - Class component z `getDerivedStateFromError`
 - Przechwytywanie błędów renderowania
 - Wyświetlanie komunikatu z ikoną AlertCircle
@@ -144,15 +156,18 @@ BuildingDetailsView (export default)
 ## Integracja z API
 
 **Endpoint wykorzystany:**
+
 - `GET /api/v1/buildings/:id`
 
 **Obsługa odpowiedzi:**
+
 - ✅ **200 OK** → Transformacja i wyświetlenie danych
 - ❌ **400 Bad Request** → "Nieprawidłowy identyfikator budynku"
 - ❌ **404 Not Found** → "Nie znaleziono budynku o podanym ID"
 - ❌ **500 Internal Server Error** → "Wystąpił błąd podczas pobierania danych budynku"
 
 **React Query konfiguracja:**
+
 ```typescript
 {
   queryKey: ["building", buildingId],
@@ -197,29 +212,34 @@ BuildingDetailsView (export default)
 ## Nawigacja z innych widoków
 
 **Z listy budynków** (`/buildings`):
+
 - Przycisk "Podgląd" (ikona oka) w `BuildingsTable.tsx`
 - Już zaimplementowany: `onClick={() => window.location.href = `/buildings/${building.id}`}`
 
 ## Styling i UX
 
 **Technologie:**
+
 - Tailwind CSS 4
 - Shadcn/ui components (Button, Skeleton, Card, Badge)
 - Lucide React icons
 
 **Layout:**
+
 - Container: `container mx-auto py-8`
 - Grid layout: `grid gap-6 lg:grid-cols-2` (responsive)
 - Cards z border i padding
 - Consistent spacing: `space-y-6`, `space-y-4`
 
 **Accessibility:**
+
 - Semantyczne tagi HTML (dl, dt, dd, h1, h2)
 - `aria-label` na przyciskach akcji
 - Czytelnościowe kolory dla stanów (muted-foreground, destructive)
 - Hover states na linkach i przyciskach
 
 **Responsive design:**
+
 - Mobile-first approach
 - 1-column layout na małych ekranach
 - 2-column layout na lg+ breakpoint
@@ -228,6 +248,7 @@ BuildingDetailsView (export default)
 ## Typy TypeScript
 
 **Nowe typy dodane:**
+
 ```typescript
 // w useBuildingDetails.ts
 interface BuildingDetailsViewModel {
@@ -242,17 +263,20 @@ interface BuildingDetailsViewModel {
 ```
 
 **Wykorzystane istniejące typy:**
+
 - `BuildingDTO` z `/src/types.ts`
 - `StatusEnum` z `/src/types.ts`
 
 ## Build Verification
 
 **Wykonano:**
+
 ```bash
 npm run build
 ```
 
 **Wyniki:**
+
 - ✅ Build succeeded (exit code 0)
 - ✅ No linter errors
 - ✅ No TypeScript errors
@@ -260,6 +284,7 @@ npm run build
 - ✅ Bundle size: 8.07 kB (gzip: 2.77 kB) - BuildingDetailsView
 
 **Wygenerowane pliki:**
+
 ```
 dist/client/_astro/BuildingDetailsView.CoTKpGPc.js    8.07 kB │ gzip:  2.77 kB
 ```
@@ -267,16 +292,19 @@ dist/client/_astro/BuildingDetailsView.CoTKpGPc.js    8.07 kB │ gzip:  2.77 kB
 ## Pliki zmodyfikowane/utworzone
 
 ### Nowe pliki:
+
 1. `/src/pages/buildings/[id].astro` - strona Astro
 2. `/src/components/hooks/useBuildingDetails.ts` - custom hook
 3. `/src/components/features/buildings/BuildingDetailsView.tsx` - główny komponent
 
 ### Zmodyfikowane pliki:
+
 - Brak (implementacja wykorzystuje istniejące API i komponenty)
 
 ## Zależności
 
 **Wykorzystane biblioteki:**
+
 - `@tanstack/react-query` - zarządzanie stanem serwera
 - `lucide-react` - ikony (Eye, Pencil, ArrowLeft, Edit, AlertCircle)
 - `react` - komponenty
@@ -286,16 +314,16 @@ dist/client/_astro/BuildingDetailsView.CoTKpGPc.js    8.07 kB │ gzip:  2.77 kB
 
 ## Zgodność z planem implementacji
 
-| Krok planu | Status | Uwagi |
-|------------|--------|-------|
-| 1. Stworzenie pliku strony Astro | ✅ | `/src/pages/buildings/[id].astro` |
-| 2. Implementacja hooka `useBuildingDetails` | ✅ | Pełna funkcjonalność + transformacja ViewModel |
-| 3. Stworzenie głównego komponentu | ✅ | Conditional rendering, ErrorBoundary |
-| 4. Stworzenie komponentów podrzędnych | ✅ | Wszystkie 5 komponentów zaimplementowane |
-| 5. Styling | ✅ | Tailwind + Shadcn/ui, spójność z projektem |
-| 6. Implementacja stanu ładowania | ✅ | SkeletonLoader z 11 items |
-| 7. Implementacja obsługi błędów | ✅ | ErrorMessage + ErrorBoundary |
-| 8. Finalne połączenie | ✅ | Wszystkie propsy przekazane, nawigacja działa |
+| Krok planu                                  | Status | Uwagi                                          |
+| ------------------------------------------- | ------ | ---------------------------------------------- |
+| 1. Stworzenie pliku strony Astro            | ✅     | `/src/pages/buildings/[id].astro`              |
+| 2. Implementacja hooka `useBuildingDetails` | ✅     | Pełna funkcjonalność + transformacja ViewModel |
+| 3. Stworzenie głównego komponentu           | ✅     | Conditional rendering, ErrorBoundary           |
+| 4. Stworzenie komponentów podrzędnych       | ✅     | Wszystkie 5 komponentów zaimplementowane       |
+| 5. Styling                                  | ✅     | Tailwind + Shadcn/ui, spójność z projektem     |
+| 6. Implementacja stanu ładowania            | ✅     | SkeletonLoader z 11 items                      |
+| 7. Implementacja obsługi błędów             | ✅     | ErrorMessage + ErrorBoundary                   |
+| 8. Finalne połączenie                       | ✅     | Wszystkie propsy przekazane, nawigacja działa  |
 
 ## Znane ograniczenia i TODO
 
@@ -317,16 +345,18 @@ dist/client/_astro/BuildingDetailsView.CoTKpGPc.js    8.07 kB │ gzip:  2.77 kB
 ### Propozycje rozszerzeń:
 
 1. **Pobieranie danych dostawcy:**
+
    ```typescript
    // Rozszerzenie useBuildingDetails
    const { data: providerData } = useQuery({
      queryKey: ["provider", buildingData?.provider_id],
-     queryFn: () => fetch(`/api/v1/providers/${buildingData.provider_id}`).then(r => r.json()),
+     queryFn: () => fetch(`/api/v1/providers/${buildingData.provider_id}`).then((r) => r.json()),
      enabled: !!buildingData?.provider_id,
    });
    ```
 
 2. **Breadcrumbs nawigacja:**
+
    ```
    Home > Lista Budynków > [Adres budynku]
    ```
@@ -351,8 +381,8 @@ Implementacja widoku "Szczegóły Budynku" została **zakończona w 100%** zgodn
 **Widok jest gotowy do użycia** i można przystąpić do implementacji kolejnych widoków (edycja budynku, audit logs) lub rozszerzeń opisanych w sekcji TODO.
 
 **Następne kroki:**
+
 - Implementacja widoku edycji budynku (`/buildings/:id/edit`)
 - Implementacja widoku audit logs (`/audit-logs`)
 - Rozszerzenie backendu o endpoint dla danych dostawcy
 - Integracja z mapą (Leaflet/Mapbox)
-

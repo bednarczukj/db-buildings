@@ -41,22 +41,23 @@ npm run test              # Run tests in watch mode
 
 ## 🔑 Required Secrets
 
-| Secret Name | Description | Where to Find |
-|-------------|-------------|---------------|
-| `SUPABASE_ANON_KEY` | Public API key | Supabase Dashboard → Settings → API |
-| `SUPABASE_SERVICE_ROLE_KEY` | Admin key | Supabase Dashboard → Settings → API |
+| Secret Name                 | Description    | Where to Find                       |
+| --------------------------- | -------------- | ----------------------------------- |
+| `SUPABASE_ANON_KEY`         | Public API key | Supabase Dashboard → Settings → API |
+| `SUPABASE_SERVICE_ROLE_KEY` | Admin key      | Supabase Dashboard → Settings → API |
 
 ## 🎯 Triggers
 
-| Event | Branch | Status |
-|-------|--------|--------|
-| Push | `master` | ✅ Auto |
-| Pull Request | to `master` | ✅ Auto |
-| Manual | any | ✅ On-demand |
+| Event        | Branch      | Status       |
+| ------------ | ----------- | ------------ |
+| Push         | `master`    | ✅ Auto      |
+| Pull Request | to `master` | ✅ Auto      |
+| Manual       | any         | ✅ On-demand |
 
 ## 📊 Pipeline Jobs
 
 ### 1. Lint & Code Quality
+
 ```yaml
 Dependencies: None
 Runs: Parallel with Unit Tests
@@ -64,17 +65,20 @@ Time: ~1-2 min
 ```
 
 **What it does:**
+
 - Checks TypeScript syntax
 - Verifies code style (ESLint)
 - Checks formatting (Prettier)
 
 **Fix locally:**
+
 ```bash
 npm run lint:fix
 npx prettier --write .
 ```
 
 ### 2. Unit Tests
+
 ```yaml
 Dependencies: None
 Runs: Parallel with Lint
@@ -82,17 +86,20 @@ Time: ~2-3 min
 ```
 
 **What it does:**
+
 - Runs Vitest tests
 - Generates coverage report
 - Uploads to Codecov (optional)
 
 **Fix locally:**
+
 ```bash
 npm run test
 npm run test:coverage
 ```
 
 ### 3. Production Build
+
 ```yaml
 Dependencies: Lint + Unit Tests
 Runs: After both pass
@@ -100,17 +107,20 @@ Time: ~2-3 min
 ```
 
 **What it does:**
+
 - Builds for production
 - Verifies no build errors
 - Uploads artifacts
 
 **Fix locally:**
+
 ```bash
 npm run build
 npm run preview
 ```
 
 ### 4. Summary
+
 ```yaml
 Dependencies: All jobs
 Runs: Always (even if jobs fail)
@@ -118,6 +128,7 @@ Time: ~10 sec
 ```
 
 **What it does:**
+
 - Collects results
 - Generates summary
 - Marks pipeline status
@@ -134,16 +145,19 @@ Time: ~10 sec
 2. **Common Issues**
 
    **Lint Failed:**
+
    ```bash
    npm run lint:fix  # Auto-fix
    ```
 
    **Tests Failed:**
+
    ```bash
    npm run test      # Debug locally
    ```
 
    **Build Failed:**
+
    ```bash
    npm run build     # Check errors
    ```
@@ -200,12 +214,14 @@ npm run lint && npm run test:run && npm run build
 ### Branch Protection
 
 Enable in `Settings` → `Branches`:
+
 - ✅ Require status checks before merging
 - ✅ Require branches to be up to date
 
 ### Cache Management
 
 GitHub automatically caches `node_modules`:
+
 - First run: ~3-4 min (no cache)
 - Subsequent: ~1-2 min (with cache)
 
@@ -224,13 +240,13 @@ After basic setup works:
 
 ## 🔗 Quick Links
 
-| Link | Description |
-|------|-------------|
-| [Setup Guide](.github/SETUP-GUIDE.md) | Complete setup instructions |
-| [Technical Docs](.github/README.md) | Detailed documentation |
-| [Architecture](.github/ARCHITECTURE.md) | Diagrams and deep dive |
-| [Actions Tab](../../actions) | View pipeline runs |
-| [Settings](../../settings/secrets/actions) | Manage secrets |
+| Link                                       | Description                 |
+| ------------------------------------------ | --------------------------- |
+| [Setup Guide](.github/SETUP-GUIDE.md)      | Complete setup instructions |
+| [Technical Docs](.github/README.md)        | Detailed documentation      |
+| [Architecture](.github/ARCHITECTURE.md)    | Diagrams and deep dive      |
+| [Actions Tab](../../actions)               | View pipeline runs          |
+| [Settings](../../settings/secrets/actions) | Manage secrets              |
 
 ## 📞 Need Help?
 
@@ -242,4 +258,3 @@ After basic setup works:
 ---
 
 **Remember:** Pipeline reflects your local environment. If tests pass locally, they should pass in CI! 🎉
-

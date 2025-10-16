@@ -37,6 +37,7 @@ Jeśli wszystkie powyższe komendy działają bez błędów, możesz przejść d
 4. Dodaj następujące secrets:
 
 #### SUPABASE_ANON_KEY
+
 - **Nazwa:** `SUPABASE_ANON_KEY`
 - **Wartość:** Twój klucz publiczny Supabase
 - **Gdzie znaleźć:**
@@ -46,12 +47,13 @@ Jeśli wszystkie powyższe komendy działają bez błędów, możesz przejść d
   4. Skopiuj wartość z `Project API keys` → `anon` `public`
 
 #### SUPABASE_SERVICE_ROLE_KEY
+
 - **Nazwa:** `SUPABASE_SERVICE_ROLE_KEY`
 - **Wartość:** Twój klucz serwisowy Supabase
 - **Gdzie znaleźć:**
   1. W tym samym miejscu co wyżej
   2. Skopiuj wartość z `Project API keys` → `service_role`
-  
+
 ⚠️ **UWAGA:** Ten klucz ma pełne uprawnienia! Nigdy nie udostępniaj go publicznie.
 
 ### Weryfikacja Secrets
@@ -113,6 +115,7 @@ Dodaj badge statusu CI/CD do swojego `README.md`:
 ```
 
 Zastąp:
+
 - `TWÓJ_USERNAME` - swoim username na GitHub
 - `TWOJA_NAZWA_REPO` - nazwą swojego repozytorium
 
@@ -125,6 +128,7 @@ Badge będzie pokazywał aktualny status pipeline (passing/failing).
 **Problem:** ESLint znajduje błędy
 
 **Rozwiązanie:**
+
 ```bash
 npm run lint:fix  # Automatyczne naprawienie
 ```
@@ -134,6 +138,7 @@ npm run lint:fix  # Automatyczne naprawienie
 **Problem:** Testy jednostkowe failują
 
 **Rozwiązanie:**
+
 ```bash
 npm run test       # Uruchom testy w watch mode
 npm run test:ui    # Uruchom z interfejsem graficznym
@@ -144,11 +149,13 @@ npm run test:ui    # Uruchom z interfejsem graficznym
 **Problem:** Błędy podczas budowania
 
 **Rozwiązanie:**
+
 ```bash
 npm run build      # Zobacz szczegółowy error
 ```
 
 Sprawdź:
+
 - Czy wszystkie importy są poprawne
 - Czy zmienne środowiskowe są zdefiniowane
 - Czy wszystkie zależności są zainstalowane
@@ -158,6 +165,7 @@ Sprawdź:
 **Problem:** Pipeline nie może odczytać secrets
 
 **Sprawdź:**
+
 1. Czy secrets są dodane w `Settings` → `Secrets and variables` → `Actions`
 2. Czy nazwy secrets są dokładnie takie jak w workflow
 3. Czy workflow ma dostęp do secrets (publiczne repo vs private)
@@ -207,4 +215,3 @@ Jeśli masz problemy z konfiguracją:
 - [ ] Pipeline uruchamia się automatycznie po push
 
 Gratulacje! 🎉 Twój CI/CD pipeline jest gotowy!
-

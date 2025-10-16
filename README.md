@@ -102,6 +102,7 @@ This project uses **GitHub Actions** for continuous integration and deployment.
 ### Pipeline Overview
 
 The CI/CD pipeline automatically runs on:
+
 - Push to `master` branch
 - Pull requests to `master`
 - Manual trigger via GitHub Actions UI
