@@ -15,12 +15,7 @@ describe("useProviders", () => {
     id: 1,
     name: "Test Provider",
     technology: "Fiber",
-    contact_email: "test@example.com",
-    contact_phone: "+48 123 456 789",
-    website: "https://example.com",
-    description: "Test provider description",
-    created_at: "2024-01-01T00:00:00Z",
-    updated_at: "2024-01-01T00:00:00Z",
+    bandwidth: 1000,
   };
 
   const mockApiResponse = {

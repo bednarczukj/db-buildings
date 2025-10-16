@@ -14,9 +14,7 @@ describe("useUsers", () => {
   const mockUser: UserProfileDTO = {
     user_id: "user-123",
     email: "test@example.com",
-    role: "user",
-    created_at: "2024-01-01T00:00:00Z",
-    updated_at: "2024-01-01T00:00:00Z",
+    role: "READ",
   };
 
   const mockUsers = [mockUser];
@@ -117,15 +115,13 @@ describe("useUsers", () => {
     const newUserData: CreateUserCommand = {
       email: "newuser@example.com",
       password: "password123",
-      role: "user",
+      role: "READ",
     };
 
     const createdUser: UserProfileDTO = {
       user_id: "new-user-123",
       email: "newuser@example.com",
-      role: "user",
-      created_at: "2024-01-01T00:00:00Z",
-      updated_at: "2024-01-01T00:00:00Z",
+      role: "READ",
     };
 
     it("should create user successfully", async () => {
@@ -222,12 +218,12 @@ describe("useUsers", () => {
 
   describe("updateUser", () => {
     const updateData: UpdateUserCommand = {
-      role: "admin",
+      role: "ADMIN",
     };
 
     const updatedUser: UserProfileDTO = {
       ...mockUser,
-      role: "admin",
+      role: "ADMIN",
     };
 
     it("should update user successfully", async () => {

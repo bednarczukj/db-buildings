@@ -94,7 +94,9 @@ export type ApiKeyDTO = Tables<"api_keys">;
 export type CreateApiKeyCommand = Omit<TablesInsert<"api_keys">, "id" | "created_at" | "last_rotated_at">;
 
 // USERS
-export type UserProfileDTO = Tables<"profiles">;
+export type UserProfileDTO = Tables<"profiles"> & {
+  email: string;
+};
 export interface CreateUserCommand {
   email: string;
   password: string;
