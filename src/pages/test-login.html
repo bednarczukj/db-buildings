@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test logowania</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <div>
+                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                    Zaloguj się do systemu
+                </h2>
+                <p class="mt-2 text-center text-sm text-gray-600">
+                    Wprowadź swoje dane, aby uzyskać dostęp
+                </p>
+            </div>
+
+            <div id="error-message" class="hidden rounded-md bg-red-50 p-4">
+                <div class="flex">
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">
+                            Błąd logowania
+                        </h3>
+                        <div class="mt-2 text-sm text-red-700">
+                            <p id="error-text">Wystąpił błąd podczas logowania</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form id="login-form" class="mt-8 space-y-6" onsubmit="handleLogin(event)">
+                <input type="hidden" name="remember" value="true" />
+                <div class="rounded-md shadow-sm -space-y-px">
+                    <div>
+                        <label for="email-address" class="sr-only">Adres e-mail</label>
+                        <input id="email-address" name="email" type="email" autocomplete="email" required
+                               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                               placeholder="Adres e-mail">
+                    </div>
+                    <div>
+                        <label for="password" class="sr-only">Hasło</label>
+                        <input id="password" name="password" type="password" autocomplete="current-password" required
+                               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                               placeholder="Hasło">
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit" id="login-button"
+                            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <svg class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        <span id="button-text">Zaloguj się</span>
+                    </button>
+                </div>
+
+                <div class="text-center">
+                    <a href="/buildings" class="text-indigo-600 hover:text-indigo-500">
+                        Przejdź do budynków bez logowania
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            errorText.textContent = message;
+            errorDiv.classList.remove('hidden');
+        }
+
+        function hideError() {
+            document.getElementById('error-message').classList.add('hidden');
+        }
+
+        function setLoading(loading) {
+            const button = document.getElementById('login-button');
+            const buttonText = document.getElementById('button-text');
+
+            if (loading) {
+                button.disabled = true;
+                buttonText.textContent = 'Logowanie...';
+            } else {
+                button.disabled = false;
+                buttonText.textContent = 'Zaloguj się';
+            }
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            hideError();
+
+            const email = document.getElementById('email-address').value;
+            const password = document.getElementById('password').value;
+
+            console.log('=== LOGIN FORM SUBMIT STARTED ===');
+            console.log('Email:', email);
+            alert('Login attempt started! Check console for details.');
+
+            setLoading(true);
+
+            try {
+                // Simulate login process
+                console.log('Simulating login process...');
+
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // Simple validation - accept any email/password for demo
+                if (email && password) {
+                    console.log('Login successful - redirecting to buildings...');
+                    alert('Login successful! Redirecting to buildings...');
+                    window.location.href = '/test-buildings.html';
+                } else {
+                    showError('Wprowadź prawidłowe dane logowania');
+                }
+            } catch (err) {
+                console.error('Login error:', err);
+                showError('Wystąpił błąd podczas logowania');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // Auto-focus email field
+        document.getElementById('email-address').focus();
+    </script>
+</body>
+</html>

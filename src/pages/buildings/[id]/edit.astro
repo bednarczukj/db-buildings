@@ -1,0 +1,10 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import BuildingForm from "@/components/features/buildings/BuildingForm";
+
+const { id } = Astro.params;
+---
+
+<Layout title="Edytuj budynek">
+  <BuildingForm buildingId={id} client:load />
+</Layout>

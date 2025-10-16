@@ -58,11 +58,13 @@ supabase db push
 ### Partitioned Tables
 
 #### Buildings (LIST partitioning)
+
 - Partitioned by `voivodeship_code`
 - All 16 voivodeship partitions are pre-created
 - Primary key must include partition key: `(id, voivodeship_code)`
 
 #### Audit Logs (RANGE partitioning)
+
 - Partitioned by `created_at` (monthly)
 - Initial 6 months of partitions created
 - Use `create_next_audit_logs_partition()` to add new partitions
@@ -120,4 +122,3 @@ Partitioned tables require partition keys in primary key:
 - `audit_logs`: `(id, created_at)`
 
 This is a PostgreSQL requirement for partitioned tables.
-

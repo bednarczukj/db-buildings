@@ -1,0 +1,15 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import BuildingDetailsView from "../../components/features/buildings/BuildingDetailsView";
+
+const { id } = Astro.params;
+
+// Validate that ID exists
+if (!id) {
+  return Astro.redirect("/buildings");
+}
+---
+
+<Layout title="Szczegóły Budynku">
+  <BuildingDetailsView client:load buildingId={id} />
+</Layout>

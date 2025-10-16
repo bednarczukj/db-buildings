@@ -1,0 +1,15 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProviderDetailsView from "../../components/features/providers/ProviderDetailsView";
+
+const { id } = Astro.params;
+
+// Validate that ID exists
+if (!id) {
+  return Astro.redirect("/providers");
+}
+---
+
+<Layout title="Szczegóły Dostawcy">
+  <ProviderDetailsView client:load providerId={id} />
+</Layout>

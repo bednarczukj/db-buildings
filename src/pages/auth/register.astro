@@ -1,0 +1,12 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import RegisterForm from "@/components/features/auth/RegisterForm";
+---
+
+<Layout title="Rejestracja">
+  <div class="min-h-screen flex items-center justify-center bg-background px-4">
+    <div class="w-full max-w-md">
+      <RegisterForm client:load />
+    </div>
+  </div>
+</Layout>

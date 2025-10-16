@@ -1,11 +1,27 @@
 ---
 import "../styles/global.css";
+import LogoutButton from "../components/shared/LogoutButton";
+import { Navigation } from "../components/shared/Navigation";
 
 interface Props {
   title?: string;
 }
 
-const { title = "10x Astro Starter" } = Astro.props;
+const { title = "Baza Budynków Polski" } = Astro.props;
+const user = Astro.locals.user;
+const supabase = Astro.locals.supabase;
+
+// Get user role from profiles table (server-side)
+let userRole = null;
+if (user && supabase) {
+  try {
+    const { data: profile } = await supabase.from("profiles").select("role").eq("user_id", user.id).single();
+    userRole = profile?.role || null;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Error fetching user role:", error);
+  }
+}
 ---
 
 <!doctype html>
@@ -18,6 +34,52 @@ const { title = "10x Astro Starter" } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
+    <header class="bg-white border-b border-border">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          {/* Logo/Brand */}
+          <div class="flex items-center">
+            <a href="/" class="text-xl font-bold text-foreground hover:text-primary transition-colors">
+              Baza Budynków Polski
+            </a>
+          </div>
+
+          {/* Navigation */}
+          <nav class="flex items-center space-x-4">
+            {
+              user ? (
+                <>
+                  {/* Authenticated user navigation */}
+                  <Navigation user={user} userRole={userRole} client:load />
+
+                  {/* User info and logout */}
+                  <div class="flex items-center space-x-4 ml-4 pl-4 border-l border-border">
+                    <span class="text-sm text-muted-foreground">{user.email}</span>
+                    <LogoutButton client:load />
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Guest navigation */}
+                  <a
+                    href="/auth/login"
+                    class="text-sm font-medium text-foreground hover:text-primary transition-colors"
+                  >
+                    Zaloguj się
+                  </a>
+                  <a
+                    href="/auth/register"
+                    class="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                  >
+                    Zarejestruj się
+                  </a>
+                </>
+              )
+            }
+          </nav>
+        </div>
+      </div>
+    </header>
     <slot />
   </body>
 </html>

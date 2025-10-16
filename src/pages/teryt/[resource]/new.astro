@@ -1,0 +1,67 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { TerytForm } from "../../../components/features/teryt/TerytForm";
+import { TERYT_RESOURCES } from "../../../lib/schemas/terytSchemas";
+
+// Get user role from middleware
+const userRole = Astro.locals.userRole;
+const hasWriteAccess = userRole === "WRITE" || userRole === "ADMIN";
+
+if (!hasWriteAccess) {
+  return Astro.redirect("/403");
+}
+
+// Get resource parameter
+const { resource } = Astro.params;
+if (!resource || !TERYT_RESOURCES.includes(resource as any)) {
+  return Astro.redirect("/404");
+}
+
+// Get resource display name
+const getResourceDisplayName = (resource: string): string => {
+  const names: Record<string, string> = {
+    voivodeships: "Województwa",
+    districts: "Powiaty",
+    communities: "Gminy",
+    cities: "Miejscowości",
+    city_districts: "Dzielnice",
+    streets: "Ulice",
+  };
+  return names[resource] || resource;
+};
+
+const displayName = getResourceDisplayName(resource);
+---
+
+<Layout title={`Dodaj ${displayName} - Baza Budynków Polski`}>
+  <div class="container mx-auto px-4 py-8">
+    <div class="mb-8">
+      <nav class="flex mb-4" aria-label="Breadcrumb">
+        <ol class="flex items-center space-x-2">
+          <li>
+            <a href="/buildings" class="text-gray-500 hover:text-gray-700">Budynki</a>
+          </li>
+          <li class="text-gray-400">/</li>
+          <li>
+            <a href={`/teryt/${resource}`} class="text-gray-500 hover:text-gray-700">{displayName}</a>
+          </li>
+          <li class="text-gray-400">/</li>
+          <li class="text-gray-900 font-medium">Dodaj nowy</li>
+        </ol>
+      </nav>
+
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">
+        Dodaj nowy wpis
+      </h1>
+      <p class="text-gray-600">
+        Dodaj nowy wpis do słownika <strong>{displayName.toLowerCase()}</strong>
+      </p>
+    </div>
+
+    <TerytForm
+      resource={resource as import("../../../lib/schemas/terytSchemas").TerytResource}
+      mode="create"
+      client:load
+    />
+  </div>
+</Layout>

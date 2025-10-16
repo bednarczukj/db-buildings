@@ -1,8 +1,22 @@
 ---
-import Welcome from "../components/Welcome.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout>
-  <Welcome />
+<Layout title="Test aplikacji">
+	<div class="min-h-screen flex items-center justify-center bg-background">
+		<div class="text-center space-y-6">
+			<h1 class="text-4xl font-bold">Test aplikacji budynków</h1>
+			<div class="space-y-4">
+				<a href="/test-login.html" class="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
+					Test logowania (HTML)
+				</a>
+				<a href="/auth/login" class="inline-block px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 ml-4">
+					Test logowania (React)
+				</a>
+				<a href="/test-buildings.html" class="inline-block px-6 py-3 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/90 ml-4">
+					Przejdź do budynków (test)
+				</a>
+			</div>
+		</div>
+	</div>
 </Layout>

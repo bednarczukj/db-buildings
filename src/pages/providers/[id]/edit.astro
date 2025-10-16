@@ -1,0 +1,12 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { ProviderForm } from "../../../components/features/providers/ProviderForm";
+
+const { id } = Astro.params;
+const providerId = id ? parseInt(id, 10) : undefined;
+---
+
+<Layout title="Edytuj dostawcę">
+  <ProviderForm providerId={providerId} client:load />
+</Layout>
+

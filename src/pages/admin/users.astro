@@ -1,0 +1,17 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import UserManagement from "../../components/features/admin/UserManagement";
+---
+
+<Layout title="Zarządzanie Użytkownikami">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-foreground">Zarządzanie Użytkownikami</h1>
+      <p class="mt-2 text-muted-foreground">
+        Wyświetla wszystkich użytkowników systemu z ich ID, adresem email oraz przypisaną rolą. Możesz tworzyć nowych użytkowników oraz zmieniać ich role dostępu.
+      </p>
+    </div>
+
+    <UserManagement client:load />
+  </div>
+</Layout>

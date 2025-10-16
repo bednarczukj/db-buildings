@@ -1,0 +1,448 @@
+###
+# API Examples for Polish Buildings Database
+# 
+# Use this file with REST Client extensions (VS Code, IntelliJ)
+# or tools like Postman, Insomnia, or HTTPie
+#
+# IMPORTANT NOTES:
+# - Building IDs are UUIDs (not integers)
+#   Example: 550e8400-e29b-41d4-a716-446655440001
+# - POST requests require `post_code` field in format XX-XXX
+###
+
+@baseUrl = http://localhost:3000
+@apiVersion = v1
+
+### 1. Get all buildings (default pagination)
+GET {{baseUrl}}/api/{{apiVersion}}/buildings
+
+### 2. Get buildings with custom pagination
+GET {{baseUrl}}/api/{{apiVersion}}/buildings?page=1&pageSize=20
+
+### 3. Get buildings in Mazowieckie voivodeship
+GET {{baseUrl}}/api/{{apiVersion}}/buildings?voivodeship_code=14
+
+### 4. Get buildings in Warsaw
+GET {{baseUrl}}/api/{{apiVersion}}/buildings?city_code=0918123
+
+### 5. Get buildings from Orange provider
+GET {{baseUrl}}/api/{{apiVersion}}/buildings?provider_id=1
+
+### 6. Get only active buildings
+GET {{baseUrl}}/api/{{apiVersion}}/buildings?status=active
+
+### 7. Get only deleted buildings
+GET {{baseUrl}}/api/{{apiVersion}}/buildings?status=deleted
+
+### 8. Complex filter: Active buildings in Warsaw from provider 1
+GET {{baseUrl}}/api/{{apiVersion}}/buildings?city_code=0918123&provider_id=1&status=active
+
+### 9. Complex filter with pagination
+GET {{baseUrl}}/api/{{apiVersion}}/buildings?voivodeship_code=14&status=active&page=2&pageSize=50
+
+### 10. Test validation error (invalid page)
+GET {{baseUrl}}/api/{{apiVersion}}/buildings?page=invalid
+
+### 11. Test validation error (pageSize too large)
+GET {{baseUrl}}/api/{{apiVersion}}/buildings?pageSize=200
+
+### 12. Test validation error (invalid status)
+GET {{baseUrl}}/api/{{apiVersion}}/buildings?status=invalid_status
+
+### 13. Test validation error (voivodeship_code wrong length)
+GET {{baseUrl}}/api/{{apiVersion}}/buildings?voivodeship_code=123
+
+### 14. Test 404 error (non-existent voivodeship)
+GET {{baseUrl}}/api/{{apiVersion}}/buildings?voivodeship_code=9999999
+
+### 15. Test 404 error (non-existent provider)
+GET {{baseUrl}}/api/{{apiVersion}}/buildings?provider_id=99999
+
+### 16. Test 404 error (page out of range)
+GET {{baseUrl}}/api/{{apiVersion}}/buildings?page=999999
+
+###
+# POST /api/v1/buildings - Create Building
+###
+
+### 17. Create building in Warsaw (valid)
+POST {{baseUrl}}/api/{{apiVersion}}/buildings
+Content-Type: application/json
+
+{
+  "voivodeship_code": "14",
+  "district_code": "1465",
+  "community_code": "1465011",
+  "city_code": "0918123",
+  "street_code": "10270",
+  "building_number": "42A",
+  "post_code": "00-042",
+  "location": {
+    "type": "Point",
+    "coordinates": [21.0122, 52.2297]
+  },
+  "provider_id": 1
+}
+
+### 18. Create building with city district
+POST {{baseUrl}}/api/{{apiVersion}}/buildings
+Content-Type: application/json
+
+{
+  "voivodeship_code": "14",
+  "district_code": "1465",
+  "community_code": "1465011",
+  "city_code": "0918123",
+  "city_district_code": "0919810",
+  "street_code": "10270",
+  "building_number": "15",
+  "post_code": "00-015",
+  "location": {
+    "type": "Point",
+    "coordinates": [21.0122, 52.2297]
+  },
+  "provider_id": 2
+}
+
+### 19. Create building in Kraków
+POST {{baseUrl}}/api/{{apiVersion}}/buildings
+Content-Type: application/json
+
+{
+  "voivodeship_code": "12",
+  "district_code": "1261",
+  "community_code": "1261011",
+  "city_code": "0950867",
+  "street_code": "12345",
+  "building_number": "10B",
+  "post_code": "31-010",
+  "location": {
+    "type": "Point",
+    "coordinates": [19.9450, 50.0647]
+  },
+  "provider_id": 1
+}
+
+### 20. Test 400 error - missing required field (post_code missing)
+POST {{baseUrl}}/api/{{apiVersion}}/buildings
+Content-Type: application/json
+
+{
+  "voivodeship_code": "14",
+  "building_number": "1"
+}
+
+### 21. Test 400 error - wrong voivodeship code length
+POST {{baseUrl}}/api/{{apiVersion}}/buildings
+Content-Type: application/json
+
+{
+  "voivodeship_code": "123",
+  "district_code": "1465",
+  "community_code": "1465011",
+  "city_code": "0918123",
+  "street_code": "10270",
+  "building_number": "1",
+  "post_code": "00-001",
+  "location": {
+    "type": "Point",
+    "coordinates": [21.0122, 52.2297]
+  },
+  "provider_id": 1
+}
+
+### 22. Test 422 error - coordinates out of Poland bounds
+POST {{baseUrl}}/api/{{apiVersion}}/buildings
+Content-Type: application/json
+
+{
+  "voivodeship_code": "14",
+  "district_code": "1465",
+  "community_code": "1465011",
+  "city_code": "0918123",
+  "street_code": "10270",
+  "building_number": "999",
+  "post_code": "00-999",
+  "location": {
+    "type": "Point",
+    "coordinates": [100.0, 100.0]
+  },
+  "provider_id": 1
+}
+
+### 23. Test 404 error - non-existent voivodeship
+POST {{baseUrl}}/api/{{apiVersion}}/buildings
+Content-Type: application/json
+
+{
+  "voivodeship_code": "99",
+  "district_code": "1465",
+  "community_code": "1465011",
+  "city_code": "0918123",
+  "street_code": "10270",
+  "building_number": "1",
+  "post_code": "00-001",
+  "location": {
+    "type": "Point",
+    "coordinates": [21.0122, 52.2297]
+  },
+  "provider_id": 1
+}
+
+### 24. Test 404 error - non-existent provider
+POST {{baseUrl}}/api/{{apiVersion}}/buildings
+Content-Type: application/json
+
+{
+  "voivodeship_code": "14",
+  "district_code": "1465",
+  "community_code": "1465011",
+  "city_code": "0918123",
+  "street_code": "10270",
+  "building_number": "1",
+  "post_code": "00-001",
+  "location": {
+    "type": "Point",
+    "coordinates": [21.0122, 52.2297]
+  },
+  "provider_id": 99999
+}
+
+### 25. Test 409 error - duplicate building (run twice)
+POST {{baseUrl}}/api/{{apiVersion}}/buildings
+Content-Type: application/json
+
+{
+  "voivodeship_code": "14",
+  "district_code": "1465",
+  "community_code": "1465011",
+  "city_code": "0918123",
+  "street_code": "10270",
+  "building_number": "DUPLICATE_TEST",
+  "post_code": "00-042",
+  "location": {
+    "type": "Point",
+    "coordinates": [21.0122, 52.2297]
+  },
+  "provider_id": 1
+}
+
+###
+# GET /api/v1/buildings/:id - Get Building by ID (UUID)
+###
+
+### 26. Get building by ID (valid UUID)
+GET {{baseUrl}}/api/{{apiVersion}}/buildings/550e8400-e29b-41d4-a716-446655440001
+
+### 27. Get another building (valid UUID)
+GET {{baseUrl}}/api/{{apiVersion}}/buildings/550e8400-e29b-41d4-a716-446655440002
+
+### 27.5. Get deleted building (valid UUID)
+GET {{baseUrl}}/api/{{apiVersion}}/buildings/550e8400-e29b-41d4-a716-446655440003
+
+### 28. Test 404 error - non-existent building UUID
+GET {{baseUrl}}/api/{{apiVersion}}/buildings/550e8400-e29b-41d4-a716-999999999999
+
+### 29. Test 400 error - invalid UUID format (not a UUID)
+GET {{baseUrl}}/api/{{apiVersion}}/buildings/not-a-valid-uuid
+
+### 30. Test 400 error - invalid UUID format (wrong structure)
+GET {{baseUrl}}/api/{{apiVersion}}/buildings/550e8400-e29b-41d4
+
+### 31. Test 400 error - invalid UUID format (number instead of UUID)
+GET {{baseUrl}}/api/{{apiVersion}}/buildings/12345
+
+### 32. Test 400 error - empty ID
+GET {{baseUrl}}/api/{{apiVersion}}/buildings/
+
+###
+# cURL Examples
+###
+
+# Basic request
+# curl -X GET "http://localhost:3000/api/v1/buildings"
+
+# With filters
+# curl -X GET "http://localhost:3000/api/v1/buildings?city_code=0918123&status=active"
+
+# With pagination
+# curl -X GET "http://localhost:3000/api/v1/buildings?page=2&pageSize=20"
+
+# Pretty print JSON with jq
+# curl -X GET "http://localhost:3000/api/v1/buildings" | jq
+
+###
+# HTTPie Examples
+###
+
+# Basic request
+# http GET http://localhost:3000/api/v1/buildings
+
+# With filters
+# http GET http://localhost:3000/api/v1/buildings city_code==0918123 status==active
+
+# With pagination
+# http GET http://localhost:3000/api/v1/buildings page==2 pageSize==20
+
+###
+# JavaScript/Fetch Examples
+###
+
+# // Basic request
+# const response = await fetch('http://localhost:3000/api/v1/buildings');
+# const data = await response.json();
+# console.log(data);
+
+# // With filters and pagination
+# const params = new URLSearchParams({
+#   city_code: '0918123',
+#   status: 'active',
+#   page: '1',
+#   pageSize: '20'
+# });
+# const response = await fetch(`http://localhost:3000/api/v1/buildings?${params}`);
+# const data = await response.json();
+# console.log(data);
+
+###
+# cURL Examples for POST
+###
+
+# Create building in Warsaw
+# curl -X POST "http://localhost:3000/api/v1/buildings" \
+#   -H "Content-Type: application/json" \
+#   -d '{
+#     "voivodeship_code": "14",
+#     "district_code": "1465",
+#     "community_code": "1465011",
+#     "city_code": "0918123",
+#     "street_code": "10270",
+#     "building_number": "42A",
+#     "post_code": "00-042",
+#     "location": {
+#       "type": "Point",
+#       "coordinates": [21.0122, 52.2297]
+#     },
+#     "provider_id": 1
+#   }'
+
+# Create building with city district
+# curl -X POST "http://localhost:3000/api/v1/buildings" \
+#   -H "Content-Type: application/json" \
+#   -d '{
+#     "voivodeship_code": "14",
+#     "district_code": "1465",
+#     "community_code": "1465011",
+#     "city_code": "0918123",
+#     "city_district_code": "0919810",
+#     "street_code": "10270",
+#     "building_number": "15",
+#     "post_code": "00-015",
+#     "location": {
+#       "type": "Point",
+#       "coordinates": [21.0122, 52.2297]
+#     },
+#     "provider_id": 2
+#   }'
+
+###
+# HTTPie Examples for POST
+###
+
+# Create building in Warsaw
+# http POST http://localhost:3000/api/v1/buildings \
+#   voivodeship_code="14" \
+#   district_code="1465" \
+#   community_code="1465011" \
+#   city_code="0918123" \
+#   street_code="10270" \
+#   building_number="42A" \
+#   post_code="00-042" \
+#   location:='{"type":"Point","coordinates":[21.0122,52.2297]}' \
+#   provider_id:=1
+
+###
+# JavaScript/Fetch Examples for POST
+###
+
+# // Create building
+# const buildingData = {
+#   voivodeship_code: "14",
+#   district_code: "1465",
+#   community_code: "1465011",
+#   city_code: "0918123",
+#   street_code: "10270",
+#   building_number: "42A",
+#   post_code: "00-042",
+#   location: {
+#     type: "Point",
+#     coordinates: [21.0122, 52.2297]
+#   },
+#   provider_id: 1
+# };
+# 
+# const response = await fetch('http://localhost:3000/api/v1/buildings', {
+#   method: 'POST',
+#   headers: {
+#     'Content-Type': 'application/json',
+#   },
+#   body: JSON.stringify(buildingData),
+# });
+# 
+# if (response.ok) {
+#   const newBuilding = await response.json();
+#   console.log('Building created:', newBuilding);
+# } else {
+#   const error = await response.json();
+#   console.error('Error:', error);
+# }
+
+###
+# cURL Examples for GET :id
+###
+
+# Get building by ID (UUID)
+# curl -X GET "http://localhost:3000/api/v1/buildings/550e8400-e29b-41d4-a716-446655440001"
+
+# Get building with pretty print (jq)
+# curl -X GET "http://localhost:3000/api/v1/buildings/550e8400-e29b-41d4-a716-446655440001" | jq
+
+# Test non-existent UUID
+# curl -X GET "http://localhost:3000/api/v1/buildings/550e8400-e29b-41d4-a716-999999999999"
+
+# Test invalid UUID
+# curl -X GET "http://localhost:3000/api/v1/buildings/not-a-valid-uuid"
+
+###
+# HTTPie Examples for GET :id
+###
+
+# Get building by ID (UUID)
+# http GET http://localhost:3000/api/v1/buildings/550e8400-e29b-41d4-a716-446655440001
+
+# Test non-existent UUID
+# http GET http://localhost:3000/api/v1/buildings/550e8400-e29b-41d4-a716-999999999999
+
+###
+# JavaScript/Fetch Examples for GET :id
+###
+
+# // Get building by ID (UUID)
+# const buildingId = '550e8400-e29b-41d4-a716-446655440001';
+# const response = await fetch(`http://localhost:3000/api/v1/buildings/${buildingId}`);
+# 
+# if (response.ok) {
+#   const building = await response.json();
+#   console.log('Building:', building);
+#   console.log(`ID (UUID): ${building.id}`);
+#   console.log(`Number: ${building.building_number}`);
+#   console.log(`Status: ${building.status}`);
+# } else if (response.status === 404) {
+#   console.log('Building not found');
+# } else if (response.status === 400) {
+#   const error = await response.json();
+#   console.error('Invalid UUID:', error.message);
+# } else {
+#   console.error('Error:', response.status);
+# }
+

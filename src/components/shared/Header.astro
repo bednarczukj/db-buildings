@@ -1,0 +1,59 @@
+---
+import { Navigation } from "./Navigation";
+
+interface Props {
+  user: { email: string } | null;
+  userRole: string | null;
+}
+
+const { user, userRole } = Astro.props;
+---
+
+<header class="bg-white border-b border-border">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      {/* Logo/Brand */}
+      <div class="flex items-center">
+        <a href="/" class="text-xl font-bold text-foreground hover:text-primary transition-colors">
+          Baza Budynków Polski
+        </a>
+      </div>
+
+      {/* Navigation */}
+      <nav class="flex items-center space-x-4">
+        {
+          user ? (
+            <>
+              {/* Authenticated user navigation */}
+              <Navigation user={user} userRole={userRole} client:load />
+
+              {/* User info and logout */}
+              <div class="flex items-center space-x-4 ml-4 pl-4 border-l border-border">
+                <span class="text-sm text-muted-foreground">{user.email}</span>
+
+                <form method="POST" action="/api/auth/logout" class="inline">
+                  <button
+                    type="submit"
+                    class="text-sm font-medium text-destructive hover:text-destructive/80 transition-colors"
+                  >
+                    Wyloguj się
+                  </button>
+                </form>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Guest navigation */}
+              <a href="/auth/login" class="text-sm font-medium text-foreground hover:text-primary transition-colors">
+                Zaloguj się
+              </a>
+              <a href="/auth/register" class="text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+                Zarejestruj się
+              </a>
+            </>
+          )
+        }
+      </nav>
+    </div>
+  </div>
+</header>

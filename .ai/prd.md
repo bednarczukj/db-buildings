@@ -1,40 +1,47 @@
 # Dokument wymagań produktu (PRD) - Baza Budynków Polski
 
 ## 1. Przegląd produktu
+
 Aplikacja webowa "Baza Budynków Polski" (BBP) to system umożliwiający ręczne wprowadzanie, przeglądanie i zarządzanie informacjami o budynkach w Polsce wraz z podstawowymi danymi o dostawcy internetu szerokopasmowego. System zapewnia rolę kontroli dostępu, wyszukiwanie z autouzupełnianiem oraz API do odczytu parametrów budynku przez inne systemy.
 
 ## 2. Problem użytkownika
+
 Użytkownicy w organizacji nie mają aktualnej bazy budynków Polski, co skutkuje:
+
 - Brakiem informacji o nowych, wybudowanych budynkach
 - Brakiem wiedzy, czy budynek ma dostęp do internetu szerokopasmowego, jaka technologia jest dostępna i jaka jest przepływność, kiedy został wybudowany
 
 ## 3. Wymagania funkcjonalne
+
 F1. Ręczne dodawanie budynków z danymi:
-  - numer budynku, typ (jednorodzinny/wielorodzinny), hierarchia TERYT (województwo → powiat → gmina → miejscowość → część/dzielnica (opcjonalnie) → ulica (opcjonalnie)). Nie wszystkie miejscowości posiadają ulice. Miasto Warszawa posiada gminy, miasta Wrocław, Poznań, Łódź, Kraków dzielnice - dla tych miast będzie wybierana gmina/dzielnica. Tylko niektóre miejscowości posiadają części miejscowości. Współrzędne (WGS84, 5 miejsc, zakres: Lon 14.1–24.1, Lat 49.0–54.8), dane dostawcy (nazwa, technologia, przepustowość).
-F2. CRUD słowników TERYT: województwa, powiaty, gminy, miejscowości, części miejscowości, gmina/dzielnice (Warszawa, Poznań, Łódź, Kraków, Wrocław), ulice.
-F3. Zarządzanie rolami i użytkownikami:
-  - role ADMIN (zarządzanie użytkownikami i rolami), WRITE (CRUD budynków i słowników), READ (tylko odczyt), pierwsze konto ADMIN tworzone ręcznie.
-F4. Autentykacja i autoryzacja:
-  - Supabase Auth, tokeny w HttpOnly Secure cookies, timeout sesji, endpoint wylogowania.
-F5. Wyszukiwanie budynków:
-  - Autouzupełnianie po nazwie miejscowości lub ulicy (min. 2 znaki, debounce 300 ms).
-  - Wyszukiwanie po kodach nazwie miejscowości + nazwie części miejscowości (opcjonalnie) + nazwie gminy/dzielnicy (opcjonalnie) + ulica (opcjonalnie) + numer budynku.
-F6. Publiczne REST API `/api/v1/…`:
-  - Odczyt parametrów budynku: współrzędne longitude/latitude, dostawca, technologia, przepustowość.
-  - Klucze API z rotacją, limit 10 zapytań/godz., nagłówek `Idempotency-Key`, HTTP 429 z `Retry-After`.
-  - Paginacja: parametry `page`, `pageSize` (domyślnie 20, max 100), odpowiedź zawiera `totalCount`.
-F7. Audyt i logowanie zmian:
-  - Tabela audytu: timestamp UTC, user, entity_type, action, zmienione pola.
-  - UI: filtr dat, paginacja (domyślnie 50, max 200), sortowanie.
-  - Retencja logów 365 dni, codzienny cron do purgi.
-F8. Usuwanie:
-  - Twarde usunięcia z modalem potwierdzającym.
-F9. Spójność danych:
-  - Optimistic locking (`version` lub `updated_at`).
-  - Unikatowy indeks na (teryt_miejscowości, teryt_części miejscowości, teryt_dzielnicy, teryt_ulicy, numer_budynku).
+
+- numer budynku, typ (jednorodzinny/wielorodzinny), hierarchia TERYT (województwo → powiat → gmina → miejscowość → część/dzielnica (opcjonalnie) → ulica (opcjonalnie)). Nie wszystkie miejscowości posiadają ulice. Miasto Warszawa posiada gminy, miasta Wrocław, Poznań, Łódź, Kraków dzielnice - dla tych miast będzie wybierana gmina/dzielnica. Tylko niektóre miejscowości posiadają części miejscowości. Współrzędne (WGS84, 5 miejsc, zakres: Lon 14.1–24.1, Lat 49.0–54.8), dane dostawcy (nazwa, technologia, przepustowość).
+  F2. CRUD słowników TERYT: województwa, powiaty, gminy, miejscowości, części miejscowości, gmina/dzielnice (Warszawa, Poznań, Łódź, Kraków, Wrocław), ulice.
+  F3. Zarządzanie rolami i użytkownikami:
+- role ADMIN (zarządzanie użytkownikami i rolami), WRITE (CRUD budynków i słowników), READ (tylko odczyt), pierwsze konto ADMIN tworzone ręcznie.
+  F4. Autentykacja i autoryzacja:
+- Supabase Auth, tokeny w HttpOnly Secure cookies, timeout sesji, endpoint wylogowania.
+  F5. Wyszukiwanie budynków:
+- Autouzupełnianie po nazwie miejscowości lub ulicy (min. 2 znaki, debounce 300 ms).
+- Wyszukiwanie po kodach nazwie miejscowości + nazwie części miejscowości (opcjonalnie) + nazwie gminy/dzielnicy (opcjonalnie) + ulica (opcjonalnie) + numer budynku.
+  F6. Publiczne REST API `/api/v1/…`:
+- Odczyt parametrów budynku: współrzędne longitude/latitude, dostawca, technologia, przepustowość.
+- Klucze API z rotacją, limit 10 zapytań/godz., nagłówek `Idempotency-Key`, HTTP 429 z `Retry-After`.
+- Paginacja: parametry `page`, `pageSize` (domyślnie 20, max 100), odpowiedź zawiera `totalCount`.
+  F7. Audyt i logowanie zmian:
+- Tabela audytu: timestamp UTC, user, entity_type, action, zmienione pola.
+- UI: filtr dat, paginacja (domyślnie 50, max 200), sortowanie.
+- Retencja logów 365 dni, codzienny cron do purgi.
+  F8. Usuwanie:
+- Twarde usunięcia z modalem potwierdzającym.
+  F9. Spójność danych:
+- Optimistic locking (`version` lub `updated_at`).
+- Unikatowy indeks na (teryt_miejscowości, teryt_części miejscowości, teryt_dzielnicy, teryt_ulicy, numer_budynku).
 
 ## 4. Granice produktu
+
 W zakresie MVP:
+
 - Ręczne wprowadzanie pojedynczych budynków i słowników z poziomu UI.
 - Brak integracji z zewnętrznymi źródłami oraz masowych importów.
 - Brak słownika dostawców internetu (dane wprowadzane ręcznie).
@@ -43,12 +50,14 @@ W zakresie MVP:
 - Brak wymuszenia HTTPS oraz limitów CORS/SLA.
 
 Poza zakresem MVP:
+
 - Automatyczne pozyskiwanie danych o budynkach.
 - Masowe ładowanie budynków.
 - Zewnętrzny słownik dostawców internetu szerokopasmowego.
 - Automatyczne wybieranie dostawcy z największą przepustowością.
 
 ## 5. Historyjki użytkowników
+
 - ID: US-001
   Tytuł: Logowanie i zarządzanie sesją
   Opis: Jako użytkownik chcę się zalogować, aby uzyskać dostęp do aplikacji zgodnie z moją rolą.
@@ -130,7 +139,15 @@ Poza zakresem MVP:
   - Możliwość ustawienia zakresu dat.
   - Logi są paginowane (50 domyślnie, max 200) i posortowane.
 
+- ID: US-012
+  Tytuł: Zarządzanie Providers
+  Opis: Jako użytkownik z rolą WRITE chcę tworzyć, edytować i usuwać wpisy słowniku Providers.
+  Kryteria akceptacji:
+  - Użytkownik z WRITE może CRUD.
+  - Użytkownik z READ może R.
+
 ## 6. Metryki sukcesu
+
 - Średni czas dodania budynku ≤ 2 s.
 - Średni czas odpowiedzi API ≤ 1 s.
 - 100% przypadków CRUD budynków i słowników zgodnie z rolami.
