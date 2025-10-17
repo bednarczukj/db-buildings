@@ -1,0 +1,197 @@
+name: Pull Request Validation
+
+on:
+  pull_request:
+    branches:
+      - master
+
+# Cancel in-progress runs for the same PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  # Job 1: Lint and Code Quality
+  lint:
+    name: Lint & Code Quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Check formatting with Prettier
+        run: npx prettier --check .
+
+  # Job 2: Unit Tests (runs in parallel with e2e-test after lint)
+  unit-test:
+    name: Unit Tests with Coverage
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests with coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-test-coverage
+          path: coverage/
+          retention-days: 7
+
+  # Job 3: E2E Tests (runs in parallel with unit-test after lint)
+  e2e-test:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    environment: integration
+
+
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      BASE_URL: http://localhost:3000
+      TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
+      TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+      ADMIN_USER_EMAIL: ${{ secrets.ADMIN_USER_EMAIL }}
+      ADMIN_USER_PASSWORD: ${{ secrets.ADMIN_USER_PASSWORD }}
+      READ_USER_EMAIL: ${{ secrets.READ_USER_EMAIL }}
+      READ_USER_PASSWORD: ${{ secrets.READ_USER_PASSWORD }}
+      # OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Create .env.test file
+        run: |
+          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> .env.test
+          echo "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env.test
+          echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.test
+          echo "BASE_URL=http://localhost:3000" >> .env.test
+          echo "TEST_USER_EMAIL=${{ secrets.TEST_USER_EMAIL }}" >> .env.test
+          echo "TEST_USER_PASSWORD=${{ secrets.TEST_USER_PASSWORD }}" >> .env.test
+          echo "ADMIN_USER_EMAIL=${{ secrets.ADMIN_USER_EMAIL }}" >> .env.test
+          echo "ADMIN_USER_PASSWORD=${{ secrets.ADMIN_USER_PASSWORD }}" >> .env.test
+          echo "READ_USER_EMAIL=${{ secrets.READ_USER_EMAIL }}" >> .env.test
+          echo "READ_USER_PASSWORD=${{ secrets.READ_USER_PASSWORD }}" >> .env.test
+
+
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          # OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+
+      - name: Start application in background
+        run: |
+          npm run preview &
+          echo $! > preview.pid
+          npx wait-on http://localhost:3000 --timeout 60000
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+
+      - name: Stop application
+        if: always()
+        run: |
+          if [ -f preview.pid ]; then
+            kill $(cat preview.pid) || true
+          fi
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-test-results
+          path: test-results/
+          retention-days: 7
+
+  # Job 4: Status Comment (runs only if all previous jobs succeed)
+  status-comment:
+    name: Post PR Status Comment
+    runs-on: ubuntu-latest
+    needs: [lint, unit-test, e2e-test]
+    if: success()
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Post success comment
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const comment = `## ✅ Pull Request Validation Passed
+
+            All checks have completed successfully!
+
+            ### Summary
+            - ✅ **Lint & Code Quality** - Passed
+            - ✅ **Unit Tests** - Passed with coverage
+            - ✅ **E2E Tests** - Passed
+
+            ### Artifacts
+            - 📊 Unit test coverage report
+            - 🎭 Playwright test report
+            - 📝 E2E test results
+
+            *Ready for review and merge!*
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
