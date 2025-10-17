@@ -72,7 +72,6 @@ jobs:
     needs: lint
     environment: integration
 
-
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -114,7 +113,6 @@ jobs:
           echo "ADMIN_USER_PASSWORD=${{ secrets.ADMIN_USER_PASSWORD }}" >> .env.test
           echo "READ_USER_EMAIL=${{ secrets.READ_USER_EMAIL }}" >> .env.test
           echo "READ_USER_PASSWORD=${{ secrets.READ_USER_PASSWORD }}" >> .env.test
-
 
       - name: Build application
         run: npm run build
@@ -194,4 +192,3 @@ jobs:
               repo: context.repo.repo,
               body: comment
             });
-
