@@ -1,4 +1,4 @@
-# Polish Buildings Database (BBP)!
+# Polish Buildings Database (BBP)
 
 ![CI/CD Pipeline](https://github.com/jacekbednarczuk/db-buildings/actions/workflows/ci.yml/badge.svg)
 
