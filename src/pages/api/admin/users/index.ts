@@ -78,7 +78,7 @@ export const GET: APIRoute = async ({ locals }) => {
         try {
           const serviceRoleKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
           if (serviceRoleKey) {
-            const serviceSupabase = createClient(import.meta.env.PUBLIC_SUPABASE_URL, serviceRoleKey);
+            const serviceSupabase = createClient(import.meta.env.SUPABASE_URL, serviceRoleKey);
 
             const { data: authUser, error: authError } = await serviceSupabase.auth.admin.getUserById(profile.user_id);
 
@@ -230,7 +230,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Create service client for auth operations
-    const serviceSupabase = createClient(import.meta.env.PUBLIC_SUPABASE_URL, serviceRoleKey);
+    const serviceSupabase = createClient(import.meta.env.SUPABASE_URL, serviceRoleKey);
 
     // Check if user with this email already exists in auth.users
     const { data: existingUsers, error: listError } = await serviceSupabase.auth.admin.listUsers();
