@@ -37,7 +37,7 @@ jobs:
 
   # Job 2: Unit Tests (runs in parallel with e2e-test after lint)
   unit-test:
-    name: Unit Tests with Coverage
+    name: Unit Tests
     runs-on: ubuntu-latest
     needs: lint
 
@@ -54,16 +54,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run unit tests with coverage
-        run: npm run test:coverage
-
-      - name: Upload coverage reports
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: unit-test-coverage
-          path: coverage/
-          retention-days: 7
+      - name: Run unit tests
+        run: npm run test:run
 
   # Job 3: E2E Tests (runs in parallel with unit-test after lint)
   e2e-test:
@@ -175,11 +167,10 @@ jobs:
 
             ### Summary
             - ✅ **Lint & Code Quality** - Passed
-            - ✅ **Unit Tests** - Passed with coverage
+            - ✅ **Unit Tests** - Passed
             - ✅ **E2E Tests** - Passed
 
             ### Artifacts
-            - 📊 Unit test coverage report
             - 🎭 Playwright test report
             - 📝 E2E test results
 
