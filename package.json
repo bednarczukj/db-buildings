@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "dev:cloud": "cp .env.cloud .env && astro dev",
+    "dev:cloud": "node scripts/dev-cloud.js",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
