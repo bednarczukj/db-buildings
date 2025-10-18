@@ -87,7 +87,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
       return new Response(JSON.stringify({ error: "Failed to get data from AI service." }), {
         status: response.status,
         headers: { "Content-Type": "application/json" },
@@ -121,7 +120,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
+  } catch {
     return new Response(JSON.stringify({ error: "An unexpected error occurred." }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

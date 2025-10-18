@@ -28,14 +28,6 @@ function BuildingsListContent() {
     refetch,
   } = useBuildings();
 
-  // Debug logging
-  console.log("BuildingsListContent - State:", {
-    isLoading,
-    isError,
-    buildingsCount: buildings?.length,
-    error: error?.message,
-  });
-
   // Error state
   if (isError) {
     return (

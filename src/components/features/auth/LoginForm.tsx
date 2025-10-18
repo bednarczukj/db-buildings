@@ -46,8 +46,7 @@ export default function LoginForm() {
 
       // Login successful - redirect to buildings page
       window.location.href = "/buildings";
-    } catch (err) {
-      console.error("Login error:", err);
+    } catch {
       setError("Wystąpił błąd podczas logowania. Spróbuj ponownie.");
     } finally {
       setIsLoading(false);

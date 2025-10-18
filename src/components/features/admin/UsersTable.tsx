@@ -9,7 +9,7 @@ interface UsersTableProps {
   users: UserProfileDTO[];
   isLoading: boolean;
   isError: boolean;
-  error: any;
+  error: unknown;
   editingUser: string | null;
   onEdit: (userId: string | null) => void;
   onUpdate: (userId: string, data: { role: "ADMIN" | "WRITE" | "READ" }) => Promise<void>;
@@ -42,14 +42,6 @@ export function UsersTable({
       default:
         return "outline";
     }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("pl-PL", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
   };
 
   if (isError) {

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle, Plus } from "lucide-react";
 import { Component, type ReactNode } from "react";
+import type { ProviderDTO } from "@/types";
 
 /**
  * Main container for the providers list view
@@ -29,18 +30,17 @@ function ProvidersListContent() {
   } = useProviders();
 
   // Handle table actions
-  const handleDetails = (provider: any) => {
+  const handleDetails = (provider: ProviderDTO) => {
     window.location.href = `/providers/${provider.id}`;
   };
 
-  const handleEdit = (provider: any) => {
+  const handleEdit = (provider: ProviderDTO) => {
     window.location.href = `/providers/${provider.id}/edit`;
   };
 
-  const handleDelete = (provider: any) => {
+  const handleDelete = (provider: ProviderDTO) => {
     if (window.confirm(`Czy na pewno chcesz usunąć dostawcę "${provider.name}"?`)) {
       // TODO: Implement delete functionality
-      console.log("Delete provider:", provider.id);
     }
   };
 

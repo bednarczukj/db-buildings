@@ -80,7 +80,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
           email = authUser.user.email;
         }
       }
-    } catch (error) {
+    } catch {
       // console.warn(`Could not get email for user ${userProfile.user_id}:`, error);
     }
 
@@ -96,7 +96,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
         "Content-Type": "application/json",
       },
     });
-  } catch (error) {
+  } catch {
     return new Response(JSON.stringify({ error: "Wystąpił nieoczekiwany błąd serwera" }), {
       status: 500,
       headers: {
@@ -238,7 +238,7 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
         "Content-Type": "application/json",
       },
     });
-  } catch (error) {
+  } catch {
     return new Response(JSON.stringify({ error: "Wystąpił nieoczekiwany błąd serwera" }), {
       status: 500,
       headers: {
@@ -348,7 +348,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
         "Content-Type": "application/json",
       },
     });
-  } catch (error) {
+  } catch {
     return new Response(JSON.stringify({ error: "Wystąpił nieoczekiwany błąd serwera" }), {
       status: 500,
       headers: {

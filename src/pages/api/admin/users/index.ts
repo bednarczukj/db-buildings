@@ -16,16 +16,6 @@ import { createClient } from "@supabase/supabase-js";
  * - 403 Forbidden: User is not admin
  * - 500 Internal Server Error: Unexpected error
  */
-// Diagnostic function to check service role key
-function checkServiceRoleKey() {
-  const serviceRoleKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
-  return {
-    configured: !!serviceRoleKey,
-    length: serviceRoleKey?.length || 0,
-    preview: serviceRoleKey ? `${serviceRoleKey.substring(0, 10)}...` : null,
-  };
-}
-
 export const GET: APIRoute = async ({ locals }) => {
   try {
     // Check if user is authenticated
@@ -81,7 +71,7 @@ export const GET: APIRoute = async ({ locals }) => {
               email = authUser.user.email;
             }
           }
-        } catch (error) {
+        } catch {
           //
         }
 
@@ -99,7 +89,7 @@ export const GET: APIRoute = async ({ locals }) => {
         "Content-Type": "application/json",
       },
     });
-  } catch (error) {
+  } catch {
     return new Response(JSON.stringify({ error: "Wystąpił nieoczekiwany błąd serwera" }), {
       status: 500,
       headers: {
@@ -265,7 +255,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       // Try to cleanup the auth user if profile creation failed
       try {
         await serviceSupabase.auth.admin.deleteUser(authUser.user.id);
-      } catch (cleanupError) {
+      } catch {
         //
       }
       return new Response(JSON.stringify({ error: "Błąd podczas tworzenia profilu użytkownika" }), {
@@ -289,7 +279,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         "Content-Type": "application/json",
       },
     });
-  } catch (error) {
+  } catch {
     return new Response(JSON.stringify({ error: "Wystąpił nieoczekiwany błąd serwera" }), {
       status: 500,
       headers: {

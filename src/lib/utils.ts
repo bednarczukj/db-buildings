@@ -18,7 +18,7 @@ export async function userHasRole(user: any, requiredRole: string, supabase: any
 
     const userRole = profile?.role;
     return userRole === requiredRole || userRole === "ADMIN";
-  } catch (error) {
+  } catch {
     return false;
   }
 }

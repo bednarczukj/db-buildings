@@ -18,15 +18,12 @@ interface TerytTableProps {
  * Table component for displaying TERYT dictionary entries
  */
 function TerytTableContent({ resource, hasWriteAccess, hasAdminAccess }: TerytTableProps) {
-  const [query, setQuery] = useState<TerytListQueryInput>({});
+  const [query] = useState<TerytListQueryInput>({});
 
   const { data: result, isLoading } = useTerytEntries(resource, query);
   const deleteMutation = useDeleteTerytEntry(resource);
 
   const entries = result?.data || [];
-  const total = result?.total || 0;
-  const page = result?.page || 1;
-  const pageSize = result?.pageSize || 10;
 
   const handleEdit = (code: string) => {
     navigate(`/teryt/${resource}/${code}/edit`);
@@ -49,13 +46,6 @@ function TerytTableContent({ resource, hasWriteAccess, hasAdminAccess }: TerytTa
     navigate(`/teryt/${resource}/new`);
   };
 
-  const handlePageChange = (newPage: number) => {
-    setQuery((prev) => ({ ...prev, page: newPage }));
-  };
-
-  const handlePageSizeChange = (newPageSize: number) => {
-    setQuery((prev) => ({ ...prev, page: 1, pageSize: newPageSize }));
-  };
   // Get resource display name
   const getResourceDisplayName = (resource: TerytResource): string => {
     const names: Record<TerytResource, string> = {
@@ -99,15 +89,15 @@ function TerytTableContent({ resource, hasWriteAccess, hasAdminAccess }: TerytTa
       case "Nazwa":
         return entry.name;
       case "Typ":
-        return (entry as any).type || "-";
+        return entry.type || "-";
       case "Kod powiatu":
-        return (entry as any).district_code || "-";
+        return entry.district_code || "-";
       case "Kod województwa":
-        return (entry as any).voivodeship_code || "-";
+        return entry.voivodeship_code || "-";
       case "Kod gminy":
-        return (entry as any).community_code || "-";
+        return entry.community_code || "-";
       case "Kod miejscowości":
-        return (entry as any).city_code || "-";
+        return entry.city_code || "-";
       default:
         return "-";
     }

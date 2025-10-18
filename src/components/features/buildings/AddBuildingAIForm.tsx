@@ -107,8 +107,9 @@ export default function AddBuildingAIForm() {
   };
 
   const onSubmit = (data: AddBuildingAIFormData) => {
-    console.log("Form submitted:", data);
+    // console.log("Form submitted:", data);
     // TODO: Implement the actual building creation logic
+    alert(`TODO: Zaimplementować logikę tworzenia budynku\n${JSON.stringify(data, null, 2)}`);
   };
 
   return (

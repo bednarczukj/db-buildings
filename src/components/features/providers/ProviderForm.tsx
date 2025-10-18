@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle, ArrowLeft, Save } from "lucide-react";
+import { useEffect } from "react";
 
 interface ProviderFormProps {
   providerId?: number;
@@ -106,15 +107,11 @@ function ProviderFormContent({ providerId }: ProviderFormProps) {
   } = form;
 
   // Handle successful submission
-  if (isCreateSuccess) {
-    window.location.href = "/providers";
-    return null;
-  }
-
-  if (isUpdateSuccess) {
-    window.location.href = "/providers";
-    return null;
-  }
+  useEffect(() => {
+    if (isCreateSuccess || isUpdateSuccess) {
+      window.location.href = "/providers";
+    }
+  }, [isCreateSuccess, isUpdateSuccess]);
 
   // Show loading skeleton
   if (isLoading) {

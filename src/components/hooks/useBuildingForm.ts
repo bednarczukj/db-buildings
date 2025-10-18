@@ -71,8 +71,7 @@ export function useBuildingForm(buildingId?: string) {
       const formData = transformBuildingToForm(buildingData);
       form.reset(formData);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [buildingData, isEditMode]);
+  }, [buildingData, isEditMode, form]);
 
   // Create building mutation
   const createMutation = useMutation<BuildingDTO, Error, CreateBuildingCommand>({

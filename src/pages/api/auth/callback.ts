@@ -34,7 +34,7 @@ export const GET: APIRoute = async ({ request, cookies }) => {
         },
       });
     }
-  } catch (err) {
+  } catch {
     return new Response(null, {
       status: 302,
       headers: {

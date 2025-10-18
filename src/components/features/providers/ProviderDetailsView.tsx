@@ -2,7 +2,7 @@ import { QueryProvider } from "@/components/providers/QueryProvider";
 import { useProviderDetails } from "@/components/hooks/useProviderDetails";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, ArrowLeft, Edit, Trash2 } from "lucide-react";
+import { AlertCircle, ArrowLeft, Edit } from "lucide-react";
 import { Component, type ReactNode } from "react";
 
 interface ProviderDetailsContentProps {

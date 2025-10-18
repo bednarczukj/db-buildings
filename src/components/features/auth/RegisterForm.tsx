@@ -52,9 +52,8 @@ export default function RegisterForm() {
       setSuccess(result.message || "Rejestracja zakończona pomyślnie");
       // Reset form after successful registration
       form.reset();
-    } catch (err) {
+    } catch {
       setError("Wystąpił błąd połączenia");
-      console.error("Register error:", err);
     } finally {
       setIsLoading(false);
     }

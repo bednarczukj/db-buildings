@@ -154,9 +154,8 @@ export function useProviderForm(providerId?: number) {
       } else {
         await createMutation.mutateAsync(data);
       }
-    } catch (error) {
+    } catch {
       // Error is handled by the mutation
-      console.error("Form submission error:", error);
     }
   });
 

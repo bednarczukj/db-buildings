@@ -20,11 +20,10 @@ const userEditSchema = z.object({
   }),
 });
 
-type UserCreateFormData = z.infer<typeof userCreateSchema>;
-type UserEditFormData = z.infer<typeof userEditSchema>;
+type UserFormData = z.infer<typeof userCreateSchema> | z.infer<typeof userEditSchema>;
 
 interface UserFormProps {
-  onSubmit: (data: any) => Promise<void>;
+  onSubmit: (data: UserFormData) => Promise<void>;
   onCancel: () => void;
   mode: "create" | "edit";
   initialData?: { role?: "ADMIN" | "WRITE" | "READ" };
@@ -55,7 +54,7 @@ export function UserForm({
     setValue,
     watch,
     formState: { errors, isValid },
-  } = useForm({
+  } = useForm<UserFormData>({
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: initialData || { role: "READ" },
@@ -63,7 +62,7 @@ export function UserForm({
 
   const watchedRole = watch("role");
 
-  const handleFormSubmit = async (data: any) => {
+  const handleFormSubmit = async (data: UserFormData) => {
     try {
       setSubmitError(null);
       await onSubmit(data);
@@ -90,9 +89,9 @@ export function UserForm({
               type="email"
               placeholder="user@example.com"
               {...register("email")}
-              className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${(errors as any).email ? "border-destructive" : ""}`}
+              className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${errors.email ? "border-destructive" : ""}`}
             />
-            {(errors as any).email && <p className="text-sm text-destructive">{(errors as any).email.message}</p>}
+            {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
           </div>
 
           <div className={compact ? "flex-1" : "space-y-2"}>
@@ -104,9 +103,9 @@ export function UserForm({
               type="password"
               placeholder="Minimum 6 znaków"
               {...register("password")}
-              className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${(errors as any).password ? "border-destructive" : ""}`}
+              className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${errors.password ? "border-destructive" : ""}`}
             />
-            {(errors as any).password && <p className="text-sm text-destructive">{(errors as any).password.message}</p>}
+            {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
           </div>
         </>
       )}
@@ -116,7 +115,7 @@ export function UserForm({
           Rola
         </label>
         <Select value={watchedRole} onValueChange={(value) => setValue("role", value as "ADMIN" | "WRITE" | "READ")}>
-          <SelectTrigger className={(errors as any).role ? "border-destructive" : ""}>
+          <SelectTrigger className={errors.role ? "border-destructive" : ""}>
             <SelectValue placeholder="Wybierz rolę" />
           </SelectTrigger>
           <SelectContent>
@@ -125,7 +124,7 @@ export function UserForm({
             <SelectItem value="ADMIN">ADMIN - Pełne uprawnienia</SelectItem>
           </SelectContent>
         </Select>
-        {(errors as any).role && <p className="text-sm text-destructive">{(errors as any).role.message}</p>}
+        {errors.role && <p className="text-sm text-destructive">{errors.role.message}</p>}
       </div>
 
       {displayError && (

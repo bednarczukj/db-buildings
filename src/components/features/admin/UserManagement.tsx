@@ -15,27 +15,14 @@ function UserManagementContent() {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingUser, setEditingUser] = useState<string | null>(null);
 
-  const {
-    users,
-    isLoading,
-    isError,
-    error,
-    refetch,
-    createUser,
-    updateUser,
-    deleteUser,
-    isCreating,
-    isUpdating,
-    isDeleting,
-  } = useUsers();
+  const { users, isLoading, isError, error, refetch, createUser, updateUser, deleteUser, isCreating } = useUsers();
 
   const handleCreateUser = async (data: { email: string; password: string; role: "ADMIN" | "WRITE" | "READ" }) => {
     try {
       await createUser(data);
       setShowCreateForm(false);
       refetch();
-    } catch (error) {
-      console.error("Error creating user:", error);
+    } catch {
       // Error handling will be shown in the form
     }
   };
@@ -45,8 +32,7 @@ function UserManagementContent() {
       await updateUser(userId, data);
       setEditingUser(null);
       refetch();
-    } catch (error) {
-      console.error("Error updating user:", error);
+    } catch {
       // Error handling will be shown in the form
     }
   };
@@ -56,8 +42,8 @@ function UserManagementContent() {
       try {
         await deleteUser(userId);
         refetch();
-      } catch (error) {
-        console.error("Error deleting user:", error);
+      } catch {
+        // TODO: show error to user
       }
     }
   };

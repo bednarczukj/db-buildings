@@ -38,9 +38,8 @@ export default function LogoutButton({ onLogout }: LogoutButtonProps) {
 
       // Redirect to login page
       window.location.href = "/auth/login";
-    } catch (err) {
+    } catch {
       setError("Wystąpił błąd połączenia");
-      console.error("Logout error:", err);
     } finally {
       setIsLoading(false);
     }

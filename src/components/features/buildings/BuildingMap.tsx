@@ -12,7 +12,7 @@ interface BuildingMapProps {
 }
 
 export function BuildingMap({ coordinates, address }: BuildingMapProps) {
-  const [MapComponent, setMapComponent] = useState<React.ComponentType<any> | null>(null);
+  const [MapComponent, setMapComponent] = useState<React.ComponentType | null>(null);
 
   useEffect(() => {
     // Dynamic import of map components to avoid SSR issues
@@ -56,8 +56,8 @@ export function BuildingMap({ coordinates, address }: BuildingMapProps) {
 
         setMapComponent(() => DynamicMap);
       })
-      .catch((error) => {
-        console.error("Error loading map components:", error);
+      .catch(() => {
+        // console.error("Error loading map components:", error);
       });
   }, [coordinates, address]);
 

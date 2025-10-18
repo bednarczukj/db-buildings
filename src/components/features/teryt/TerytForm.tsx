@@ -85,9 +85,9 @@ function TerytFormContent({ resource, mode, code }: TerytFormProps) {
       // Set parent selection for cascading
       if (parentResource) {
         const parentField = getParentFieldName(resource);
-        const parentValue = (initialData as any)[parentField];
+        const parentValue = (initialData as TerytDTO)[parentField as keyof TerytDTO];
         if (parentValue) {
-          setSelectedParent(parentValue);
+          setSelectedParent(parentValue as string);
         }
       }
     }
@@ -151,7 +151,7 @@ function TerytFormContent({ resource, mode, code }: TerytFormProps) {
             value={selectedParent}
             onValueChange={(value) => {
               setSelectedParent(value);
-              form.setValue(parentField as keyof TerytInputs[TerytResource], value as any);
+              form.setValue(parentField as keyof TerytInputs[TerytResource], value);
             }}
             disabled={isLoadingParents}
           >
@@ -280,21 +280,21 @@ function getSchemaForResource(resource: TerytResource) {
 function getDefaultValues(resource: TerytResource, initialData?: TerytDTO): Partial<TerytInputs[TerytResource]> {
   if (!initialData) return {};
 
-  const defaults: any = {
+  const defaults: TerytDTO = {
     code: initialData.code,
     name: initialData.name,
   };
 
   // Add parent reference if exists
   const parentField = getParentFieldName(resource);
-  if (parentField && (initialData as any)[parentField]) {
-    defaults[parentField] = (initialData as any)[parentField];
+  if (parentField && initialData[parentField]) {
+    defaults[parentField] = initialData[parentField];
   }
 
   // Add community-specific fields
   if (resource === "communities") {
-    defaults.type_id = (initialData as any).type_id;
-    defaults.type = (initialData as any).type;
+    defaults.type_id = initialData.type_id;
+    defaults.type = initialData.type;
   }
 
   return defaults;
