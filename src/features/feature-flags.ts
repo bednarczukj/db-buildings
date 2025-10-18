@@ -1,7 +1,7 @@
 import featureFlagsConfig from "./feature-flags.config.json";
 
 type Environment = "local" | "integration" | "production";
-type Feature = "auth" | "pages" | "forms" | string;
+type Feature = "auth_api" | "pages_api" | string;
 
 const getEnv = (): Environment => {
   const env = import.meta.env.PUBLIC_ENV_NAME;

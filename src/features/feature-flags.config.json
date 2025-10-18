@@ -1,17 +1,14 @@
 {
   "local": {
-    "auth": true,
-    "pages": true,
-    "forms": true
+    "auth_api": true,
+    "pages_api": true
   },
   "integration": {
-    "auth": true,
-    "pages": true,
-    "forms": false
+    "auth_api": true,
+    "pages_api": true
   },
   "production": {
-    "auth": false,
-    "pages": false,
-    "forms": false
+    "auth_api": false,
+    "pages_api": false
   }
 }
