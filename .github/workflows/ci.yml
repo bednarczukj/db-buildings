@@ -147,6 +147,9 @@ jobs:
           npm run preview &
           echo $! > preview.pid
           npx wait-on http://localhost:3000 --timeout 60000
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
       - name: Run E2E tests
         run: npm run test:e2e
