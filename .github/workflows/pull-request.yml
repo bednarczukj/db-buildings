@@ -75,7 +75,9 @@ jobs:
       ADMIN_USER_PASSWORD: ${{ secrets.ADMIN_USER_PASSWORD }}
       READ_USER_EMAIL: ${{ secrets.READ_USER_EMAIL }}
       READ_USER_PASSWORD: ${{ secrets.READ_USER_PASSWORD }}
-      # OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+      E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
 
     steps:
       - name: Checkout code
@@ -105,6 +107,9 @@ jobs:
           echo "ADMIN_USER_PASSWORD=${{ secrets.ADMIN_USER_PASSWORD }}" >> .env.test
           echo "READ_USER_EMAIL=${{ secrets.READ_USER_EMAIL }}" >> .env.test
           echo "READ_USER_PASSWORD=${{ secrets.READ_USER_PASSWORD }}" >> .env.test
+          echo "E2E_USERNAME=${{ secrets.E2E_USERNAME }}" >> .env.test
+          echo "E2E_PASSWORD=${{ secrets.E2E_PASSWORD }}" >> .env.test
+          echo "OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}" >> .env.test
 
       - name: Build application
         run: npm run build
@@ -113,7 +118,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          # OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
 
       - name: Start application in background
         run: |

@@ -39,8 +39,16 @@ export class BuildingService {
     // Calculate offset for pagination
     const offset = (page - 1) * pageSize;
 
-    // Start building the query
-    let queryBuilder = this.supabase.from("buildings").select("*", { count: "exact" });
+    // Start building the query with provider name join
+    let queryBuilder = this.supabase
+      .from("buildings")
+      .select(
+        `
+        *,
+        providers!inner(name)
+      `,
+        { count: "exact" }
+      );
 
     // Apply filters if provided
     if (voivodeship_code) {
@@ -85,9 +93,15 @@ export class BuildingService {
       throw new Error("Page out of range");
     }
 
+    // Transform data to include provider_name
+    const transformedData = data?.map((building: any) => ({
+      ...building,
+      provider_name: building.providers?.name || "Nieznany dostawca",
+    })) || [];
+
     // Return results with metadata
     return {
-      data: data as BuildingDTO[],
+      data: transformedData as BuildingDTO[],
       page,
       pageSize,
       total,

@@ -91,7 +91,7 @@ export function BuildingsTable({ buildings, isLoading }: BuildingsTableProps) {
               <TableCell>{building.street_name || "—"}</TableCell>
               <TableCell>{building.building_number}</TableCell>
               <TableCell>
-                <span className="text-sm text-muted-foreground">ID: {building.provider_id}</span>
+                <span className="text-sm">{building.provider_name}</span>
               </TableCell>
               <TableCell>
                 <StatusBadge status={building.status} />

@@ -42,52 +42,59 @@
    - Komponenty: `BuildingForm`, `TerytDropdownCascade`, `CoordinateInput`, `SubmitButton`, `ModalConfirm`.
    - UX: pre-fill w edycji, walidacja zakresu, potwierdzenie przed opuszczeniem.
 
-6. **Lista Słowników TERYT** (/teryt/[resource])
+6. **Formularz Dodawania Budynku (AI)** (/buildings/add-ai)
+   - Cel: Dodawanie budynku z automatycznym uzupełnianiem kodów TERYT przez AI.
+   - Kluczowe informacje: Pola tekstowe na adres (województwo, powiat, itd.), przycisk "Pobierz teryty".
+   - Komponenty: `AddBuildingAIForm`, `Button` ze stanem ładowania, `Alert` dla sukcesu/błędu.
+   - UX: Interaktywny proces w dwóch krokach: 1. Podaj adres i pobierz TERYT, 2. Uzupełnij resztę danych.
+   - Dostępność/Security: Dostępny dla ról `WRITE` i `ADMIN`.
+
+7. **Lista Słowników TERYT** (/teryt/[resource])
    - Cel: CRUD rekordów słownika na danym poziomie.
    - Kluczowe informacje: tabela z kodem, nazwą, kodem nadrzędnym.
    - Komponenty: `TablePagination`, `FilterPanel`, `Button` CRUD.
 
-7. **Formularz CRUD Słownika TERYT** (/teryt/[resource]/new, /teryt/[resource]/:code/edit)
+8. **Formularz CRUD Słownika TERYT** (/teryt/[resource]/new, /teryt/[resource]/:code/edit)
    - Cel: dodawanie/edycja wpisu słownika.
    - Kluczowe informacje: kod, nazwa, kod nadrzędny (dropdown).
    - Komponenty: `ZodForm`, `TextInput`, `Select`.
 
-8. **Lista Dostawców** (/providers)
+9. **Lista Dostawców** (/providers)
    - Cel: przegląd i CRUD dostawców.
    - Kluczowe informacje: nazwa, technologia, przepustowość.
    - Komponenty: `TablePagination`, `Button` CRUD.
 
-9. **Formularz CRUD Dostawcy** (/providers/new, /providers/:id/edit)
-   - Cel: dodawanie/edycja dostawcy.
-   - Kluczowe informacje: nazwa, technologia (select), przepustowość.
-   - Komponenty: `ProviderForm`, `TextInput`, `Select`, `SubmitButton`.
+10. **Formularz CRUD Dostawcy** (/providers/new, /providers/:id/edit)
+    - Cel: dodawanie/edycja dostawcy.
+    - Kluczowe informacje: nazwa, technologia (select), przepustowość.
+    - Komponenty: `ProviderForm`, `TextInput`, `Select`, `SubmitButton`.
 
-10. **Lista Użytkowników i Ról** (/users)
+11. **Lista Użytkowników i Ról** (/users)
     - Cel: zarządzanie kontami i rolami.
     - Kluczowe informacje: login, email, rola.
     - Komponenty: `TablePagination`, `RoleBadge`, `Button` CRUD.
 
-11. **Formularz CRUD Użytkownika/Roli** (/users/new, /users/:id/edit)
+12. **Formularz CRUD Użytkownika/Roli** (/users/new, /users/:id/edit)
     - Cel: tworzenie/edycja użytkownika i przypisanie roli.
     - Kluczowe informacje: login, email, rola (select).
     - Komponenty: `UserForm`, `TextInput`, `SelectRole`, `SubmitButton`.
 
-12. **Lista Logów Audytu** (/audit-logs)
+13. **Lista Logów Audytu** (/audit-logs)
     - Cel: przegląd zmian.
     - Kluczowe informacje: timestamp, user, entity, action, zmienione pola.
     - Komponenty: `DateRangePicker`, `TablePagination`, `SortControls`.
 
-13. **Lista Kluczy API** (/api-keys)
+14. **Lista Kluczy API** (/api-keys)
     - Cel: zarządzanie kluczami API.
     - Kluczowe informacje: klucz (maskowany), data utworzenia, status.
     - Komponenty: `TablePagination`, `Button` rotate/delete.
 
-14. **Formularz CRUD Klucza API** (/api-keys/new)
+15. **Formularz CRUD Klucza API** (/api-keys/new)
     - Cel: tworzenie nowego klucza.
     - Kluczowe informacje: opis, daty ważności.
     - Komponenty: `ApiKeyForm`, `TextInput`, `SubmitButton`.
 
-15. **Strony Błędów** (/403, /404, /429, /500)
+16. **Strony Błędów** (/403, /404, /429, /500)
     - Cel: obsługa stanów błędów i uprawnień.
     - Kluczowe informacje: komunikat, CTA do powrotu lub re-login.
     - Komponenty: `ErrorPage` z `StatusCode`, `Button`.
@@ -98,8 +105,8 @@
 2. Redirect do Dashboard.
 3. Z Dashboard wybiera „Budynki” → przechodzi do listy.
 4. Kliknięcie budynku → widok szczegółów.
-5. Kliknięcie „Edytuj” → formularz edycji.
-6. Zapis → powrót do szczegółów → toast potwierdzenia.
+5. Kliknięcie „Edytuj” lub "Dodaj Budynek (AI)" → odpowiedni formularz.
+6. Zapis → powrót do szczegółów/listy → toast potwierdzenia.
 7. Z menu głównego dostęp do słowników, użytkowników, logów, kluczy API.
 8. Logout → powrót do strony logowania.
 
@@ -127,6 +134,7 @@
 - **TerytDropdownCascade** – zależne dropdowny hierarchii.
 - **AutocompleteInput** – wyszukiwanie budynków.
 - **BuildingForm** – pola budynku i walidacja.
+- **AddBuildingAIForm** – formularz z integracją AI do pobierania TERYT.
 - **ModalConfirm** – potwierdzenie usunięcia.
 - **ErrorBoundary** – globalne łapanie błędów.
 - **SkeletonLoader** – placeholdery podczas fetch.

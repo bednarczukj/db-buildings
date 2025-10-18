@@ -67,6 +67,14 @@ For each resource: `voivodeships`, `districts`, `communities`, `cities`, `city-d
 - POST /api/v1/api-keys/:id/rotate
 - DELETE /api/v1/api-keys/:id
 
+### 2.7. AI Services
+
+- POST /api/teryt/ai-lookup
+  - Cel: Pobieranie kodów TERYT na podstawie nazw przy użyciu AI.
+  - Zabezpieczenia: Wymaga roli `WRITE` lub `ADMIN`.
+  - Request Body: `{ wojewodztwo, powiat, gmina, miejscowosc, ... }`
+  - Response Body: `{ teryt: { wojewodztwo_kod, ... } }`
+
 ## 3. Authentication & Authorization
 
 - Use Supabase Auth with JWT stored in HttpOnly Secure cookies

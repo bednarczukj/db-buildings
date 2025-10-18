@@ -51,30 +51,39 @@ export const onRequest = defineMiddleware(async ({ locals, cookies, url, request
   }
 
   // Get user role from profiles table
-  let userRole = null;
+  let userWithRole = null;
   if (user) {
     try {
       const { data: profile } = await supabase.from("profiles").select("role").eq("user_id", user.id).single();
 
-      userRole = profile?.role || null;
+      if (profile) {
+        userWithRole = {
+          ...user,
+          role: profile.role, // Merge user and role
+        };
+      } else {
+        // Profile not found, use user data without role
+        userWithRole = { ...user, role: null };
+      }
     } catch {
-      // Error fetching user role - user will have limited access
+      // Error fetching profile, proceed without role
+      userWithRole = { ...user, role: null };
     }
   }
 
-  // Set userRole in locals for use in pages
-  locals.userRole = userRole;
+  // Set the merged user object in locals
+  locals.user = userWithRole;
 
   // Protect admin routes based on roles
-  if (url.pathname.startsWith("/admin") && userRole !== "ADMIN") {
+  if (url.pathname.startsWith("/admin") && locals.user?.role !== "ADMIN") {
     return new Response("Forbidden: Wymagane uprawnienia administratora.", { status: 403 });
   }
 
   // Protect write operations based on roles
   if (
     (url.pathname.endsWith("/new") || url.pathname.includes("/edit")) &&
-    userRole !== "WRITE" &&
-    userRole !== "ADMIN"
+    locals.user?.role !== "WRITE" &&
+    locals.user?.role !== "ADMIN"
   ) {
     return new Response("Forbidden: Wymagane uprawnienia do zapisu.", { status: 403 });
   }

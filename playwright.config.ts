@@ -57,14 +57,20 @@ export default defineConfig({
   // Configure projects - Chromium and Firefox for better compatibility
   projects: [
     {
-      name: "chromium",
+      name: "chromium-authenticated",
+      testMatch: ["**/buildings.spec.ts"], // Only buildings tests need auth
       use: {
         ...devices["Desktop Chrome"],
-        // Browser context options for isolation
-        contextOptions: {
-          // Clear cookies and storage for each test
-          storageState: undefined,
-        },
+        // Use authenticated storage state from global setup
+        storageState: ".auth/user.json",
+      },
+    },
+    {
+      name: "chromium",
+      testIgnore: ["**/buildings.spec.ts"], // Exclude buildings tests
+      use: {
+        ...devices["Desktop Chrome"],
+        // No authentication for login/example tests
       },
     },
     // Firefox temporarily disabled due to headless mode crashes on macOS

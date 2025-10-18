@@ -17,6 +17,7 @@ pnpm-debug.log*
 .env.local
 .env.test.local
 .env.test
+.env.cloud
 !.env.example
 
 # macOS-specific files
@@ -36,3 +37,4 @@ playwright-report/
 /test-results/
 /playwright-report/
 /playwright/.cache/
+/.auth/

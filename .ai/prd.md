@@ -146,6 +146,19 @@ Poza zakresem MVP:
   - Użytkownik z WRITE może CRUD.
   - Użytkownik z READ może R.
 
+
+- ID: US-013
+  Tytuł: Dodawanie budynku z autouzupełnianiem TERYT przez AI
+  Opis: Jako użytkownik z rolą WRITE chcę dodać budynek podając nazwy (województwo, powiat, gmina, miasto, dzielnica), a system, używając modelu AI (przez OpenRouter.ai), automatycznie pobierze i uzupełni kody TERYT w formularzu.
+  Kryteria akceptacji:
+  - Nowy formularz "Dodaj Budynek AI" zawiera pola tekstowe na nazwy jednostek terytorialnych.
+  - Przycisk "Pobierz teryty" jest widoczny obok pól.
+  - Po kliknięciu przycisku, zapytanie z nazwami jest wysyłane do modelu AI (np. Gemini 2.5 Pro) przez OpenRouter.ai.
+  - Model AI zwraca poprawne kody TERYT.
+  - Pola TERYT w formularzu są automatycznie uzupełniane.
+  - Użytkownik może dokończyć wypełnianie reszty danych budynku i zapisać formularz.
+
+
 ## 6. Metryki sukcesu
 
 - Średni czas dodania budynku ≤ 2 s.

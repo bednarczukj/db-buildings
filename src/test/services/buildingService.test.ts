@@ -56,7 +56,7 @@ describe("BuildingService", () => {
 
   describe("getBuildings", () => {
     it("should fetch buildings with pagination and filters", async () => {
-      const mockData: BuildingDTO[] = [
+      const mockData: any[] = [
         {
           id: "1",
           voivodeship_code: "14",
@@ -67,7 +67,8 @@ describe("BuildingService", () => {
           provider_id: 1,
           created_at: "2024-01-01T00:00:00Z",
           updated_at: "2024-01-01T00:00:00Z",
-        } as BuildingDTO,
+          providers: { name: "Orange" },
+        },
       ];
       const mockResponse: PostgrestResponse<BuildingDTO[]> = {
         data: mockData,
@@ -143,7 +144,12 @@ describe("BuildingService", () => {
       });
 
       expect(result).toEqual({
-        data: mockData,
+        data: [
+          {
+            ...mockData[0],
+            provider_name: "Orange",
+          },
+        ],
         page: 1,
         pageSize: 10,
         total: 1,
@@ -169,7 +175,7 @@ describe("BuildingService", () => {
     });
 
     it("should throw error for page out of range", async () => {
-      const mockResponse: PostgrestResponse<BuildingDTO[]> = {
+      const mockResponse: PostgrestResponse<any[]> = {
         data: [],
         error: null,
         count: 5, // Total 5 records
@@ -204,7 +210,7 @@ describe("BuildingService", () => {
     });
 
     it("should handle database errors", async () => {
-      const mockResponse: PostgrestResponse<BuildingDTO[]> = {
+      const mockResponse: PostgrestResponse<any[]> = {
         data: null,
         error: { message: "Database connection failed" } as any,
         count: null,

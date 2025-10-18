@@ -40,7 +40,9 @@ export type CreateProviderCommand = TablesInsert<"providers">;
 export type UpdateProviderCommand = TablesUpdate<"providers">;
 
 // BUILDINGS
-export type BuildingDTO = Tables<"buildings">;
+export type BuildingDTO = Tables<"buildings"> & {
+  provider_name: string;
+};
 export type CreateBuildingCommand = TablesInsert<"buildings">;
 export type UpdateBuildingCommand = TablesUpdate<"buildings">;
 

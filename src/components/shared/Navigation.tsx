@@ -30,6 +30,15 @@ export function Navigation({ user, userRole }: NavigationProps) {
           )}
 
           {hasWriteAccess && (
+            <a
+              href="/buildings/add-ai"
+              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+            >
+              Dodaj budynek (AI)
+            </a>
+          )}
+
+          {hasWriteAccess && (
             <a href="/providers" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
               Zarządzaj Dostawcami
             </a>

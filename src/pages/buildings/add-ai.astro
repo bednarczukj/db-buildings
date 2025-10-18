@@ -1,0 +1,21 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import AddBuildingAIForm from "@/components/features/buildings/AddBuildingAIForm";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+---
+
+<Layout title="Dodaj Budynek (AI)">
+  <div class="container mx-auto py-10">
+    <Card className="max-w-3xl mx-auto">
+      <CardHeader>
+        <CardTitle>Dodaj Nowy Budynek z pomocą AI</CardTitle>
+        <CardDescription>
+          Wprowadź adres w formie tekstowej, a my spróbujemy automatycznie uzupełnić kody TERYT.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <AddBuildingAIForm client:load />
+      </CardContent>
+    </Card>
+  </div>
+</Layout>

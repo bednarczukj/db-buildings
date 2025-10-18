@@ -14,8 +14,8 @@ export class LoginPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.emailInput = page.locator('input[name="email"]');
-    this.passwordInput = page.locator('input[name="password"]');
+    this.emailInput = page.locator('input[id="email"]');
+    this.passwordInput = page.locator('input[id="password"]');
     this.loginButton = page.locator('button[type="submit"]');
     this.errorMessage = page.locator('[role="alert"]');
   }

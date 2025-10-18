@@ -1,11 +1,11 @@
 /**
  * Playwright global setup
  * Runs once before all tests
- * Creates test users in Supabase
+ * Creates authenticated session for existing cloud user
  */
 
-import { FullConfig } from "@playwright/test";
-import { createClient } from "@supabase/supabase-js";
+import { chromium } from "@playwright/test";
+import type { FullConfig } from "@playwright/test";
 import { config } from "dotenv";
 
 // Load test environment variables
@@ -17,80 +17,57 @@ async function globalSetup(config: FullConfig) {
   console.log("🚀 Starting global setup...");
   console.log(`📍 Base URL: ${baseURL}`);
 
-  // Initialize Supabase Admin Client (using service role key for user management)
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  // For cloud Supabase, we assume users already exist
+  // Skip user creation to avoid conflicts
+  console.log("👥 Using existing cloud users (skipping creation)...");
 
-  if (!supabaseUrl || !supabaseServiceKey) {
-    console.warn("⚠️  Missing Supabase credentials in .env.test - skipping user creation");
-    return;
-  }
+  // Create authenticated session storage state
+  console.log("🔐 Creating authenticated session...");
 
-  const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  });
+  // Use chromium. Headless is fine on Linux (CI), but needs to be disabled on macOS.
+  const headless = process.env.CI ? true : process.platform !== "darwin";
 
-  console.log("👥 Creating test users...");
+  console.log(`   🖥️  Platform: ${process.platform}, Browser: Chromium, Headless: ${headless}`);
 
-  // Test users to create
-  const testUsers = [
-    {
-      email: process.env.TEST_USER_EMAIL || "test@example.com",
-      password: process.env.TEST_USER_PASSWORD || "TestPassword123!",
-      role: "READ",
-    },
-    {
-      email: process.env.ADMIN_USER_EMAIL || "admin@example.com",
-      password: process.env.ADMIN_USER_PASSWORD || "AdminPassword123!",
-      role: "ADMIN",
-    },
-    {
-      email: process.env.READ_USER_EMAIL || "readonly@example.com",
-      password: process.env.READ_USER_PASSWORD || "ReadOnlyPassword123!",
-      role: "READ",
-    },
-  ];
+  const browser = await chromium.launch({ headless });
+  const page = await browser.newPage();
 
-  for (const user of testUsers) {
-    try {
-      // Try to create user
-      const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-        email: user.email,
-        password: user.password,
-        email_confirm: true, // Auto-confirm email for test users
-      });
+  try {
+    // Navigate to login page
+    await page.goto(baseURL + "/auth/login");
 
-      if (authError) {
-        // User might already exist - that's okay
-        if (authError.message.includes("already exists") || authError.message.includes("User already registered")) {
-          console.log(`   ℹ️  User ${user.email} already exists - skipping`);
-          continue;
-        }
-        console.error(`   ❌ Failed to create user ${user.email}:`, authError.message);
-        continue;
-      }
+    // Wait for the page to load completely
+    await page.waitForLoadState("networkidle");
 
-      if (authData?.user) {
-        console.log(`   ✅ Created user: ${user.email}`);
+    // Wait for form to be ready
+    await page.waitForSelector('input[id="email"]', { state: "visible", timeout: 10000 });
+    await page.waitForSelector('input[id="password"]', { state: "visible", timeout: 10000 });
 
-        // Create profile with role (email is not stored in profiles table)
-        const { error: profileError } = await supabase.from("profiles").upsert({
-          user_id: authData.user.id,
-          role: user.role,
-        });
+    // Login with existing E2E user from cloud
+    const testEmail = process.env.E2E_USERNAME || process.env.TEST_USER_EMAIL || "test@example.com";
+    const testPassword = process.env.E2E_PASSWORD || process.env.TEST_USER_PASSWORD || "TestPassword123!";
 
-        if (profileError) {
-          console.error(`   ⚠️  Failed to create profile for ${user.email}:`, profileError.message);
-        } else {
-          console.log(`   ✅ Created profile for ${user.email} with role ${user.role}`);
-        }
-      }
-    } catch (error) {
-      console.error(`   ❌ Error creating user ${user.email}:`, error);
-    }
+    console.log(`   📧 Logging in as: ${testEmail}`);
+
+    await page.fill('input[id="email"]', testEmail);
+    await page.fill('input[id="password"]', testPassword);
+    await page.click('button[type="submit"]');
+
+    // Wait for navigation after login
+    await page.waitForURL("**/buildings", { timeout: 30000 });
+    await page.waitForLoadState("networkidle");
+
+    console.log(`   ✅ Successfully logged in as ${testEmail}`);
+
+    // Save authenticated state
+    await page.context().storageState({ path: ".auth/user.json" });
+    console.log("   ✅ Saved authenticated session to .auth/user.json");
+  } catch (error) {
+    console.error("   ❌ Failed to create authenticated session:", error);
+    // Take screenshot for debugging
+    await page.screenshot({ path: "test-results/global-setup-error.png" });
+  } finally {
+    await browser.close();
   }
 
   console.log("✅ Global setup complete");
