@@ -125,8 +125,8 @@ To set up CI/CD for your fork:
 
 Add these secrets in GitHub `Settings → Secrets and variables → Actions`:
 
-- `SUPABASE_ANON_KEY` - Your Supabase anonymous key
-- `SUPABASE_SERVICE_ROLE_KEY` - Your Supabase service role key
+- `SUPABASE_PUBLIC_KEY` - Your Supabase anonymous/public key (for frontend/API endpoints)
+- `SUPABASE_SERVICE_ROLE_KEY` - Your Supabase service role key (for admin operations)
 
 See [`.github/SETUP-GUIDE.md`](.github/SETUP-GUIDE.md) for more details.
 

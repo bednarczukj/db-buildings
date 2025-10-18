@@ -23,7 +23,7 @@ vi.mock("@supabase/ssr", () => {
 // Mock environment variables
 vi.mock("import.meta.env", () => ({
   SUPABASE_URL: "https://test.supabase.co",
-  SUPABASE_KEY: "test-anon-key",
+  PUBLIC_SUPABASE_KEY: "test-anon-key",
 }));
 
 describe("useUserRole", () => {

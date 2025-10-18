@@ -14,7 +14,7 @@ export function useUserRole(user: User | null) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<unknown>(null);
 
-  const supabase = createBrowserClient<Database>(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY);
+  const supabase = createBrowserClient<Database>(import.meta.env.SUPABASE_URL, import.meta.env.PUBLIC_SUPABASE_KEY);
 
   useEffect(() => {
     async function fetchUserRole() {
