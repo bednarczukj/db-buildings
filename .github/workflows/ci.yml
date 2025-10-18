@@ -226,7 +226,6 @@ jobs:
           echo "- **E2E Tests:** ${{ needs.e2e-tests.result }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Production Build:** ${{ needs.build.result }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
 
       - name: Fail if any job failed
         if: contains(needs.*.result, 'failure')
