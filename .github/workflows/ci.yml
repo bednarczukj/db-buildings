@@ -134,21 +134,12 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          PUBLIC_SUPABASE_KEY: ${{ secrets.SUPABASE_PUBLIC_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
 
       - name: Start application in background
         run: |
           npm run preview &
           echo $! > preview.pid
           npx wait-on http://localhost:3000 --timeout 60000
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          PUBLIC_SUPABASE_KEY: ${{ secrets.SUPABASE_PUBLIC_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
 
       - name: Run E2E tests
         run: npm run test:e2e
