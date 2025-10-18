@@ -37,6 +37,10 @@ export default defineConfig({
     // Base URL for page.goto() calls
     baseURL: process.env.BASE_URL || "http://localhost:3000",
 
+    // Disable headless on macOS (local dev) due to crashes (https://github.com/microsoft/playwright/issues/30336)
+    // CI always uses headless mode
+    headless: process.env.CI ? true : process.platform === "darwin" ? false : true,
+
     // Collect trace on test failure
     trace: "on-first-retry",
 
@@ -77,10 +81,13 @@ export default defineConfig({
     // },
   ],
 
-  // NOTE: Uruchom aplikację ręcznie przed testami: npm run dev
+  // NOTE: For local development, start the dev server manually before tests: npm run dev
+  // Auto-start disabled to avoid port conflicts and allow running tests against existing server
+  // CI environments handle server startup in their workflows (see .github/workflows/pull-request.yml)
   // webServer: {
   //   command: "npm run dev",
   //   url: "http://localhost:3000",
   //   reuseExistingServer: true,
+  //   timeout: 120000,
   // },
 });
