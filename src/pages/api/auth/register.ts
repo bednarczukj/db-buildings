@@ -42,7 +42,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       }
     );
   } catch (err) {
-    console.error("Register error:", err);
     return new Response(JSON.stringify({ error: "Wystąpił błąd serwera" }), {
       status: 500,
     });

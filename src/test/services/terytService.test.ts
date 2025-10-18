@@ -136,7 +136,6 @@ describe("TerytService", () => {
     });
 
     it.skip("should handle database errors", async () => {
-      const mockError = new Error("Database connection failed");
       const mockResponse: PostgrestResponse<any[]> = {
         data: null,
         error: { message: "Database connection failed" } as any,

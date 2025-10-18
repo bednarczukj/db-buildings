@@ -28,10 +28,6 @@ function checkServiceRoleKey() {
 
 export const GET: APIRoute = async ({ locals }) => {
   try {
-    // Log service role key status for debugging
-    const serviceRoleStatus = checkServiceRoleKey();
-    console.log("Service role key status:", serviceRoleStatus);
-
     // Check if user is authenticated
     const user = locals.user;
     if (!user) {
@@ -60,7 +56,6 @@ export const GET: APIRoute = async ({ locals }) => {
     const { data: profiles, error: profilesError } = await supabase.from("profiles").select("*");
 
     if (profilesError) {
-      console.error("Error fetching profiles:", profilesError);
       return new Response(JSON.stringify({ error: "Błąd podczas pobierania profili użytkowników" }), {
         status: 500,
         headers: {
@@ -84,22 +79,10 @@ export const GET: APIRoute = async ({ locals }) => {
 
             if (!authError && authUser?.user?.email) {
               email = authUser.user.email;
-              console.log(`✅ Found email for user ${profile.user_id}: ${email}`);
-            } else {
-              console.log(`❌ No email found for user ${profile.user_id}`);
-              if (authError) {
-                console.log(`   Auth error: ${authError.message} (code: ${authError.status})`);
-                if (authError.message?.includes("not_admin")) {
-                  console.log(`   🔑 Service role key may not have admin privileges`);
-                  console.log(`   Check: Supabase Dashboard → Settings → API → service_role secret`);
-                }
-              }
             }
-          } else {
-            console.log(`SUPABASE_SERVICE_ROLE_KEY not configured for user ${profile.user_id}`);
           }
         } catch (error) {
-          console.warn(`Could not get email for user ${profile.user_id}:`, error);
+          //
         }
 
         return {
@@ -117,7 +100,6 @@ export const GET: APIRoute = async ({ locals }) => {
       },
     });
   } catch (error) {
-    console.error("Unexpected error in GET /api/admin/users:", error);
     return new Response(JSON.stringify({ error: "Wystąpił nieoczekiwany błąd serwera" }), {
       status: 500,
       headers: {
@@ -235,7 +217,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // Check if user with this email already exists in auth.users
     const { data: existingUsers, error: listError } = await serviceSupabase.auth.admin.listUsers();
     if (listError) {
-      console.error("Error checking existing users:", listError);
       return new Response(JSON.stringify({ error: "Błąd podczas sprawdzania istniejących użytkowników" }), {
         status: 500,
         headers: {
@@ -262,7 +243,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
     });
 
     if (authError || !authUser.user) {
-      console.error("Error creating auth user:", authError);
       return new Response(JSON.stringify({ error: "Błąd podczas tworzenia konta użytkownika" }), {
         status: 500,
         headers: {
@@ -277,17 +257,16 @@ export const POST: APIRoute = async ({ request, locals }) => {
       .insert({
         user_id: authUser.user.id, // Use real user_id from auth.users
         role: validatedData.role,
-      } as any)
+      })
       .select()
       .single();
 
     if (profileError) {
-      console.error("Error creating profile:", profileError);
       // Try to cleanup the auth user if profile creation failed
       try {
         await serviceSupabase.auth.admin.deleteUser(authUser.user.id);
       } catch (cleanupError) {
-        console.error("Error cleaning up auth user:", cleanupError);
+        //
       }
       return new Response(JSON.stringify({ error: "Błąd podczas tworzenia profilu użytkownika" }), {
         status: 500,
@@ -311,7 +290,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
       },
     });
   } catch (error) {
-    console.error("Unexpected error in POST /api/admin/users:", error);
     return new Response(JSON.stringify({ error: "Wystąpił nieoczekiwany błąd serwera" }), {
       status: 500,
       headers: {

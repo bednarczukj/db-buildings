@@ -9,7 +9,7 @@ import {
   useUpdateTerytEntry,
   useDeleteTerytEntry,
 } from "../../components/hooks/useTeryt";
-import type { TerytResource, TerytListQueryInput } from "../../lib/schemas/terytSchemas";
+import type { TerytListQueryInput } from "../../lib/schemas/terytSchemas";
 
 // Mock fetch
 const mockFetch = vi.fn();

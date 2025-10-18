@@ -17,7 +17,6 @@ export const POST: APIRoute = async ({ cookies, request }) => {
       status: 200,
     });
   } catch (err) {
-    console.error("Logout error:", err);
     return new Response(JSON.stringify({ error: "Wystąpił błąd serwera" }), {
       status: 500,
     });

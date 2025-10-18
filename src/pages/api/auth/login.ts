@@ -13,20 +13,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     const supabase = createSupabaseServerInstance({ cookies, headers: request.headers });
 
-    console.log("Login attempt for:", email);
-
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-
-    if (error) {
-      console.log("Login error:", error);
-      console.log("Error details:", error.message, error.status);
-    } else {
-      console.log("Login successful for user:", data.user?.id);
-      console.log("Session created:", !!data.session);
-    }
 
     if (error) {
       return new Response(JSON.stringify({ error: error.message }), {
@@ -51,7 +41,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       }
     );
   } catch (err) {
-    console.error("Login error:", err);
     return new Response(JSON.stringify({ error: "Wystąpił błąd serwera" }), {
       status: 500,
     });

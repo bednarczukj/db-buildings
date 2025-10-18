@@ -238,7 +238,7 @@ describe("BuildingService", () => {
         { table: "providers", field: "id", value: 1 },
       ];
 
-      mockReferences.forEach(({ table, field, value }) => {
+      mockReferences.forEach(({ field, value }) => {
         mockSupabase.from.mockReturnValueOnce({
           select: vi.fn().mockReturnValue({
             eq: vi.fn().mockReturnThis(),

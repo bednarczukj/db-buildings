@@ -81,7 +81,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
         }
       }
     } catch (error) {
-      console.warn(`Could not get email for user ${userProfile.user_id}:`, error);
+      // console.warn(`Could not get email for user ${userProfile.user_id}:`, error);
     }
 
     const response = {
@@ -97,7 +97,6 @@ export const GET: APIRoute = async ({ params, locals }) => {
       },
     });
   } catch (error) {
-    console.error("Unexpected error in GET /api/admin/users/[id]:", error);
     return new Response(JSON.stringify({ error: "Wystąpił nieoczekiwany błąd serwera" }), {
       status: 500,
       headers: {
@@ -214,7 +213,6 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
       .single();
 
     if (updateError) {
-      console.error("Error updating user role:", updateError);
       return new Response(JSON.stringify({ error: "Błąd podczas aktualizacji roli użytkownika" }), {
         status: 500,
         headers: {
@@ -241,7 +239,6 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
       },
     });
   } catch (error) {
-    console.error("Unexpected error in PUT /api/admin/users/[id]:", error);
     return new Response(JSON.stringify({ error: "Wystąpił nieoczekiwany błąd serwera" }), {
       status: 500,
       headers: {
@@ -325,7 +322,6 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
     const { error: profileDeleteError } = await supabase.from("profiles").delete().eq("user_id", userId);
 
     if (profileDeleteError) {
-      console.error("Error deleting user profile:", profileDeleteError);
       return new Response(JSON.stringify({ error: "Błąd podczas usuwania profilu użytkownika" }), {
         status: 500,
         headers: {
@@ -338,7 +334,6 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
     const { error: authDeleteError } = await supabase.auth.admin.deleteUser(userId);
 
     if (authDeleteError) {
-      console.error("Error deleting auth user:", authDeleteError);
       return new Response(JSON.stringify({ error: "Błąd podczas usuwania konta użytkownika" }), {
         status: 500,
         headers: {
@@ -354,7 +349,6 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
       },
     });
   } catch (error) {
-    console.error("Unexpected error in DELETE /api/admin/users/[id]:", error);
     return new Response(JSON.stringify({ error: "Wystąpił nieoczekiwany błąd serwera" }), {
       status: 500,
       headers: {

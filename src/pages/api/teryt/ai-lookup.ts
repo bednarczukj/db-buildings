@@ -40,7 +40,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
   // 3. Get OpenRouter API Key
   const openRouterApiKey = import.meta.env.OPENROUTER_API_KEY;
   if (!openRouterApiKey) {
-    console.error("OPENROUTER_API_KEY is not set in environment variables.");
     return new Response(JSON.stringify({ error: "AI service is not configured." }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
@@ -89,7 +88,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Error from OpenRouter:", response.status, errorText);
       return new Response(JSON.stringify({ error: "Failed to get data from AI service." }), {
         status: response.status,
         headers: { "Content-Type": "application/json" },
@@ -100,7 +98,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const content = aiResult.choices[0]?.message?.content;
 
     if (!content) {
-      console.error("No content in AI response:", aiResult);
       return new Response(JSON.stringify({ error: "AI returned an empty response." }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
@@ -125,7 +122,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Error calling OpenRouter or parsing response:", error);
     return new Response(JSON.stringify({ error: "An unexpected error occurred." }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

@@ -308,7 +308,7 @@ describe("BuildingFormSchema Validation", () => {
       { post_code: "00 042", message: "format XX-XXX" }, // Space instead of dash
     ];
 
-    testCases.forEach(({ post_code, message }) => {
+    testCases.forEach(({ post_code }) => {
       const invalidData = {
         voivodeship_code: "14",
         district_code: "1465",

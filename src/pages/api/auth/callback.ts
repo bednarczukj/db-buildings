@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { createSupabaseServerInstance } from "../../../db/supabase.client.ts";
 
-export const GET: APIRoute = async ({ request, cookies, url }) => {
+export const GET: APIRoute = async ({ request, cookies }) => {
   try {
     const supabase = createSupabaseServerInstance({ cookies, headers: request.headers });
 
@@ -9,7 +9,6 @@ export const GET: APIRoute = async ({ request, cookies, url }) => {
     const { data, error } = await supabase.auth.getSession();
 
     if (error) {
-      console.error("Callback error:", error);
       return new Response(null, {
         status: 302,
         headers: {
@@ -36,7 +35,6 @@ export const GET: APIRoute = async ({ request, cookies, url }) => {
       });
     }
   } catch (err) {
-    console.error("Callback processing error:", err);
     return new Response(null, {
       status: 302,
       headers: {

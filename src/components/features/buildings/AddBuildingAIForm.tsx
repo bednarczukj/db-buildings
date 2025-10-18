@@ -54,9 +54,9 @@ export default function AddBuildingAIForm() {
   const handleFetchTeryt = async () => {
     const addressData = form.getValues();
     const requiredFields = ["wojewodztwo_nazwa", "powiat_nazwa", "gmina_nazwa", "miejscowosc_nazwa"];
-    
+
     // Simple validation before sending
-    if (!requiredFields.every(field => addressData[field as keyof AddBuildingAIFormData])) {
+    if (!requiredFields.every((field) => addressData[field as keyof AddBuildingAIFormData])) {
       setAiError("Wypełnij wymagane pola adresowe przed pobraniem kodów TERYT.");
       return;
     }
@@ -85,7 +85,7 @@ export default function AddBuildingAIForm() {
       if (!response.ok) {
         throw new Error(result.error || "Nie udało się pobrać danych z serwera.");
       }
-      
+
       const { teryt } = result;
       if (teryt) {
         form.setValue("wojewodztwo_kod", teryt.wojewodztwo_kod);
@@ -105,7 +105,7 @@ export default function AddBuildingAIForm() {
       setIsFetchingTeryt(false);
     }
   };
-  
+
   const onSubmit = (data: AddBuildingAIFormData) => {
     console.log("Form submitted:", data);
     // TODO: Implement the actual building creation logic
@@ -132,7 +132,9 @@ export default function AddBuildingAIForm() {
                 control={form.control}
                 render={({ field }) => <Input id={name} {...field} />}
               />
-               <p className="text-sm text-destructive">{form.formState.errors[name as keyof AddBuildingAIFormData]?.message?.toString()}</p>
+              <p className="text-sm text-destructive">
+                {form.formState.errors[name as keyof AddBuildingAIFormData]?.message?.toString()}
+              </p>
             </div>
           ))}
         </div>
@@ -149,7 +151,7 @@ export default function AddBuildingAIForm() {
           </Alert>
         )}
         {aiSuccess && (
-           <Alert>
+          <Alert>
             <Terminal className="h-4 w-4" />
             <AlertTitle>Sukces!</AlertTitle>
             <AlertDescription>{aiSuccess}</AlertDescription>
@@ -159,8 +161,8 @@ export default function AddBuildingAIForm() {
 
       <div className="space-y-4">
         <h3 className="text-lg font-medium">2. Zweryfikuj Kody TERYT</h3>
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-           {/* Form fields for TERYT codes */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Form fields for TERYT codes */}
           {Object.entries({
             wojewodztwo_kod: "Kod Województwa",
             powiat_kod: "Kod Powiatu",
@@ -174,14 +176,14 @@ export default function AddBuildingAIForm() {
               <Controller
                 name={name as keyof AddBuildingAIFormData}
                 control={form.control}
-                render={({ field }) => <Input id={name} {...field} readOnly className="bg-muted"/>}
+                render={({ field }) => <Input id={name} {...field} readOnly className="bg-muted" />}
               />
             </div>
           ))}
         </div>
       </div>
-      
-       <div className="space-y-4">
+
+      <div className="space-y-4">
         <h3 className="text-lg font-medium">3. Uzupełnij Dane Budynku</h3>
         <div className="space-y-2">
           <Label htmlFor="building_number">Numer Budynku</Label>
@@ -192,7 +194,7 @@ export default function AddBuildingAIForm() {
           />
           <p className="text-sm text-destructive">{form.formState.errors.building_number?.message}</p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="latitude">Szerokość geograficzna (Latitude)</Label>
@@ -200,12 +202,12 @@ export default function AddBuildingAIForm() {
               name="latitude"
               control={form.control}
               render={({ field }) => (
-                <Input 
-                  id="latitude" 
+                <Input
+                  id="latitude"
                   type="number"
                   step="0.00001"
-                  {...field} 
-                  onChange={e => field.onChange(parseFloat(e.target.value))}
+                  {...field}
+                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
                 />
               )}
             />
@@ -217,19 +219,19 @@ export default function AddBuildingAIForm() {
               name="longitude"
               control={form.control}
               render={({ field }) => (
-                <Input 
-                  id="longitude" 
+                <Input
+                  id="longitude"
                   type="number"
                   step="0.00001"
-                  {...field} 
-                  onChange={e => field.onChange(parseFloat(e.target.value))}
+                  {...field}
+                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
                 />
               )}
             />
             <p className="text-sm text-destructive">{form.formState.errors.longitude?.message}</p>
           </div>
         </div>
-        
+
         {/* TODO: Add other building fields here (type, provider, etc.) */}
       </div>
 

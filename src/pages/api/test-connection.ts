@@ -6,10 +6,9 @@ export const GET: APIRoute = async ({ cookies, request }) => {
     const supabase = createSupabaseServerInstance({ cookies, headers: request.headers });
 
     // Test basic connection
-    const { data, error } = await supabase.from("profiles").select("count", { count: "exact", head: true });
+    const { error } = await supabase.from("profiles").select("count", { count: "exact", head: true });
 
     if (error) {
-      console.log("Database connection error:", error);
       return new Response(
         JSON.stringify({
           status: "error",
@@ -34,7 +33,6 @@ export const GET: APIRoute = async ({ cookies, request }) => {
       { status: 200 }
     );
   } catch (err) {
-    console.error("Test connection error:", err);
     return new Response(
       JSON.stringify({
         status: "error",

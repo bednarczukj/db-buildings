@@ -40,15 +40,13 @@ export class BuildingService {
     const offset = (page - 1) * pageSize;
 
     // Start building the query with provider name join
-    let queryBuilder = this.supabase
-      .from("buildings")
-      .select(
-        `
+    let queryBuilder = this.supabase.from("buildings").select(
+      `
         *,
         providers!inner(name)
       `,
-        { count: "exact" }
-      );
+      { count: "exact" }
+    );
 
     // Apply filters if provided
     if (voivodeship_code) {
@@ -94,10 +92,11 @@ export class BuildingService {
     }
 
     // Transform data to include provider_name
-    const transformedData = data?.map((building: any) => ({
-      ...building,
-      provider_name: building.providers?.name || "Nieznany dostawca",
-    })) || [];
+    const transformedData =
+      data?.map((building: any) => ({
+        ...building,
+        provider_name: building.providers?.name || "Nieznany dostawca",
+      })) || [];
 
     // Return results with metadata
     return {
