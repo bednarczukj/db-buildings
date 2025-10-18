@@ -1,0 +1,17 @@
+{
+  "local": {
+    "auth": true,
+    "pages": true,
+    "forms": true
+  },
+  "integration": {
+    "auth": true,
+    "pages": true,
+    "forms": false
+  },
+  "production": {
+    "auth": false,
+    "pages": false,
+    "forms": false
+  }
+}

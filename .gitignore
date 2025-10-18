@@ -38,3 +38,7 @@ playwright-report/
 /playwright-report/
 /playwright/.cache/
 /.auth/
+
+# Temporary files
+10x-astro-starter@*
+eslint
