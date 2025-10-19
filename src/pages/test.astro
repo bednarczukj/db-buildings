@@ -16,6 +16,11 @@ console.log("🧪 SERVER: Available env vars:", {
 });
 console.log("🧪 SERVER: SUPABASE_URL value:", process.env.SUPABASE_URL || "NOT_SET");
 console.log("🧪 SERVER: PUBLIC_SUPABASE_KEY value:", process.env.PUBLIC_SUPABASE_KEY ? "[SET]" : "NOT_SET");
+
+// Debug all available env vars
+console.log("🧪 SERVER: All process.env keys:", Object.keys(process.env));
+console.log("🧪 SERVER: CF_PAGES value:", process.env.CF_PAGES);
+console.log("🧪 SERVER: NODE_ENV value:", process.env.NODE_ENV);
 ---
 
 <!doctype html>

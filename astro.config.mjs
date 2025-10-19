@@ -10,7 +10,7 @@ export default defineConfig({
   output: "server",
   adapter: process.env.CF_PAGES // eslint-disable-line no-undef
     ? cloudflare({
-        mode: "advanced",
+        mode: "directory",
       })
     : node({
         mode: "standalone",
