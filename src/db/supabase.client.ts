@@ -23,6 +23,9 @@ export const createSupabaseServerInstance = (context: { headers: Headers; cookie
   // SUPABASE_URL jest importowana synchronicznie z astro:env/server
 
   if (!SUPABASE_URL || !PUBLIC_SUPABASE_KEY) {
+    // Wszystkie zmienne są optional w astro:env, więc walidacja runtime
+    // eslint-disable-next-line no-console
+    console.error(`Missing Supabase configuration: URL=${!!SUPABASE_URL}, Key=${!!PUBLIC_SUPABASE_KEY}`);
     throw new Error(`Missing Supabase configuration: URL=${!!SUPABASE_URL}, Key=${!!PUBLIC_SUPABASE_KEY}`);
   }
 

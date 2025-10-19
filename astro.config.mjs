@@ -23,15 +23,12 @@ export default defineConfig({
       },
   env: {
     schema: {
-      // Supabase
-      SUPABASE_URL: envField.string({ context: "server", access: "secret" }),
+      // Wszystkie zmienne oznaczone jako optional aby uniknąć problemów z build-time walidacją
+      // w środowisku Cloudflare Pages gdzie zmienne nie są dostępne podczas build
+      SUPABASE_URL: envField.string({ context: "server", access: "secret", optional: true }),
       PUBLIC_SUPABASE_KEY: envField.string({ context: "server", access: "public", optional: true }),
-      SUPABASE_SERVICE_ROLE_KEY: envField.string({ context: "server", access: "secret" }),
-
-      // AI Service
-      OPENROUTER_API_KEY: envField.string({ context: "server", access: "secret" }),
-
-      // Feature Flags
+      SUPABASE_SERVICE_ROLE_KEY: envField.string({ context: "server", access: "secret", optional: true }),
+      OPENROUTER_API_KEY: envField.string({ context: "server", access: "secret", optional: true }),
       PUBLIC_ENV_NAME: envField.string({ context: "client", access: "public", optional: true }),
     },
   },
