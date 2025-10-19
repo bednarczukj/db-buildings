@@ -71,9 +71,10 @@ export const GET: APIRoute = async ({ params, locals }) => {
     let email = `unknown-${userProfile.user_id.slice(0, 8)}@example.com`;
 
     try {
-      const serviceRoleKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
+      const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || import.meta.env?.SUPABASE_SERVICE_ROLE_KEY;
       if (serviceRoleKey) {
-        const serviceSupabase = createClient(import.meta.env.SUPABASE_URL, serviceRoleKey);
+        const supabaseUrl = process.env.SUPABASE_URL || import.meta.env?.SUPABASE_URL;
+        const serviceSupabase = createClient(supabaseUrl, serviceRoleKey);
 
         const { data: authUser, error: authError } = await serviceSupabase.auth.admin.getUserById(userProfile.user_id);
         if (!authError && authUser?.user?.email) {

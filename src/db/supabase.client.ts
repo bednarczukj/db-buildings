@@ -4,7 +4,7 @@ import type { Database } from "./database.types.ts";
 
 export const cookieOptions: CookieOptionsWithName = {
   path: "/",
-  secure: import.meta.env.PROD, // true in production (HTTPS), false in development
+  secure: process.env.NODE_ENV === "production" || import.meta.env?.PROD, // Cloudflare prod uses process.env, dev uses import.meta.env
   httpOnly: true,
   sameSite: "lax",
   maxAge: 60 * 60 * 24 * 7, // 7 days
@@ -18,7 +18,21 @@ function parseCookieHeader(cookieHeader: string): { name: string; value: string 
 }
 
 export const createSupabaseServerInstance = (context: { headers: Headers; cookies: AstroCookies }) => {
-  const supabase = createServerClient<Database>(import.meta.env.SUPABASE_URL, import.meta.env.PUBLIC_SUPABASE_KEY, {
+  // Cloudflare Pages Functions use process.env, Node.js dev/e2e use import.meta.env as fallback
+  const supabaseUrl = process.env.SUPABASE_URL || import.meta.env?.SUPABASE_URL;
+  const supabaseKey = process.env.PUBLIC_SUPABASE_KEY || import.meta.env?.PUBLIC_SUPABASE_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    // eslint-disable-next-line no-console
+    console.error("Missing Supabase configuration:", {
+      supabaseUrl: !!supabaseUrl,
+      supabaseKey: !!supabaseKey,
+      nodeEnv: process.env.NODE_ENV,
+    });
+    throw new Error("Missing Supabase configuration");
+  }
+
+  const supabase = createServerClient<Database>(supabaseUrl, supabaseKey, {
     cookieOptions,
     cookies: {
       getAll() {

@@ -61,9 +61,10 @@ export const GET: APIRoute = async ({ locals }) => {
 
         // Try to get real email using service role
         try {
-          const serviceRoleKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
+          const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || import.meta.env?.SUPABASE_SERVICE_ROLE_KEY;
           if (serviceRoleKey) {
-            const serviceSupabase = createClient(import.meta.env.SUPABASE_URL, serviceRoleKey);
+            const supabaseUrl = process.env.SUPABASE_URL || import.meta.env?.SUPABASE_URL;
+            const serviceSupabase = createClient(supabaseUrl, serviceRoleKey);
 
             const { data: authUser, error: authError } = await serviceSupabase.auth.admin.getUserById(profile.user_id);
 
@@ -186,7 +187,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Check if service role key is available for creating users
-    const serviceRoleKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || import.meta.env?.SUPABASE_SERVICE_ROLE_KEY;
     if (!serviceRoleKey) {
       return new Response(
         JSON.stringify({
@@ -202,7 +203,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Create service client for auth operations
-    const serviceSupabase = createClient(import.meta.env.SUPABASE_URL, serviceRoleKey);
+    const supabaseUrl = process.env.SUPABASE_URL || import.meta.env?.SUPABASE_URL;
+    const serviceSupabase = createClient(supabaseUrl, serviceRoleKey);
 
     // Check if user with this email already exists in auth.users
     const { data: existingUsers, error: listError } = await serviceSupabase.auth.admin.listUsers();
