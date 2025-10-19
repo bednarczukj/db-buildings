@@ -2,7 +2,6 @@ import type { APIRoute } from "astro";
 import { createUserSchema } from "../../../../lib/schemas/authSchemas";
 import { ZodError } from "zod";
 import { createClient } from "@supabase/supabase-js";
-import { SUPABASE_SERVICE_ROLE_KEY, SUPABASE_URL } from "astro:env/server";
 
 /**
  * GET /api/admin/users
@@ -201,7 +200,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Create service client for auth operations
-    const serviceSupabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const serviceSupabase = createClient(supabaseUrl, serviceRoleKey);
 
     // Check if user with this email already exists in auth.users
     const { data: existingUsers, error: listError } = await serviceSupabase.auth.admin.listUsers();

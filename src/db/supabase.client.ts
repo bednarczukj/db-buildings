@@ -1,6 +1,5 @@
 import type { AstroCookies } from "astro";
 import { createServerClient, type CookieOptionsWithName } from "@supabase/ssr";
-import { PUBLIC_SUPABASE_KEY, SUPABASE_URL } from "astro:env/server";
 import type { Database } from "./database.types.ts";
 
 export const cookieOptions: CookieOptionsWithName = {
@@ -19,17 +18,17 @@ function parseCookieHeader(cookieHeader: string): { name: string; value: string 
 }
 
 export const createSupabaseServerInstance = (context: { headers: Headers; cookies: AstroCookies }) => {
-  // Astro:env zapewnia type-safe zmienne środowiskowe
-  // SUPABASE_URL jest importowana synchronicznie z astro:env/server
+  // Cloudflare Pages Functions use process.env directly
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.PUBLIC_SUPABASE_KEY;
 
-  if (!SUPABASE_URL || !PUBLIC_SUPABASE_KEY) {
-    // Wszystkie zmienne są optional w astro:env, więc walidacja runtime
+  if (!supabaseUrl || !supabaseKey) {
     // eslint-disable-next-line no-console
-    console.error(`Missing Supabase configuration: URL=${!!SUPABASE_URL}, Key=${!!PUBLIC_SUPABASE_KEY}`);
-    throw new Error(`Missing Supabase configuration: URL=${!!SUPABASE_URL}, Key=${!!PUBLIC_SUPABASE_KEY}`);
+    console.error(`Missing Supabase configuration: URL=${!!supabaseUrl}, Key=${!!supabaseKey}`);
+    throw new Error(`Missing Supabase configuration: URL=${!!supabaseUrl}, Key=${!!supabaseKey}`);
   }
 
-  const supabase = createServerClient<Database>(SUPABASE_URL, PUBLIC_SUPABASE_KEY, {
+  const supabase = createServerClient<Database>(supabaseUrl, supabaseKey, {
     cookieOptions,
     cookies: {
       getAll() {

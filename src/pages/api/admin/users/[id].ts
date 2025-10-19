@@ -2,7 +2,6 @@ import type { APIRoute } from "astro";
 import { updateUserRoleSchema } from "../../../../lib/schemas/authSchemas";
 import { ZodError } from "zod";
 import { createClient } from "@supabase/supabase-js";
-import { SUPABASE_SERVICE_ROLE_KEY, SUPABASE_URL } from "astro:env/server";
 
 /**
  * GET /api/admin/users/[id]

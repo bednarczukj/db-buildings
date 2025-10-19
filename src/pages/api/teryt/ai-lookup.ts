@@ -1,6 +1,5 @@
 import type { APIRoute } from "astro";
 import { z } from "zod";
-import { OPENROUTER_API_KEY } from "astro:env/server";
 
 export const prerender = false;
 
@@ -39,7 +38,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const { wojewodztwo, powiat, gmina, miejscowosc, dzielnica, ulica, numer_budynku } = validation.data;
 
   // 3. Get OpenRouter API Key
-  if (!OPENROUTER_API_KEY) {
+  const openRouterApiKey = process.env.OPENROUTER_API_KEY;
+  if (!openRouterApiKey) {
     return new Response(JSON.stringify({ error: "AI service is not configured." }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
@@ -75,7 +75,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+        Authorization: `Bearer ${openRouterApiKey}`,
         "HTTP-Referer": request.headers.get("referer") || "http://localhost:4321",
         "X-Title": "Baza Budynków Polski",
       },
