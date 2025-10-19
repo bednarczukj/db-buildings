@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { createUserSchema } from "../../../../lib/schemas/authSchemas";
 import { ZodError } from "zod";
 import { createClient } from "@supabase/supabase-js";
+import { SUPABASE_SERVICE_ROLE_KEY, SUPABASE_URL } from "astro:env/server";
 
 /**
  * GET /api/admin/users
@@ -61,11 +62,8 @@ export const GET: APIRoute = async ({ locals }) => {
 
         // Try to get real email using service role
         try {
-          const { SUPABASE_SERVICE_ROLE_KEY: serviceRoleKey, SUPABASE_URL: supabaseUrl } = await import(
-            "astro:env/server"
-          );
-          if (serviceRoleKey) {
-            const serviceSupabase = createClient(supabaseUrl, serviceRoleKey);
+          if (SUPABASE_SERVICE_ROLE_KEY) {
+            const serviceSupabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
             const { data: authUser, error: authError } = await serviceSupabase.auth.admin.getUserById(profile.user_id);
 
@@ -188,8 +186,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Check if service role key is available for creating users
-    const { SUPABASE_SERVICE_ROLE_KEY: serviceRoleKey } = await import("astro:env/server");
-    if (!serviceRoleKey) {
+    if (!SUPABASE_SERVICE_ROLE_KEY) {
       return new Response(
         JSON.stringify({
           error: "Brak uprawnień do tworzenia użytkowników. Skonfiguruj SUPABASE_SERVICE_ROLE_KEY.",
@@ -204,8 +201,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Create service client for auth operations
-    const { SUPABASE_URL: supabaseUrl } = await import("astro:env/server");
-    const serviceSupabase = createClient(supabaseUrl, serviceRoleKey);
+    const serviceSupabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
     // Check if user with this email already exists in auth.users
     const { data: existingUsers, error: listError } = await serviceSupabase.auth.admin.listUsers();

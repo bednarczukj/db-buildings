@@ -1,6 +1,7 @@
 import type { AstroCookies } from "astro";
 import { createServerClient, type CookieOptionsWithName } from "@supabase/ssr";
 import { PUBLIC_SUPABASE_KEY } from "astro:env/client";
+import { SUPABASE_URL } from "astro:env/server";
 import type { Database } from "./database.types.ts";
 
 export const cookieOptions: CookieOptionsWithName = {
@@ -20,9 +21,7 @@ function parseCookieHeader(cookieHeader: string): { name: string; value: string 
 
 export const createSupabaseServerInstance = (context: { headers: Headers; cookies: AstroCookies }) => {
   // Astro:env zapewnia type-safe zmienne środowiskowe
-  // W produkcji (Cloudflare) używa process.env
-  // W dev/e2e (Node.js) używa import.meta.env jako fallback
-  const { SUPABASE_URL } = await import("astro:env/server");
+  // SUPABASE_URL jest importowana synchronicznie z astro:env/server
 
   const supabase = createServerClient<Database>(SUPABASE_URL, PUBLIC_SUPABASE_KEY, {
     cookieOptions,

@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { updateUserRoleSchema } from "../../../../lib/schemas/authSchemas";
 import { ZodError } from "zod";
 import { createClient } from "@supabase/supabase-js";
+import { SUPABASE_SERVICE_ROLE_KEY, SUPABASE_URL } from "astro:env/server";
 
 /**
  * GET /api/admin/users/[id]
@@ -71,9 +72,8 @@ export const GET: APIRoute = async ({ params, locals }) => {
     let email = `unknown-${userProfile.user_id.slice(0, 8)}@example.com`;
 
     try {
-      const { SUPABASE_SERVICE_ROLE_KEY: serviceRoleKey, SUPABASE_URL: supabaseUrl } = await import("astro:env/server");
-      if (serviceRoleKey) {
-        const serviceSupabase = createClient(supabaseUrl, serviceRoleKey);
+      if (SUPABASE_SERVICE_ROLE_KEY) {
+        const serviceSupabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
         const { data: authUser, error: authError } = await serviceSupabase.auth.admin.getUserById(userProfile.user_id);
         if (!authError && authUser?.user?.email) {
