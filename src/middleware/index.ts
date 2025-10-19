@@ -17,9 +17,11 @@ const PUBLIC_EXACT_PATHS = ["/"];
 
 export const onRequest = defineMiddleware(async ({ locals, cookies, url, request }, next) => {
   // Create Supabase server instance
+  // Function automatically detects runtime.env vs process.env
   const supabase = createSupabaseServerInstance({
     cookies,
     headers: request.headers,
+    runtime: locals.runtime,
   });
 
   // Skip auth check for public paths

@@ -17,14 +17,22 @@ function parseCookieHeader(cookieHeader: string): { name: string; value: string 
   });
 }
 
-export const createSupabaseServerInstance = (context: { headers: Headers; cookies: AstroCookies }) => {
-  // Cloudflare Pages Functions use process.env directly
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseKey = process.env.PUBLIC_SUPABASE_KEY;
+export const createSupabaseServerInstance = (context: {
+  headers: Headers;
+  cookies: AstroCookies;
+  runtime?: { env: Record<string, string> };
+}) => {
+  // Cloudflare Pages Functions use runtime.env, Node.js uses process.env
+  const runtimeEnv = context.runtime?.env;
+  const env = runtimeEnv || process.env;
+  const supabaseUrl = env.SUPABASE_URL;
+  const supabaseKey = env.PUBLIC_SUPABASE_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
     // eslint-disable-next-line no-console
-    console.error(`Missing Supabase configuration: URL=${!!supabaseUrl}, Key=${!!supabaseKey}`);
+    console.error(
+      `Missing Supabase configuration: URL=${!!supabaseUrl}, Key=${!!supabaseKey}, RuntimeEnv=${!!runtimeEnv}`
+    );
     throw new Error(`Missing Supabase configuration: URL=${!!supabaseUrl}, Key=${!!supabaseKey}`);
   }
 

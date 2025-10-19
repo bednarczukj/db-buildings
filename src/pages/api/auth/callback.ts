@@ -1,9 +1,9 @@
 import type { APIRoute } from "astro";
 import { createSupabaseServerInstance } from "../../../db/supabase.client.ts";
 
-export const GET: APIRoute = async ({ request, cookies }) => {
+export const GET: APIRoute = async ({ request, cookies, locals }) => {
   try {
-    const supabase = createSupabaseServerInstance({ cookies, headers: request.headers });
+    const supabase = createSupabaseServerInstance({ cookies, headers: request.headers, runtime: locals.runtime });
 
     // Handle the callback from Supabase Auth
     const { data, error } = await supabase.auth.getSession();
