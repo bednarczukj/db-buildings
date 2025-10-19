@@ -4,7 +4,7 @@ import type { Database } from "./database.types.ts";
 
 export const cookieOptions: CookieOptionsWithName = {
   path: "/",
-  secure: false, // Set to false for development (localhost)
+  secure: import.meta.env.PROD, // true in production (HTTPS), false in development
   httpOnly: true,
   sameSite: "lax",
   maxAge: 60 * 60 * 24 * 7, // 7 days

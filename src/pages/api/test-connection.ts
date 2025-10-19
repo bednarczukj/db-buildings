@@ -3,6 +3,17 @@ import { createSupabaseServerInstance } from "../../db/supabase.client.ts";
 
 export const GET: APIRoute = async ({ cookies, request }) => {
   try {
+    // Debug environment variables
+    const envDebug = {
+      SUPABASE_URL: !!import.meta.env.SUPABASE_URL,
+      PUBLIC_SUPABASE_KEY: !!import.meta.env.PUBLIC_SUPABASE_KEY,
+      SUPABASE_SERVICE_ROLE_KEY: !!import.meta.env.SUPABASE_SERVICE_ROLE_KEY,
+      OPENROUTER_API_KEY: !!import.meta.env.OPENROUTER_API_KEY,
+      PROD: import.meta.env.PROD,
+      DEV: import.meta.env.DEV,
+      CF_PAGES: import.meta.env.CF_PAGES,
+    };
+
     const supabase = createSupabaseServerInstance({ cookies, headers: request.headers });
 
     // Test basic connection
@@ -14,6 +25,7 @@ export const GET: APIRoute = async ({ cookies, request }) => {
           status: "error",
           message: "Database connection failed",
           error: error.message,
+          env: envDebug,
         }),
         { status: 500 }
       );
@@ -29,6 +41,7 @@ export const GET: APIRoute = async ({ cookies, request }) => {
         auth: authError ? "error" : "ok",
         session: !!authData.session,
         user: authData.session?.user?.email || null,
+        env: envDebug,
       }),
       { status: 200 }
     );
@@ -38,6 +51,7 @@ export const GET: APIRoute = async ({ cookies, request }) => {
         status: "error",
         message: "Unexpected error",
         error: err instanceof Error ? err.message : String(err),
+        env: envDebug,
       }),
       { status: 500 }
     );
