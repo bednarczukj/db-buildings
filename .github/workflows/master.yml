@@ -100,7 +100,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist
+          command: pages deploy dist --project-name ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
 
   # Job 4: Deployment Summary
   summary:
