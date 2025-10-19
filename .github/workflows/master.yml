@@ -96,14 +96,11 @@ jobs:
           CF_PAGES: 1
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
-          directory: dist
-          # Optional: Add GitHub deployment comments
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: pages deploy dist --compatibility-date=2024-01-01
 
   # Job 4: Deployment Summary
   summary:
