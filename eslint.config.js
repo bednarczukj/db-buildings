@@ -83,6 +83,13 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": "warn",
     },
   },
+  // Allow console.log in Astro pages for debugging
+  {
+    files: ["src/pages/**/*.astro"],
+    rules: {
+      "no-console": "off",
+    },
+  },
   // Relax rules for test files
   {
     files: ["src/test/**/*.{ts,tsx}", "**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"],
