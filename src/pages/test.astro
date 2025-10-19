@@ -7,6 +7,15 @@ console.log("🧪 SERVER: Environment:", {
   CF_PAGES: process.env.CF_PAGES,
   userAgent: Astro.request.headers.get("user-agent"),
 });
+console.log("🧪 SERVER: Available env vars:", {
+  SUPABASE_URL: !!process.env.SUPABASE_URL,
+  PUBLIC_SUPABASE_KEY: !!process.env.PUBLIC_SUPABASE_KEY,
+  SUPABASE_SERVICE_ROLE_KEY: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+  OPENROUTER_API_KEY: !!process.env.OPENROUTER_API_KEY,
+  PUBLIC_ENV_NAME: !!process.env.PUBLIC_ENV_NAME,
+});
+console.log("🧪 SERVER: SUPABASE_URL value:", process.env.SUPABASE_URL || "NOT_SET");
+console.log("🧪 SERVER: PUBLIC_SUPABASE_KEY value:", process.env.PUBLIC_SUPABASE_KEY ? "[SET]" : "NOT_SET");
 ---
 
 <!doctype html>
