@@ -25,7 +25,7 @@ export default defineConfig({
     schema: {
       // Supabase
       SUPABASE_URL: envField.string({ context: "server", access: "secret" }),
-      PUBLIC_SUPABASE_KEY: envField.string({ context: "server", access: "public" }),
+      PUBLIC_SUPABASE_KEY: envField.string({ context: "server", access: "public", optional: true }),
       SUPABASE_SERVICE_ROLE_KEY: envField.string({ context: "server", access: "secret" }),
 
       // AI Service

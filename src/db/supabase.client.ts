@@ -22,6 +22,10 @@ export const createSupabaseServerInstance = (context: { headers: Headers; cookie
   // Astro:env zapewnia type-safe zmienne środowiskowe
   // SUPABASE_URL jest importowana synchronicznie z astro:env/server
 
+  if (!SUPABASE_URL || !PUBLIC_SUPABASE_KEY) {
+    throw new Error(`Missing Supabase configuration: URL=${!!SUPABASE_URL}, Key=${!!PUBLIC_SUPABASE_KEY}`);
+  }
+
   const supabase = createServerClient<Database>(SUPABASE_URL, PUBLIC_SUPABASE_KEY, {
     cookieOptions,
     cookies: {
