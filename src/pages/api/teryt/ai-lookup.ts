@@ -38,7 +38,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const { wojewodztwo, powiat, gmina, miejscowosc, dzielnica, ulica, numer_budynku } = validation.data;
 
   // 3. Get OpenRouter API Key
-  const openRouterApiKey = process.env.OPENROUTER_API_KEY || import.meta.env?.OPENROUTER_API_KEY;
+  const { OPENROUTER_API_KEY: openRouterApiKey } = await import("astro:env/server");
   if (!openRouterApiKey) {
     return new Response(JSON.stringify({ error: "AI service is not configured." }), {
       status: 500,

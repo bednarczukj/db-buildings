@@ -1,10 +1,11 @@
 import type { AstroCookies } from "astro";
 import { createServerClient, type CookieOptionsWithName } from "@supabase/ssr";
+import { PUBLIC_SUPABASE_KEY } from "astro:env/client";
 import type { Database } from "./database.types.ts";
 
 export const cookieOptions: CookieOptionsWithName = {
   path: "/",
-  secure: process.env.NODE_ENV === "production" || import.meta.env?.PROD, // Cloudflare prod uses process.env, dev uses import.meta.env
+  secure: process.env.NODE_ENV === "production", // Astro env będzie walidować dostępność
   httpOnly: true,
   sameSite: "lax",
   maxAge: 60 * 60 * 24 * 7, // 7 days
@@ -18,21 +19,12 @@ function parseCookieHeader(cookieHeader: string): { name: string; value: string 
 }
 
 export const createSupabaseServerInstance = (context: { headers: Headers; cookies: AstroCookies }) => {
-  // Cloudflare Pages Functions use process.env, Node.js dev/e2e use import.meta.env as fallback
-  const supabaseUrl = process.env.SUPABASE_URL || import.meta.env?.SUPABASE_URL;
-  const supabaseKey = process.env.PUBLIC_SUPABASE_KEY || import.meta.env?.PUBLIC_SUPABASE_KEY;
+  // Astro:env zapewnia type-safe zmienne środowiskowe
+  // W produkcji (Cloudflare) używa process.env
+  // W dev/e2e (Node.js) używa import.meta.env jako fallback
+  const { SUPABASE_URL } = await import("astro:env/server");
 
-  if (!supabaseUrl || !supabaseKey) {
-    // eslint-disable-next-line no-console
-    console.error("Missing Supabase configuration:", {
-      supabaseUrl: !!supabaseUrl,
-      supabaseKey: !!supabaseKey,
-      nodeEnv: process.env.NODE_ENV,
-    });
-    throw new Error("Missing Supabase configuration");
-  }
-
-  const supabase = createServerClient<Database>(supabaseUrl, supabaseKey, {
+  const supabase = createServerClient<Database>(SUPABASE_URL, PUBLIC_SUPABASE_KEY, {
     cookieOptions,
     cookies: {
       getAll() {
