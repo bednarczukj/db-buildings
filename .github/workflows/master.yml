@@ -100,7 +100,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --compatibility-date=2024-01-01
+          command: pages deploy dist
 
   # Job 4: Deployment Summary
   summary:
