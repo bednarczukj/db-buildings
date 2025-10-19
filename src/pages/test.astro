@@ -1,5 +1,12 @@
 ---
 // Test page to check if basic Cloudflare Pages Functions work
+console.log('🧪 SERVER: Test page server-side execution started');
+console.log('🧪 SERVER: Timestamp:', new Date().toISOString());
+console.log('🧪 SERVER: Environment:', {
+  NODE_ENV: process.env.NODE_ENV,
+  CF_PAGES: process.env.CF_PAGES,
+  userAgent: Astro.request.headers.get('user-agent')
+});
 ---
 
 <!doctype html>
@@ -37,5 +44,18 @@
       </ul>
       <a href="/" style="color: blue; text-decoration: underline;">Wróć do strony głównej</a>
     </div>
+
+    <script>
+      console.log('🧪 CLIENT: Test page client-side loaded');
+      console.log('🧪 CLIENT: Timestamp:', new Date().toISOString());
+      console.log('🧪 CLIENT: User agent:', navigator.userAgent);
+      console.log('🧪 CLIENT: URL:', window.location.href);
+
+      // Dodaj widoczny znacznik że JavaScript działa
+      const debugDiv = document.createElement('div');
+      debugDiv.style.cssText = 'background: #e8f5e8; border: 1px solid #4caf50; padding: 10px; margin: 10px 0; border-radius: 4px;';
+      debugDiv.innerHTML = '<strong>✅ JavaScript działa!</strong> Sprawdź konsolę przeglądarki (F12) po więcej logów.';
+      document.querySelector('.container').appendChild(debugDiv);
+    </script>
   </body>
 </html>
