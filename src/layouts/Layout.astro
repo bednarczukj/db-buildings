@@ -9,19 +9,12 @@ interface Props {
 
 const { title = "Baza Budynków Polski" } = Astro.props;
 const user = Astro.locals.user;
-const supabase = Astro.locals.supabase;
+// supabase is not needed here anymore
+// const supabase = Astro.locals.supabase;
 
-// Get user role from profiles table (server-side)
-let userRole = null;
-if (user && supabase) {
-  try {
-    const { data: profile } = await supabase.from("profiles").select("role").eq("user_id", user.id).single();
-    userRole = profile?.role || null;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Error fetching user role:", error);
-  }
-}
+// Get user role from locals (already set by middleware)
+// No need to fetch from database again
+const userRole = user?.role || null;
 ---
 
 <!doctype html>
