@@ -4,7 +4,7 @@ type Environment = "local" | "integration" | "production";
 type Feature = "auth_api" | "pages_api" | string;
 
 const getEnv = (): Environment => {
-  const env = import.meta.env.PUBLIC_ENV_NAME;
+  const env = process.env.PUBLIC_ENV_NAME || import.meta.env?.PUBLIC_ENV_NAME;
 
   if (env === "production" || env === "prod") {
     return "production";

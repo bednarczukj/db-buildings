@@ -5,13 +5,15 @@ export const GET: APIRoute = async ({ cookies, request }) => {
   try {
     // Debug environment variables
     const envDebug = {
-      SUPABASE_URL: !!import.meta.env.SUPABASE_URL,
-      PUBLIC_SUPABASE_KEY: !!import.meta.env.PUBLIC_SUPABASE_KEY,
-      SUPABASE_SERVICE_ROLE_KEY: !!import.meta.env.SUPABASE_SERVICE_ROLE_KEY,
-      OPENROUTER_API_KEY: !!import.meta.env.OPENROUTER_API_KEY,
-      PROD: import.meta.env.PROD,
-      DEV: import.meta.env.DEV,
-      CF_PAGES: import.meta.env.CF_PAGES,
+      SUPABASE_URL: !!(process.env.SUPABASE_URL || import.meta.env?.SUPABASE_URL),
+      PUBLIC_SUPABASE_KEY: !!(process.env.PUBLIC_SUPABASE_KEY || import.meta.env?.PUBLIC_SUPABASE_KEY),
+      SUPABASE_SERVICE_ROLE_KEY: !!(
+        process.env.SUPABASE_SERVICE_ROLE_KEY || import.meta.env?.SUPABASE_SERVICE_ROLE_KEY
+      ),
+      OPENROUTER_API_KEY: !!(process.env.OPENROUTER_API_KEY || import.meta.env?.OPENROUTER_API_KEY),
+      PROD: process.env.NODE_ENV === "production" || import.meta.env?.PROD,
+      DEV: process.env.NODE_ENV !== "production" || import.meta.env?.DEV,
+      CF_PAGES: !!process.env.CF_PAGES || import.meta.env?.CF_PAGES,
     };
 
     const supabase = createSupabaseServerInstance({ cookies, headers: request.headers });
