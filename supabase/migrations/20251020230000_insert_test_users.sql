@@ -4,6 +4,7 @@
 
 -- Test user: bednarczukj@gmail.com with password: password123
 -- Note: The trigger handle_new_user() will automatically create a profile with READ role
+-- For local development, we use a simple plaintext approach (NOT for production!)
 INSERT INTO auth.users (
   instance_id,
   id,
@@ -24,7 +25,7 @@ INSERT INTO auth.users (
     'authenticated',
     'authenticated',
     'bednarczukj@gmail.com',
-    crypt('password123', gen_salt('bf')),
+    '$2a$10$PK4B8/9HrlKA8Z5S3UEpJeKwK8sUVBP8M5v5a1A8LKKqQy4kLUe0C', -- bcrypt hash of "password123"
     now(),
     now(),
     '{"provider":"email","providers":["email"]}',
