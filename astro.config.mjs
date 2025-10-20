@@ -18,7 +18,7 @@ export default defineConfig({
   server: process.env.CF_PAGES // eslint-disable-line no-undef
     ? undefined
     : {
-        port: 3000,
+        port: process.env.PORT ? parseInt(process.env.PORT) : 3000, // eslint-disable-line no-undef
         host: "localhost",
       },
   integrations: [react()],

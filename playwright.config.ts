@@ -35,7 +35,7 @@ export default defineConfig({
   // Shared settings for all projects
   use: {
     // Base URL for page.goto() calls
-    baseURL: process.env.BASE_URL || "http://localhost:3000",
+    baseURL: process.env.BASE_URL || "http://localhost:3001", // E2E tests run on port 3001
 
     // Disable headless on macOS (local dev) due to crashes (https://github.com/microsoft/playwright/issues/30336)
     // CI always uses headless mode
