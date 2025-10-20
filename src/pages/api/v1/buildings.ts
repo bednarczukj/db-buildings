@@ -70,6 +70,8 @@ export const GET: APIRoute = async ({ url, locals }) => {
   } catch (error) {
     // Handle Zod validation errors
     if (error instanceof ZodError) {
+      // eslint-disable-next-line no-console
+      console.error("Zod validation error:", error.errors);
       return new Response(
         JSON.stringify({
           error: "Validation error",
@@ -102,6 +104,8 @@ export const GET: APIRoute = async ({ url, locals }) => {
 
     // Handle invalid filter reference errors (404)
     if (error instanceof Error && error.message.startsWith("Invalid ")) {
+      // eslint-disable-next-line no-console
+      console.error("Invalid filter reference error:", error.message);
       return new Response(
         JSON.stringify({
           error: "Not found",
@@ -120,7 +124,7 @@ export const GET: APIRoute = async ({ url, locals }) => {
     // Log error for debugging (in production, use proper error logging service)
     if (error instanceof Error) {
       // eslint-disable-next-line no-console
-      console.error("Error fetching buildings:", error.message);
+      console.error("Error fetching buildings:", error.message, error);
     }
     return new Response(
       JSON.stringify({
