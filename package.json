@@ -3,7 +3,6 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
     "dev:cloud": "node scripts/dev-cloud.js",
     "build": "astro build",
     "preview": "astro preview",
@@ -24,8 +23,7 @@
     "test:e2e:report": "playwright show-report playwright-report",
     "test:all": "npm run test:run && npm run test:e2e",
     "dev": "astro dev",
-    "dev:e2e": "PORT=3001 USE_CLOUD_DB=true astro dev",
-    "dev:both": "npm run dev & npm run dev:e2e"
+    "dev:e2e": "PORT=3001 USE_CLOUD_DB=true astro dev"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.10",
