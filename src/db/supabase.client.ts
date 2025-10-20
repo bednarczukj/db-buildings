@@ -24,14 +24,21 @@ export const createSupabaseServerInstance = (context: {
 }) => {
   // Cloudflare Pages Functions use runtime.env, Node.js uses process.env
   const runtimeEnv = context.runtime?.env;
-  const env = runtimeEnv || process.env;
+
+  // Check if runtime env has the required Supabase variables
+  const hasRuntimeSupabaseUrl = runtimeEnv?.SUPABASE_URL;
+  const hasRuntimeSupabaseKey = runtimeEnv?.PUBLIC_SUPABASE_KEY;
+
+  // Use runtime env only if it contains both required variables, otherwise use process.env
+  const env = hasRuntimeSupabaseUrl && hasRuntimeSupabaseKey ? runtimeEnv : process.env;
+
   const supabaseUrl = env.SUPABASE_URL;
   const supabaseKey = env.PUBLIC_SUPABASE_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
     // eslint-disable-next-line no-console
     console.error(
-      `Missing Supabase configuration: URL=${!!supabaseUrl}, Key=${!!supabaseKey}, RuntimeEnv=${!!runtimeEnv}`
+      `Missing Supabase configuration: URL=${!!supabaseUrl}, Key=${!!supabaseKey}, UsingRuntime=${hasRuntimeSupabaseUrl && hasRuntimeSupabaseKey}`
     );
     throw new Error(`Missing Supabase configuration: URL=${!!supabaseUrl}, Key=${!!supabaseKey}`);
   }
