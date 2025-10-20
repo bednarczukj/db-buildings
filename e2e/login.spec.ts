@@ -32,10 +32,26 @@ test.describe("Login Flow", () => {
     expect(currentUrl).toMatch(/\/(auth\/login|buildings|$)/);
   });
 
-  test("should accept valid email format", async () => {
+  test("should accept valid email format", async ({ page }) => {
+    // Wait for page to load completely
+    await page.waitForLoadState("networkidle");
+
+    // Debug: Check if inputs exist and are visible
+    await expect(loginPage.emailInput).toBeVisible();
+    await expect(loginPage.passwordInput).toBeVisible();
+
     // Fill with valid email
     await loginPage.emailInput.fill("test@example.com");
     await loginPage.passwordInput.fill("password123");
+
+    // Wait a bit for React to process
+    await page.waitForTimeout(100);
+
+    // Debug: Log the current values
+    const emailValue = await loginPage.emailInput.inputValue();
+    const passwordValue = await loginPage.passwordInput.inputValue();
+    console.log("Email value:", emailValue);
+    console.log("Password value:", passwordValue);
 
     // Both inputs should have values
     await expect(loginPage.emailInput).toHaveValue("test@example.com");

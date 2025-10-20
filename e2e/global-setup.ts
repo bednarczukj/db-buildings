@@ -24,8 +24,8 @@ async function globalSetup(config: FullConfig) {
   // Create authenticated session storage state
   console.log("🔐 Creating authenticated session...");
 
-  // Use chromium. Headless is fine on Linux (CI), but needs to be disabled on macOS.
-  const headless = process.env.CI ? true : process.platform !== "darwin";
+  // Use headless mode to avoid macOS permission issues
+  const headless = true;
 
   console.log(`   🖥️  Platform: ${process.platform}, Browser: Chromium, Headless: ${headless}`);
 

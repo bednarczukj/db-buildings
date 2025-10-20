@@ -37,9 +37,9 @@ export default defineConfig({
     // Base URL for page.goto() calls
     baseURL: process.env.BASE_URL || "http://localhost:3001", // E2E tests run on port 3001
 
-    // Disable headless on macOS (local dev) due to crashes (https://github.com/microsoft/playwright/issues/30336)
+    // Use headless mode to avoid macOS permission issues with Chromium
     // CI always uses headless mode
-    headless: process.env.CI ? true : process.platform === "darwin" ? false : true,
+    headless: true,
 
     // Collect trace on test failure
     trace: "on-first-retry",
