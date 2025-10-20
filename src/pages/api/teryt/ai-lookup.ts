@@ -39,25 +39,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   // 3. Get OpenRouter API Key
   const openRouterApiKey = process.env.OPENROUTER_API_KEY;
-  console.log("OPENROUTER_API_KEY available:", !!openRouterApiKey, "length:", openRouterApiKey?.length || 0);
-
   if (!openRouterApiKey) {
-    console.error("OPENROUTER_API_KEY is missing from environment");
-    return new Response(
-      JSON.stringify({
-        error: "AI service is not configured.",
-        debug: {
-          openRouterKey: !!process.env.OPENROUTER_API_KEY,
-          supabaseUrl: !!process.env.SUPABASE_URL,
-          serviceRoleKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
-          envKeys: Object.keys(process.env).filter((key) => key.includes("OPENROUTER") || key.includes("SUPABASE")),
-        },
-      }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return new Response(JSON.stringify({ error: "AI service is not configured." }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   // 4. Construct AI Prompt
