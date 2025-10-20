@@ -206,8 +206,6 @@ export function FilterPanel({ filters, onFiltersChange, onReset, isLoading }: Fi
             <SelectContent>
               <SelectItem value="__all__">Wszystkie</SelectItem>
               <SelectItem value="active">Aktywny</SelectItem>
-              <SelectItem value="inactive">Nieaktywny</SelectItem>
-              <SelectItem value="pending">Oczekujący</SelectItem>
               <SelectItem value="deleted">Usunięty</SelectItem>
             </SelectContent>
           </Select>
