@@ -10,7 +10,7 @@ test.describe("Example E2E Tests", () => {
     await page.goto("/");
 
     // Check that the page loaded successfully
-    await expect(page).toHaveTitle(/Test aplikacji/);
+    await expect(page).toHaveTitle(/Lista Budynków/);
 
     // Visual regression test (optional)
     // await expect(page).toHaveScreenshot('homepage.png');
