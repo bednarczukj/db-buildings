@@ -1,7 +1,7 @@
 import { defineConfig } from "astro/config";
 
 import react from "@astrojs/react";
-import tailwindcss from "@tailwindcss/vite";
+import tailwind from "@astrojs/tailwind";
 import node from "@astrojs/node";
 import cloudflare from "@astrojs/cloudflare";
 
@@ -21,9 +21,5 @@ export default defineConfig({
         port: process.env.PORT ? parseInt(process.env.PORT) : 3000, // eslint-disable-line no-undef
         host: "localhost",
       },
-  integrations: [react()],
-  vite: {
-    // @ts-expect-error - Tailwind Vite plugin has type compatibility issues with Astro
-    plugins: [tailwindcss()],
-  },
+  integrations: [react(), tailwind()],
 });
