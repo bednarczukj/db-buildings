@@ -60,7 +60,13 @@ export default tseslint.config(
   includeIgnoreFile(gitignorePath),
   // Ignore utility scripts
   {
-    ignores: ["check-db-data.js", "test-api-validation.js", "update-db.js", "update-user-role.js"],
+    ignores: [
+      "check-db-data.js",
+      "test-api-validation.js",
+      "update-db.js",
+      "update-user-role.js",
+      "scripts/dev-with-supabase.js",
+    ],
   },
   baseConfig,
   jsxA11yConfig,

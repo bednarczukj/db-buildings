@@ -25,7 +25,7 @@
     "test:e2e:codegen": "playwright codegen http://localhost:8080",
     "test:e2e:report": "playwright show-report playwright-report",
     "test:all": "npm run test:run && npm run test:e2e",
-    "dev": "node -e \"require('dotenv').config()\" && PORT=4321 astro dev",
+    "dev": "node scripts/dev-with-supabase.js",
     "dev:e2e": "echo 'E2E tests now run against production: https://db-buildings.pages.dev'"
   },
   "dependencies": {
