@@ -55,37 +55,40 @@ export default defineConfig({
   },
 
   // Configure projects - Skip all tests on macOS due to Chromium permission issues
-  projects: process.platform === "darwin" ? [] : [
-    {
-      name: "chromium-authenticated",
-      testMatch: ["**/buildings.spec.ts"], // Only buildings tests need auth
-      use: {
-        ...devices["Desktop Chrome"],
-        // Use authenticated storage state from global setup
-        storageState: ".auth/user.json",
-      },
-    },
-    {
-      name: "chromium",
-      testIgnore: ["**/buildings.spec.ts"], // Exclude buildings tests
-      use: {
-        ...devices["Desktop Chrome"],
-        // No authentication for login/example tests
-      },
-    },
-    // Firefox temporarily disabled due to headless mode crashes on macOS
-    // {
-    //   name: "firefox",
-    //   use: {
-    //     ...devices["Desktop Firefox"],
-    //     // Browser context options for isolation
-    //     contextOptions: {
-    //       // Clear cookies and storage for each test
-    //       storageState: undefined,
-    //     },
-    //   },
-    // },
-  ],
+  projects:
+    process.platform === "darwin"
+      ? []
+      : [
+          {
+            name: "chromium-authenticated",
+            testMatch: ["**/buildings.spec.ts"], // Only buildings tests need auth
+            use: {
+              ...devices["Desktop Chrome"],
+              // Use authenticated storage state from global setup
+              storageState: ".auth/user.json",
+            },
+          },
+          {
+            name: "chromium",
+            testIgnore: ["**/buildings.spec.ts"], // Exclude buildings tests
+            use: {
+              ...devices["Desktop Chrome"],
+              // No authentication for login/example tests
+            },
+          },
+          // Firefox temporarily disabled due to headless mode crashes on macOS
+          // {
+          //   name: "firefox",
+          //   use: {
+          //     ...devices["Desktop Firefox"],
+          //     // Browser context options for isolation
+          //     contextOptions: {
+          //       // Clear cookies and storage for each test
+          //       storageState: undefined,
+          //     },
+          //   },
+          // },
+        ],
 
   // Testing against production deployment - no local server needed
   // webServer: {
