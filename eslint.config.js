@@ -62,6 +62,7 @@ export default tseslint.config(
       "test-api-validation.js",
       "update-db.js",
       "update-user-role.js",
+      "migrate-data.js",
       "scripts/dev-with-supabase.cjs",
     ],
   },
