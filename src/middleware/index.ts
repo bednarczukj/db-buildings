@@ -12,8 +12,8 @@ const PUBLIC_PATHS = [
   "/api/auth",
 ];
 
-// Exact match paths (not startsWith)
-const PUBLIC_EXACT_PATHS = ["/"];
+// Exact match paths (not startsWith) - root path has special handling
+const PUBLIC_EXACT_PATHS = [];
 
 export const onRequest = defineMiddleware(async ({ locals, cookies, url, request }, next) => {
   let supabase;
@@ -41,12 +41,6 @@ export const onRequest = defineMiddleware(async ({ locals, cookies, url, request
 
     // In production, return error
     return new Response("Database connection error", { status: 500 });
-  }
-
-  // Skip auth check for public paths
-  if (PUBLIC_PATHS.some((path) => url.pathname.startsWith(path)) || PUBLIC_EXACT_PATHS.includes(url.pathname)) {
-    locals.supabase = supabase;
-    return next();
   }
 
   let currentUser = null;
@@ -77,6 +71,21 @@ export const onRequest = defineMiddleware(async ({ locals, cookies, url, request
     locals.user = null;
     locals.session = null;
     locals.supabase = null;
+  }
+
+  // Special handling for root path (login page)
+  if (url.pathname === "/") {
+    // If user is authenticated, redirect to buildings
+    if (currentUser) {
+      return Response.redirect(new URL("/buildings", url));
+    }
+    // If not authenticated, allow access to login page
+    return next();
+  }
+
+  // Skip auth check for other public paths
+  if (PUBLIC_PATHS.some((path) => url.pathname.startsWith(path)) || PUBLIC_EXACT_PATHS.includes(url.pathname)) {
+    return next();
   }
 
   // Protect buildings and admin routes - require authentication

@@ -1,8 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import BuildingsList from "../components/features/buildings/BuildingsList";
+import LoginForm from "../components/features/auth/LoginForm";
 ---
 
-<Layout title="Lista Budynków">
-  <BuildingsList client:load />
+<Layout title="Logowanie">
+  <div class="min-h-screen flex items-center justify-center bg-background px-4">
+    <div class="w-full max-w-md">
+      <LoginForm client:load />
+    </div>
+  </div>
 </Layout>
