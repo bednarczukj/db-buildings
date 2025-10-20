@@ -12,6 +12,12 @@ import { config } from "dotenv";
 config({ path: ".env.test" });
 
 async function globalSetup(config: FullConfig) {
+  // Skip setup if no projects (e.g., macOS where tests are disabled)
+  if (!config.projects || config.projects.length === 0) {
+    console.log("🚀 Skipping global setup - no test projects configured");
+    return;
+  }
+
   const { baseURL } = config.projects[0].use;
 
   console.log("🚀 Starting global setup...");
@@ -20,6 +26,13 @@ async function globalSetup(config: FullConfig) {
   // For cloud Supabase, we assume users already exist
   // Skip user creation to avoid conflicts
   console.log("👥 Using existing cloud users (skipping creation)...");
+
+  // Skip browser setup on macOS due to permission issues
+  if (process.platform === "darwin") {
+    console.log("🍎 Skipping browser setup on macOS due to permission restrictions");
+    console.log("✅ Global setup complete (macOS)");
+    return;
+  }
 
   // Create authenticated session storage state
   console.log("🔐 Creating authenticated session...");

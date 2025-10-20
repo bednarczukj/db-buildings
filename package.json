@@ -15,15 +15,15 @@
     "test:run": "vitest run",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test",
+    "test:e2e": "node -e \"if (process.platform === 'darwin') { console.log('E2E tests are skipped on macOS due to Chromium permission restrictions.'); process.exit(0); }\" && playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:debug": "playwright test --debug",
-    "test:e2e:codegen": "playwright codegen http://localhost:3001",
+    "test:e2e:codegen": "playwright codegen http://localhost:8080",
     "test:e2e:report": "playwright show-report playwright-report",
     "test:all": "npm run test:run && npm run test:e2e",
     "dev": "astro dev",
-    "dev:e2e": "node -e \"require('dotenv').config({path:'.env.cloud'})\" && PORT=3001 astro dev"
+    "dev:e2e": "echo 'E2E tests now run against production: https://db-buildings.pages.dev'"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.10",
