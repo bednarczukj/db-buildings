@@ -16,13 +16,32 @@ const PUBLIC_PATHS = [
 const PUBLIC_EXACT_PATHS = ["/"];
 
 export const onRequest = defineMiddleware(async ({ locals, cookies, url, request }, next) => {
-  // Create Supabase server instance
-  // Function automatically detects runtime.env vs process.env
-  const supabase = createSupabaseServerInstance({
-    cookies,
-    headers: request.headers,
-    runtime: locals.runtime,
-  });
+  let supabase;
+
+  try {
+    // Create Supabase server instance
+    // Function automatically detects runtime.env vs process.env
+    supabase = createSupabaseServerInstance({
+      cookies,
+      headers: request.headers,
+      runtime: locals.runtime,
+    });
+  } catch (error) {
+    // Handle Supabase configuration/connection errors gracefully
+    // eslint-disable-next-line no-console
+    console.error("Failed to create Supabase instance:", error);
+
+    // For development, allow requests to continue without Supabase
+    if (process.env.NODE_ENV !== "production") {
+      locals.supabase = null;
+      locals.user = null;
+      locals.session = null;
+      return next();
+    }
+
+    // In production, return error
+    return new Response("Database connection error", { status: 500 });
+  }
 
   // Skip auth check for public paths
   if (PUBLIC_PATHS.some((path) => url.pathname.startsWith(path)) || PUBLIC_EXACT_PATHS.includes(url.pathname)) {

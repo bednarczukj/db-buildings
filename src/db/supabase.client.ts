@@ -1,6 +1,12 @@
 import type { AstroCookies } from "astro";
 import { createServerClient, type CookieOptionsWithName } from "@supabase/ssr";
 import type { Database } from "./database.types.ts";
+import { config } from "dotenv";
+
+// Load environment variables if not already loaded (for local development)
+if (!process.env.SUPABASE_URL) {
+  config();
+}
 
 export const cookieOptions: CookieOptionsWithName = {
   path: "/",
