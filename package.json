@@ -23,7 +23,7 @@
     "test:e2e:report": "playwright show-report playwright-report",
     "test:all": "npm run test:run && npm run test:e2e",
     "dev": "astro dev",
-    "dev:e2e": "PORT=3001 USE_CLOUD_DB=true astro dev"
+    "dev:e2e": "PORT=3001 SUPABASE_URL=https://rfkvrtocxyoabbqrpnsg.supabase.co PUBLIC_SUPABASE_KEY=sb_publishable_g9_bXZ48OUk1EvRVobq_zQ_JnwYYQqr SUPABASE_SERVICE_ROLE_KEY=sb_secret_pjMVz8oXcdv2jsMLeYECcg_e0t66XOC OPENROUTER_API_KEY=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 astro dev"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.10",

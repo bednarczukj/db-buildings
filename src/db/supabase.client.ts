@@ -1,8 +1,3 @@
-import { config } from "dotenv";
-
-// Load environment variables from .env file (or .env.cloud for E2E tests)
-config({ path: process.env.USE_CLOUD_DB === "true" ? ".env.cloud" : ".env" });
-
 import type { AstroCookies } from "astro";
 import { createServerClient, type CookieOptionsWithName } from "@supabase/ssr";
 import type { Database } from "./database.types.ts";
