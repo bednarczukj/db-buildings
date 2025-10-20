@@ -87,7 +87,7 @@ jobs:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       PUBLIC_SUPABASE_KEY: ${{ secrets.SUPABASE_PUBLIC_KEY }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-      BASE_URL: http://localhost:3000
+      BASE_URL: http://localhost:3001
       TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
       TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
       ADMIN_USER_EMAIL: ${{ secrets.ADMIN_USER_EMAIL }}
@@ -119,7 +119,7 @@ jobs:
           echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> .env.test
           echo "PUBLIC_SUPABASE_KEY=${{ secrets.SUPABASE_PUBLIC_KEY }}" >> .env.test
           echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.test
-          echo "BASE_URL=http://localhost:3000" >> .env.test
+          echo "BASE_URL=http://localhost:3001" >> .env.test
           echo "TEST_USER_EMAIL=${{ secrets.TEST_USER_EMAIL }}" >> .env.test
           echo "TEST_USER_PASSWORD=${{ secrets.TEST_USER_PASSWORD }}" >> .env.test
           echo "ADMIN_USER_EMAIL=${{ secrets.ADMIN_USER_EMAIL }}" >> .env.test
