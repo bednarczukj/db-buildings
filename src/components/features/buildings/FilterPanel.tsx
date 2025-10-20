@@ -53,8 +53,22 @@ export function FilterPanel({ filters, onFiltersChange, onReset, isLoading }: Fi
             <SelectContent>
               <SelectItem value="__all__">Wszystkie</SelectItem>
               {/* TODO: Load from API - GET /api/v1/voivodeships */}
-              <SelectItem value="1465011">Dolnośląskie</SelectItem>
-              <SelectItem value="0465011">Kujawsko-pomorskie</SelectItem>
+              <SelectItem value="02">Dolnośląskie</SelectItem>
+              <SelectItem value="04">Kujawsko-pomorskie</SelectItem>
+              <SelectItem value="06">Lubelskie</SelectItem>
+              <SelectItem value="08">Lubuskie</SelectItem>
+              <SelectItem value="10">Łódzkie</SelectItem>
+              <SelectItem value="12">Małopolskie</SelectItem>
+              <SelectItem value="14">Mazowieckie</SelectItem>
+              <SelectItem value="16">Opolskie</SelectItem>
+              <SelectItem value="18">Podkarpackie</SelectItem>
+              <SelectItem value="20">Podlaskie</SelectItem>
+              <SelectItem value="22">Pomorskie</SelectItem>
+              <SelectItem value="24">Śląskie</SelectItem>
+              <SelectItem value="26">Świętokrzyskie</SelectItem>
+              <SelectItem value="28">Warmińsko-mazurskie</SelectItem>
+              <SelectItem value="30">Wielkopolskie</SelectItem>
+              <SelectItem value="32">Zachodniopomorskie</SelectItem>
             </SelectContent>
           </Select>
         </div>
