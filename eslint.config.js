@@ -4,7 +4,6 @@ import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
 import eslintPluginAstro from "eslint-plugin-astro";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import pluginReact from "eslint-plugin-react";
-import reactCompiler from "eslint-plugin-react-compiler";
 import eslintPluginReactHooks from "eslint-plugin-react-hooks";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -46,13 +45,11 @@ const reactConfig = tseslint.config({
   },
   plugins: {
     "react-hooks": eslintPluginReactHooks,
-    "react-compiler": reactCompiler,
   },
   settings: { react: { version: "detect" } },
   rules: {
     ...eslintPluginReactHooks.configs.recommended.rules,
     "react/react-in-jsx-scope": "off",
-    "react-compiler/react-compiler": "error",
   },
 });
 
@@ -118,13 +115,6 @@ export default tseslint.config(
     files: ["src/components/ui/**/*.tsx"],
     rules: {
       "jsx-a11y/label-has-associated-control": "off",
-    },
-  },
-  // Relax react-compiler rules (it's still experimental)
-  {
-    files: ["src/components/**/*.{ts,tsx}"],
-    rules: {
-      "react-compiler/react-compiler": "warn",
     },
   }
 );
