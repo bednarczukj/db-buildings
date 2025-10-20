@@ -46,8 +46,27 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   const { wojewodztwo, powiat, gmina, miejscowosc, dzielnica, ulica, numer_budynku } = validation.data;
 
-  // 3. Get OpenRouter API Key
-  const openRouterApiKey = process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY;
+  // 3. Get OpenRouter API Key (same pattern as Supabase client)
+  const runtimeEnv = locals.runtime?.env;
+  const openRouterApiKey =
+    runtimeEnv?.OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY || import.meta.env?.OPENROUTER_API_KEY;
+
+  // Debug: Check how OPENROUTER_API_KEY is accessed
+  console.log("OPENROUTER_API_KEY access check:", {
+    hasRuntimeEnv: !!runtimeEnv,
+    runtimeKey: !!runtimeEnv?.OPENROUTER_API_KEY,
+    processKey: !!process.env.OPENROUTER_API_KEY,
+    importKey: !!import.meta.env?.OPENROUTER_API_KEY,
+    keySource: openRouterApiKey
+      ? runtimeEnv?.OPENROUTER_API_KEY
+        ? "runtime.OPENROUTER_API_KEY"
+        : process.env.OPENROUTER_API_KEY
+          ? "process.OPENROUTER_API_KEY"
+          : "import.OPENROUTER_API_KEY"
+      : "none",
+    cfPages: !!process.env.CF_PAGES || import.meta.env?.CF_PAGES,
+    nodeEnv: process.env.NODE_ENV,
+  });
 
   if (!openRouterApiKey) {
     return new Response(JSON.stringify({ error: "AI service is not configured." }), {
