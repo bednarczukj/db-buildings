@@ -1,3 +1,8 @@
+import { config } from "dotenv";
+
+// Load environment variables from .env file
+config();
+
 import type { AstroCookies } from "astro";
 import { createServerClient, type CookieOptionsWithName } from "@supabase/ssr";
 import type { Database } from "./database.types.ts";
