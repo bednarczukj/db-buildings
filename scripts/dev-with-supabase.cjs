@@ -23,7 +23,7 @@ if (!isSupabaseRunning()) {
   console.log("🚀 Starting Supabase...");
   const supabase = spawn("supabase", ["start"], {
     detached: true,
-    stdio: "inherit"
+    stdio: "inherit",
   });
   supabase.unref();
 
@@ -57,7 +57,7 @@ function startAstro() {
   // Start Astro dev server
   const astro = spawn("astro", ["dev", "--port", "3000"], {
     stdio: "inherit",
-    env: { ...process.env, PORT: "3000" }
+    env: { ...process.env, PORT: "3000" },
   });
 
   astro.on("close", (code) => {
