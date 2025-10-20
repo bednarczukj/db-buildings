@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { APIRoute } from "astro";
 import { z } from "zod";
 
@@ -14,21 +15,40 @@ const requestSchema = z.object({
 });
 
 export const POST: APIRoute = async ({ request, locals }) => {
+  console.log("AI Lookup API called");
+
   const { user, session } = locals;
+  console.log("Auth check:", { hasSession: !!session, hasUser: !!user, userRole: user?.role });
 
   // 1. Security Check: Allow only WRITE/ADMIN roles
   if (!session || !user || (user.role !== "ADMIN" && user.role !== "WRITE")) {
+    console.log("Auth failed:", { session: !!session, user: !!user, role: user?.role });
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { "Content-Type": "application/json" },
     });
   }
 
+  console.log("Auth passed, validating request body");
+
   // 2. Validate request body
-  const body = await request.json();
+  let body;
+  try {
+    body = await request.json();
+    console.log("Request body:", body);
+  } catch (error) {
+    console.log("Failed to parse request body:", error);
+    return new Response(JSON.stringify({ error: "Invalid JSON in request body" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   const validation = requestSchema.safeParse(body);
+  console.log("Validation result:", validation.success);
 
   if (!validation.success) {
+    console.log("Validation errors:", validation.error.flatten());
     return new Response(JSON.stringify({ error: "Invalid request body", details: validation.error.flatten() }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
@@ -36,10 +56,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   const { wojewodztwo, powiat, gmina, miejscowosc, dzielnica, ulica, numer_budynku } = validation.data;
+  console.log("Parsed data:", { wojewodztwo, powiat, gmina, miejscowosc });
 
   // 3. Get OpenRouter API Key
   const openRouterApiKey = process.env.OPENROUTER_API_KEY;
+  console.log("API Key check:", { hasKey: !!openRouterApiKey, keyLength: openRouterApiKey?.length });
+
   if (!openRouterApiKey) {
+    console.log("API key missing from environment");
     return new Response(JSON.stringify({ error: "AI service is not configured." }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
@@ -70,6 +94,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const prompt = promptParts.join("\n");
 
   try {
+    console.log("Making OpenRouter API call...");
+
     // 5. Query OpenRouter AI
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
@@ -86,7 +112,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
       }),
     });
 
+    console.log("OpenRouter response status:", response.status);
+
     if (!response.ok) {
+      const errorText = await response.text();
+      console.log("OpenRouter error response:", errorText);
       return new Response(JSON.stringify({ error: "Failed to get data from AI service." }), {
         status: response.status,
         headers: { "Content-Type": "application/json" },
@@ -94,17 +124,23 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     const aiResult = await response.json();
+    console.log("OpenRouter response received successfully");
+
     const content = aiResult.choices[0]?.message?.content;
+    console.log("AI content received:", !!content);
 
     if (!content) {
+      console.log("AI returned empty content");
       return new Response(JSON.stringify({ error: "AI returned an empty response." }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
       });
     }
 
+    console.log("Parsing AI content...");
     // 6. Parse and return the result
     const terytData = JSON.parse(content);
+    console.log("Parsed TERYT data:", terytData);
 
     // Ensure all keys are present, defaulting to null if missing
     const assuredTerytData = {
@@ -116,12 +152,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
       ulica_kod: terytData.ulica_kod || null,
     };
 
+    console.log("Returning successful response with TERYT data");
     return new Response(JSON.stringify({ teryt: assuredTerytData }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch {
-    return new Response(JSON.stringify({ error: "An unexpected error occurred." }), {
+  } catch (error) {
+    console.error("Unexpected error in AI lookup:", error);
+    return new Response(JSON.stringify({ error: "An unexpected error occurred.", details: error?.message }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
