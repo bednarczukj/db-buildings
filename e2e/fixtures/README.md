@@ -11,13 +11,13 @@ Provides an authenticated page context for tests that require authentication.
 **Usage:**
 
 ```typescript
-import { test, expect } from '../fixtures/authenticated-fixture';
+import { test, expect } from "../fixtures/authenticated-fixture";
 
-test('should access protected page', async ({ authenticatedPage }) => {
+test("should access protected page", async ({ authenticatedPage }) => {
   // authenticatedPage is already logged in
-  await authenticatedPage.goto('/buildings');
-  
-  const heading = authenticatedPage.locator('h1').first();
+  await authenticatedPage.goto("/buildings");
+
+  const heading = authenticatedPage.locator("h1").first();
   await expect(heading).toBeVisible();
 });
 ```
@@ -32,7 +32,7 @@ test('should access protected page', async ({ authenticatedPage }) => {
 Follow this pattern to create new fixtures:
 
 ```typescript
-import { test as base } from '@playwright/test';
+import { test as base } from "@playwright/test";
 
 type CustomFixtures = {
   myFixture: string;
@@ -41,16 +41,16 @@ type CustomFixtures = {
 export const test = base.extend<CustomFixtures>({
   myFixture: async ({}, use) => {
     // Setup code here
-    const value = 'some setup value';
-    
+    const value = "some setup value";
+
     // Use the fixture
     await use(value);
-    
+
     // Teardown code here (optional)
   },
 });
 
-export { expect } from '@playwright/test';
+export { expect } from "@playwright/test";
 ```
 
 ## Best Practices
