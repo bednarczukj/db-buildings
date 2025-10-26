@@ -3,7 +3,8 @@ import { navigate } from "astro:transitions/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2, Plus, AlertCircle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Pencil, Trash2, Plus, AlertCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { QueryProvider } from "@/components/providers/QueryProvider";
 import { useTerytEntries, useDeleteTerytEntry } from "../../hooks/useTeryt";
 import type { TerytResource, TerytListQueryInput, TerytDTO } from "@/lib/schemas/terytSchemas";
@@ -18,7 +19,13 @@ interface TerytTableProps {
  * Table component for displaying TERYT dictionary entries
  */
 function TerytTableContent({ resource, hasWriteAccess, hasAdminAccess }: TerytTableProps) {
-  const [query] = useState<TerytListQueryInput>({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const query: TerytListQueryInput = {
+    page: currentPage,
+    pageSize: pageSize,
+  };
 
   const { data: result, isLoading } = useTerytEntries(resource, query);
   const deleteMutation = useDeleteTerytEntry(resource);
@@ -36,6 +43,12 @@ function TerytTableContent({ resource, hasWriteAccess, hasAdminAccess }: TerytTa
 
     try {
       await deleteMutation.mutateAsync(code);
+      // Reset to first page if we're on a page that becomes empty
+      const newTotalItems = totalItems - 1;
+      const newTotalPages = Math.ceil(newTotalItems / pageSize);
+      if (currentPage > newTotalPages && newTotalPages > 0) {
+        setCurrentPage(newTotalPages);
+      }
       alert("Wpis został usunięty.");
     } catch (error) {
       alert(`Błąd: ${error instanceof Error ? error.message : "Nie udało się usunąć wpisu."}`);
@@ -45,6 +58,23 @@ function TerytTableContent({ resource, hasWriteAccess, hasAdminAccess }: TerytTa
   const handleAddNew = () => {
     navigate(`/teryt/${resource}/new`);
   };
+
+  // Pagination helpers
+  const totalItems = result?.total || 0;
+  const totalPages = Math.ceil(totalItems / pageSize);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handlePageSizeChange = (newPageSize: string) => {
+    const size = parseInt(newPageSize);
+    setPageSize(size);
+    setCurrentPage(1); // Reset to first page when changing page size
+  };
+
+  const startItem = (currentPage - 1) * pageSize + 1;
+  const endItem = Math.min(currentPage * pageSize, totalItems);
 
   // Get resource display name
   const getResourceDisplayName = (resource: TerytResource): string => {
@@ -210,6 +240,86 @@ function TerytTableContent({ resource, hasWriteAccess, hasAdminAccess }: TerytTa
           )}
         </TableBody>
       </Table>
+
+      {/* Pagination Controls */}
+      {!isLoading && totalItems > 0 && (
+        <div className="flex items-center justify-between px-2 py-4 border-t">
+          <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+            <span>
+              Pokazuje {startItem}-{endItem} z {totalItems} wpisów
+            </span>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            {/* Page Size Selector */}
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-muted-foreground">Rozmiar strony:</span>
+              <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
+                <SelectTrigger className="w-20">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="25">25</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
+                  <SelectItem value="100">100</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Page Navigation */}
+            <div className="flex items-center space-x-1">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage <= 1}
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Poprzednia
+              </Button>
+
+              {/* Page Numbers */}
+              <div className="flex items-center space-x-1">
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+
+                  return (
+                    <Button
+                      key={pageNum}
+                      variant={currentPage === pageNum ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handlePageChange(pageNum)}
+                      className="w-10"
+                    >
+                      {pageNum}
+                    </Button>
+                  );
+                })}
+              </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage >= totalPages}
+              >
+                Następna
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

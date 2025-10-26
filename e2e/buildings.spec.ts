@@ -1,67 +1,91 @@
 /**
  * E2E tests for buildings page
  * Tests that provider names are displayed instead of IDs
+ * Uses Page Object Model pattern for maintainable tests
  */
 
 import { test, expect } from "@playwright/test";
+import { BuildingsPage } from "./page-objects/BuildingsPage";
 
 test.describe("Buildings Page", () => {
   test("should display provider names instead of IDs", async ({ page }) => {
     // User is already authenticated via storage state from global setup
-    // Navigate to buildings page
-    await page.goto("/buildings");
-    await page.waitForLoadState("networkidle");
+    const buildingsPage = new BuildingsPage(page);
+
+    // Navigate to buildings page and wait for load
+    await buildingsPage.goto();
+    await buildingsPage.waitForLoad();
 
     // Check if there's a table (data exists) or empty state
-    const hasTable = await page.locator("table").count();
+    const hasTable = await buildingsPage.hasTable();
 
-    if (hasTable > 0) {
-      // Wait for buildings table to load
-      await page.waitForSelector("table", { timeout: 10000 });
-
-      // Find table rows (excluding header)
-      const tableRows = page.locator("tbody tr");
+    if (hasTable) {
+      // Wait for buildings table to be visible
+      await expect(buildingsPage.table).toBeVisible();
 
       // Get count of rows
-      const rowCount = await tableRows.count();
+      const rowCount = await buildingsPage.getRowCount();
 
       if (rowCount > 0) {
-        // Check the first row's provider column (5th column - Dostawca)
-        const firstRowProviderCell = tableRows.first().locator("td").nth(4);
+        // Check the first row's provider name
+        const providerName = await buildingsPage.getFirstRowProviderName();
 
-        // The provider cell should not contain "ID:" text (which was the old format)
-        await expect(firstRowProviderCell).not.toContainText("ID:");
+        // The provider name should be present and not empty
+        expect(providerName).toBeTruthy();
+        expect(providerName).not.toBe("");
 
-        // The provider cell should contain some text (provider name)
-        const providerText = await firstRowProviderCell.textContent();
-        expect(providerText).toBeTruthy();
-        expect(providerText?.trim()).not.toBe("");
+        // The provider name should not contain "ID:" text (which was the old format)
+        expect(providerName).not.toContain("ID:");
       }
     } else {
       // If no buildings, check that empty state is shown
-      const emptyState = page.locator("text=Nie znaleziono budynków spełniających podane kryteria");
-      await expect(emptyState).toBeVisible();
+      await expect(buildingsPage.emptyState).toBeVisible();
       console.log("✅ Empty state displayed correctly (no buildings in database)");
     }
   });
 
   test("should load buildings data successfully", async ({ page }) => {
     // User is already authenticated via storage state from global setup
-    // Navigate to buildings page
-    await page.goto("/buildings");
-    await page.waitForLoadState("networkidle");
+    const buildingsPage = new BuildingsPage(page);
 
-    // Check page title (use first() to avoid strict mode violation with multiple h1s from Playwright DevTools)
-    await expect(page.locator("h1").first()).toContainText("Lista Budynków");
+    // Navigate to buildings page
+    await buildingsPage.goto();
+    await buildingsPage.waitForLoad();
+
+    // Check page title using user-facing selector
+    await expect(buildingsPage.heading).toContainText("Lista Budynków");
 
     // Check that either table or empty state is shown (not error)
-    const hasTable = await page.locator("table").count();
-    const hasEmptyState = await page.locator("text=Nie znaleziono budynków").count();
+    const hasTable = await buildingsPage.hasTable();
+    const hasEmptyState = await buildingsPage.isEmptyStateVisible();
 
-    expect(hasTable + hasEmptyState).toBeGreaterThan(0);
+    expect(hasTable || hasEmptyState).toBe(true);
 
     // Check that API call was made and succeeded (no error state)
-    const errorMessage = page.locator("text=Wystąpił błąd");
-    await expect(errorMessage).not.toBeVisible();
+    await expect(buildingsPage.errorMessage).not.toBeVisible();
+  });
+
+  test.describe("Visual Regression", () => {
+    test("should match buildings page screenshot when table is present", async ({ page }) => {
+      const buildingsPage = new BuildingsPage(page);
+      await buildingsPage.goto();
+      await buildingsPage.waitForLoad();
+
+      // Only take screenshot if table is visible
+      if (await buildingsPage.hasTable()) {
+        await expect(page).toHaveScreenshot("buildings-page-with-data.png");
+      }
+    });
+
+    test("should match buildings page empty state screenshot", async ({ page }) => {
+      const buildingsPage = new BuildingsPage(page);
+      await buildingsPage.goto();
+      await buildingsPage.waitForLoad();
+
+      // Only take screenshot if empty state is visible
+      if (await buildingsPage.isEmptyStateVisible()) {
+        await expect(page).toHaveScreenshot("buildings-page-empty.png");
+      }
+    });
   });
 });

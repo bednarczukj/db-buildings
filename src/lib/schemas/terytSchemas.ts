@@ -127,8 +127,9 @@ export const terytListQuerySchema = z.object({
   // Parent filter (for hierarchical filtering)
   parent_code: z
     .string()
-    .length(7, "Parent code must be exactly 7 characters")
-    .regex(/^[A-Z0-9]{7}$/, "Parent code must contain only uppercase letters and digits")
+    .min(2, "Parent code must be at least 2 characters")
+    .max(7, "Parent code must be at most 7 characters")
+    .regex(/^[A-Z0-9]{2,7}$/, "Parent code must contain only uppercase letters and digits")
     .optional(),
 
   // Search filter

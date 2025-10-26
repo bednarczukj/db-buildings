@@ -64,6 +64,9 @@ export default tseslint.config(
       "update-user-role.js",
       "migrate-data.js",
       "scripts/dev-with-supabase.cjs",
+      "generate-*.js",
+      "insert-*.js",
+      "test-*.js",
     ],
   },
   baseConfig,
@@ -76,6 +79,7 @@ export default tseslint.config(
     files: ["e2e/**/*.ts", "playwright.config.ts"],
     rules: {
       "no-console": "off",
+      "react-hooks/rules-of-hooks": "off",
     },
   },
   // Relax rules for components and API routes (warnings instead of errors)

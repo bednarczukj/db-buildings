@@ -28,7 +28,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   let body;
   try {
     body = await request.json();
-  } catch (error) {
+  } catch {
     return new Response(JSON.stringify({ error: "Invalid JSON in request body" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
@@ -52,6 +52,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     runtimeEnv?.OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY || import.meta.env?.OPENROUTER_API_KEY;
 
   // Debug: Check how OPENROUTER_API_KEY is accessed
+  // eslint-disable-next-line no-console
   console.log("OPENROUTER_API_KEY access check:", {
     hasRuntimeEnv: !!runtimeEnv,
     runtimeKey: !!runtimeEnv?.OPENROUTER_API_KEY,

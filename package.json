@@ -18,7 +18,7 @@
     "test:run": "vitest run",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "node -e \"if (process.platform === 'darwin') { console.log('E2E tests are skipped on macOS due to Chromium permission restrictions.'); process.exit(0); }\" && playwright test",
+    "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:debug": "playwright test --debug",

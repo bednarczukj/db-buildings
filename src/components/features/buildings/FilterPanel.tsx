@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RotateCcw } from "lucide-react";
+import { useTerytEntries } from "@/components/hooks/useTeryt";
 import type { BuildingListQueryDTO, StatusEnum } from "@/types";
 
 interface FilterPanelProps {
@@ -15,6 +16,29 @@ interface FilterPanelProps {
  * Contains controls for TERYT codes, provider, and status
  */
 export function FilterPanel({ filters, onFiltersChange, onReset, isLoading }: FilterPanelProps) {
+  // Fetch districts for selected voivodeship
+  const { data: districtsResult, isLoading: districtsLoading } = useTerytEntries(
+    "districts",
+    filters.voivodeship_code ? { parent_code: filters.voivodeship_code } : {},
+    { enabled: !!filters.voivodeship_code }
+  );
+  const districts = districtsResult?.data || [];
+
+  // Fetch communities for selected district
+  const { data: communitiesResult, isLoading: communitiesLoading } = useTerytEntries(
+    "communities",
+    filters.district_code ? { parent_code: filters.district_code } : {},
+    { enabled: !!filters.district_code }
+  );
+  const communities = communitiesResult?.data || [];
+
+  // Fetch cities for selected community
+  const { data: citiesResult, isLoading: citiesLoading } = useTerytEntries(
+    "cities",
+    filters.community_code ? { parent_code: filters.community_code } : {},
+    { enabled: !!filters.community_code }
+  );
+  const cities = citiesResult?.data || [];
   return (
     <div className="rounded-lg border bg-card p-4">
       <div className="mb-4 flex items-center justify-between">
@@ -91,14 +115,18 @@ export function FilterPanel({ filters, onFiltersChange, onReset, isLoading }: Fi
                 city_code: undefined,
               })
             }
-            disabled={isLoading || !filters.voivodeship_code}
+            disabled={isLoading || !filters.voivodeship_code || districtsLoading}
           >
             <SelectTrigger id="district">
-              <SelectValue placeholder="Wybierz powiat" />
+              <SelectValue placeholder={districtsLoading ? "Ładowanie..." : "Wybierz powiat"} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="__all__">Wszystkie</SelectItem>
-              {/* TODO: Load from API - GET /api/v1/districts?voivodeship_code={code} */}
+              {districts.map((district) => (
+                <SelectItem key={district.code} value={district.code}>
+                  {district.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -120,14 +148,18 @@ export function FilterPanel({ filters, onFiltersChange, onReset, isLoading }: Fi
                 city_code: undefined,
               })
             }
-            disabled={isLoading || !filters.district_code}
+            disabled={isLoading || !filters.district_code || communitiesLoading}
           >
             <SelectTrigger id="community">
-              <SelectValue placeholder="Wybierz gminę" />
+              <SelectValue placeholder={communitiesLoading ? "Ładowanie..." : "Wybierz gminę"} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="__all__">Wszystkie</SelectItem>
-              {/* TODO: Load from API - GET /api/v1/communities?district_code={code} */}
+              {communities.map((community) => (
+                <SelectItem key={community.code} value={community.code}>
+                  {community.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -143,14 +175,18 @@ export function FilterPanel({ filters, onFiltersChange, onReset, isLoading }: Fi
           <Select
             value={filters.city_code || ""}
             onValueChange={(value) => onFiltersChange({ city_code: value === "__all__" ? undefined : value })}
-            disabled={isLoading || !filters.community_code}
+            disabled={isLoading || !filters.community_code || citiesLoading}
           >
             <SelectTrigger id="city">
-              <SelectValue placeholder="Wybierz miasto" />
+              <SelectValue placeholder={citiesLoading ? "Ładowanie..." : "Wybierz miasto"} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="__all__">Wszystkie</SelectItem>
-              {/* TODO: Load from API - GET /api/v1/cities?community_code={code} */}
+              {cities.map((city) => (
+                <SelectItem key={city.code} value={city.code}>
+                  {city.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

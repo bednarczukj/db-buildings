@@ -27,13 +27,6 @@ async function globalSetup(config: FullConfig) {
   // Skip user creation to avoid conflicts
   console.log("👥 Using existing cloud users (skipping creation)...");
 
-  // Skip browser setup on macOS due to permission issues
-  if (process.platform === "darwin") {
-    console.log("🍎 Skipping browser setup on macOS due to permission restrictions");
-    console.log("✅ Global setup complete (macOS)");
-    return;
-  }
-
   // Create authenticated session storage state
   console.log("🔐 Creating authenticated session...");
 

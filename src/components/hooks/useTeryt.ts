@@ -5,7 +5,11 @@ import type { TerytListResponse } from "../../lib/schemas/terytSchemas";
 /**
  * Hook for fetching TERYT entries list
  */
-export function useTerytEntries(resource: TerytResource, query: TerytListQueryInput = {}) {
+export function useTerytEntries(
+  resource: TerytResource,
+  query: TerytListQueryInput = {},
+  options: { enabled?: boolean } = {}
+) {
   return useQuery({
     queryKey: ["teryt", resource, query],
     queryFn: async (): Promise<TerytListResponse> => {
@@ -26,6 +30,7 @@ export function useTerytEntries(resource: TerytResource, query: TerytListQueryIn
       return response.json();
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
+    ...options,
   });
 }
 

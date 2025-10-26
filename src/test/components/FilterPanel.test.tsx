@@ -1,10 +1,18 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { FilterPanel } from "../../components/features/buildings/FilterPanel";
 import type { BuildingListQueryDTO } from "../../types";
+import * as useTerytModule from "../../components/hooks/useTeryt";
+
+// Mock useTerytEntries
+vi.mock("../../components/hooks/useTeryt", () => ({
+  useTerytEntries: vi.fn(),
+}));
 
 describe("FilterPanel component", () => {
+  let queryClient: QueryClient;
   const mockOnFiltersChange = vi.fn();
   const mockOnReset = vi.fn();
 
@@ -19,19 +27,46 @@ describe("FilterPanel component", () => {
   };
 
   beforeEach(() => {
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+        mutations: {
+          retry: false,
+        },
+      },
+    });
     vi.clearAllMocks();
+
+    // Mock useTerytEntries to return empty data and not loading
+    vi.mocked(useTerytModule.useTerytEntries).mockReturnValue({
+      data: { data: [], page: 1, pageSize: 10, total: 0 },
+      isLoading: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    } as any);
   });
+
+  afterEach(() => {
+    queryClient.clear();
+  });
+
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
 
   describe("rendering", () => {
     it("should render filter panel with title and reset button", () => {
-      render(<FilterPanel {...defaultProps} />);
+      render(<FilterPanel {...defaultProps} />, { wrapper });
 
       expect(screen.getByText("Filtry")).toBeInTheDocument();
       expect(screen.getByRole("button", { name: /resetuj/i })).toBeInTheDocument();
     });
 
     it.skip("should render all filter selects", () => {
-      render(<FilterPanel {...defaultProps} />);
+      render(<FilterPanel {...defaultProps} />, { wrapper });
 
       expect(screen.getByLabelText(/województwo/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/powiat/i)).toBeInTheDocument();
@@ -42,7 +77,7 @@ describe("FilterPanel component", () => {
     }); // Skip due to Radix UI testing issues
 
     it("should disable controls when loading", () => {
-      render(<FilterPanel {...defaultProps} isLoading={true} />);
+      render(<FilterPanel {...defaultProps} isLoading={true} />, { wrapper });
 
       const resetButton = screen.getByRole("button", { name: /resetuj/i });
       expect(resetButton).toBeDisabled();
@@ -60,7 +95,7 @@ describe("FilterPanel component", () => {
     // Focus on testing the core logic and accessibility instead
 
     it("should render filter selects with correct labels", () => {
-      render(<FilterPanel {...defaultProps} />);
+      render(<FilterPanel {...defaultProps} />, { wrapper });
 
       expect(screen.getByLabelText(/województwo/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/powiat/i)).toBeInTheDocument();
@@ -72,7 +107,7 @@ describe("FilterPanel component", () => {
 
     it("should call onReset when reset button is clicked", async () => {
       const user = userEvent.setup();
-      render(<FilterPanel {...defaultProps} />);
+      render(<FilterPanel {...defaultProps} />, { wrapper });
 
       const resetButton = screen.getByRole("button", { name: /resetuj/i });
       await user.click(resetButton);
@@ -94,7 +129,7 @@ describe("FilterPanel component", () => {
         },
       };
 
-      render(<FilterPanel {...propsWithValues} />);
+      render(<FilterPanel {...propsWithValues} />, { wrapper });
 
       expect(screen.getByLabelText(/województwo/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/powiat/i)).toBeInTheDocument();
@@ -103,7 +138,7 @@ describe("FilterPanel component", () => {
 
   describe("accessibility", () => {
     it("should have proper button accessibility", () => {
-      render(<FilterPanel {...defaultProps} />);
+      render(<FilterPanel {...defaultProps} />, { wrapper });
 
       const resetButton = screen.getByRole("button", { name: /resetuj/i });
       expect(resetButton).toHaveAttribute("aria-label", "Resetuj filtry");
@@ -121,7 +156,7 @@ describe("FilterPanel component", () => {
         },
       };
 
-      render(<FilterPanel {...propsWithEmptyFilters} />);
+      render(<FilterPanel {...propsWithEmptyFilters} />, { wrapper });
 
       // Should render without errors
       expect(screen.getByText("Filtry")).toBeInTheDocument();
@@ -137,7 +172,7 @@ describe("FilterPanel component", () => {
         },
       };
 
-      render(<FilterPanel {...propsWithUndefinedFilters} />);
+      render(<FilterPanel {...propsWithUndefinedFilters} />, { wrapper });
 
       // Should render without errors
       expect(screen.getByText("Filtry")).toBeInTheDocument();
