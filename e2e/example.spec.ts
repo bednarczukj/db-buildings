@@ -137,6 +137,9 @@ test.describe("Example E2E Tests", () => {
       await page.waitForLoadState("networkidle");
     });
 
+    // Skip visual regression tests in CI (snapshots need to be committed)
+    test.skip(!!process.env.CI, "Skipping visual regression in CI");
+
     test("should match homepage screenshot", async () => {
       // Visual comparison test (will create baseline on first run)
       // Uncomment to enable visual regression testing
