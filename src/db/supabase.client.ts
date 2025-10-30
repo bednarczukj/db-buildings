@@ -56,6 +56,7 @@ export const createSupabaseServerInstance = (context: {
 
   const supabase = createServerClient<Database>(supabaseUrl, supabaseKey, {
     cookieOptions: getCookieOptions(isProduction),
+    db: { schema: "app" },
     cookies: {
       getAll() {
         return parseCookieHeader(context.headers.get("Cookie") ?? "");
