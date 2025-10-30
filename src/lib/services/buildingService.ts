@@ -39,11 +39,11 @@ export class BuildingService {
     // Calculate offset for pagination
     const offset = (page - 1) * pageSize;
 
-    // Start building the query with provider name join
+    // Start building the query with provider name (LEFT JOIN to avoid dropping rows without provider)
     let queryBuilder = this.supabase.from("buildings").select(
       `
         *,
-        providers!inner(name)
+        providers(name)
       `,
       { count: "exact" }
     );
